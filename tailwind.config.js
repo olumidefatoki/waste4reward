@@ -16,6 +16,10 @@ module.exports = {
       portal: "100vh",
       modal: "38rem",
     },
+    backgroundImage: {
+      "hero-pattern": "url('/src/assets/images/bg-1.jpg')",
+      // "footer-texture": "url('/img/footer-texture.png')",
+    },
   },
   plugins: [],
 };

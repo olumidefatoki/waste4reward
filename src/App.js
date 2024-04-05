@@ -10,13 +10,15 @@ function App() {
   useEffect(() => {
     const createRoute = async () => {
       try {
-        const authRouters = getDashboardRouter();
-        const defaultRouter = [].concat(authRouters);
+        const dashboardRouters = getDashboardRouter();
+        const authRouters = getAuthRouter();
+        const defaultRouter = [].concat(authRouters, dashboardRouters);
         setRouter(createBrowserRouter(defaultRouter));
         setHasRouter(true);
       } catch (e) {
+        const dashboardRouters = getDashboardRouter();
         const authRouters = getAuthRouter();
-        const defaultRouter = [].concat(authRouters);
+        const defaultRouter = [].concat(authRouters, dashboardRouters);
         setRouter(createBrowserRouter(defaultRouter));
         setHasRouter(true);
       }
