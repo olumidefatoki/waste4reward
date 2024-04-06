@@ -7,6 +7,8 @@ import Recycler from "../pages/recycler";
 import Transaction from "../pages/transaction";
 import User from "../pages/user";
 import Waybill from "../pages/waybill";
+import Admin from "../pages/admin";
+import AdminDashboard from "../pages/admin/dashboard/Dashboard";
 
 export const getDashboardRouter = () => {
   return [
@@ -20,11 +22,6 @@ export const getDashboardRouter = () => {
             {
               path: "/dashboard",
               element: <Dashboard />,
-              // errorElement: <ErrorPage />,
-            },
-            {
-              path: "/aggregator",
-              element: <Aggregator />,
               // errorElement: <ErrorPage />,
             },
             {
@@ -49,6 +46,57 @@ export const getDashboardRouter = () => {
             },
             {
               path: "/waybill",
+              element: <Waybill />,
+              // errorElement: <ErrorPage />,
+            },
+            // {
+            //   path: "/dashboard/:modelId",
+            //   element: <DashboardLayout />,
+            //   errorElement: <ErrorPage />,
+            // },
+          ],
+        },
+      ],
+    },
+    {
+      path: "admin",
+      element: <Admin />,
+      // errorElement: <ErrorPage />,
+      children: [
+        {
+          children: [
+            {
+              path: "dashboard",
+              element: <AdminDashboard />,
+              // errorElement: <ErrorPage />,
+            },
+            {
+              path: "aggregator",
+              element: <Aggregator />,
+              // errorElement: <ErrorPage />,
+            },
+            {
+              path: "collector",
+              element: <Collector />,
+              // errorElement: <ErrorPage />,
+            },
+            {
+              path: "recycler",
+              element: <Recycler />,
+              // errorElement: <ErrorPage />,
+            },
+            {
+              path: "transaction",
+              element: <Transaction />,
+              // errorElement: <ErrorPage />,
+            },
+            {
+              path: "user",
+              element: <User />,
+              // errorElement: <ErrorPage />,
+            },
+            {
+              path: "waybill",
               element: <Waybill />,
               // errorElement: <ErrorPage />,
             },

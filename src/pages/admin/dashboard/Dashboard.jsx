@@ -1,19 +1,16 @@
 import React from "react";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
-import BottleWater from "../../assets/images/bottle-of-water.png";
-import DashCard from "../../components/card/DashCard";
-import useNav from "../../hooks/useNav";
-import InputSelect from "../../components/input/InputSelect";
-import DataCard from "../../components/card/DataCard";
-import Group from "../../assets/images/group.png";
-import Character from "../../assets/images/Characters.png";
-import rafiki from "../../assets/images/rafiki.png";
-import Character2 from "../../assets/images/Character.png";
-import LineCharts from "../../components/charts/LineChart";
-import Granular from "../../assets/images/granular.png";
-import Pana from "../../assets/images/pana.png";
+import BottleWater from "../../../assets/images/bottle-of-water.png";
+import DashCard from "../../../components/card/DashCard";
+import useNav from "../../../hooks/useNav";
+import InputSelect from "../../../components/input/InputSelect";
+import DataCard from "../../../components/card/DataCard";
+import rafiki from "../../../assets/images/rafiki.png";
+import Character2 from "../../../assets/images/Character.png";
+import LineCharts from "../../../components/charts/LineChart";
+import Granular from "../../../assets/images/granular.png";
+import Pana from "../../../assets/images/pana.png";
 import { AiOutlineRight } from "react-icons/ai";
-import BarChart from "../../components/charts/BarChart";
 
 const data = [
   {
@@ -63,20 +60,7 @@ const data2 = [
     css: "bg-white border border-gray-300",
   },
 ];
-
-const barData = [
-  { name: "Group A", value: 400 },
-  { name: "Group B", value: 300 },
-  { name: "Group C", value: 300 },
-  { name: "Group D", value: 200 },
-  { name: "Group E", value: 200 },
-  { name: "Group F", value: 200 },
-  { name: "Group G", value: 200 },
-  { name: "Group H", value: 200 },
-  { name: "Group I", value: 200 },
-  { name: "Group J", value: 200 },
-];
-const Dashboard = () => {
+const AdminDashboard = () => {
   const { closeNav } = useNav();
   console.log({ closeNav });
   return (
@@ -184,68 +168,45 @@ const Dashboard = () => {
           </div>
           <div></div>
         </div>
-        <div className="w-11/12 bg-[#F9F5FF] p-4 rounded-md">
-          <h1 className="h-[49px] border-b border-[#EAECF0] mb-5 font-bold">
-            Top 5 collectors
-          </h1>
-          <div className="w-11/12 ">
-            {[1, 1, 1, 1, 1].map((data) => {
-              return (
-                <div className="border-b border-[#EAECF0] h-[60px]">
-                  <div className="flex justify-between items-center mb-3">
-                    <div className="basis-[70%]">
-                      <p className="font-bold text-sm">Andi Lane</p>
-                      <p className="text-sm">Andilane@gmail.com</p>
-                    </div>
-                    <p className="text-sm basis-[20%]">3,000 Collected</p>
-                    <p className="basis-[10%]">
-                      <AiOutlineRight />
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-      <div className="h-max border border-gray-300 rounded-md mb-10 p-2">
-        <div className="flex justify-between items-center border-b border-gray-300 mb-10 h-20 p-4">
-          <div>
-            <p className="font-bold">State Locations</p>
-          </div>
-        </div>
-        <div className="h-[500px] flex items-center justify-center">
-          <div className="basis-[50%] h-full">
-            <BarChart
-              data={barData}
-              outerRadius={200}
-              // width={200}
-              // height={200}
-            />
-          </div>
-          <div className="basis-[50%] flex items-center justify-center p-2 bg-[#F9FAFB] rounded-md">
-            <div className="flex flex-wrap gap-16 basis-[90%]">
-              {[
-                { color: "#0088FE" },
-                { color: "#00C49F" },
-                { color: "#FFBB28" },
-                { color: "#FF8042" },
-                { color: "#0088FE" },
-                { color: "#00C49F" },
-                { color: "#FFBB28" },
-                { color: "#FF8042" },
-                { color: "#0088FE" },
-                { color: "#00C49F" },
-              ].map((data) => {
+        <div className="w-11/12 p-4 rounded-md">
+          <div className="flex gap-4">
+            <div className="basis-[50%] bg-[#ECFDF3] p-4 rounded-md">
+              <h1 className="h-[49px] border-b border-[#EAECF0] mb-5 font-bold">
+                Top 5 Aggregators
+              </h1>
+              {[1, 1, 1, 1, 1].map((data) => {
                 return (
-                  <div className="flex gap-2 basis-[112px] h-[54px]">
-                    <div
-                      className={`rounded-full w-[12px] h-[12px] mt-2`}
-                      style={{ backgroundColor: `${data.color}` }}
-                    ></div>
-                    <div className="mt-1">
-                      <p className="text-sm mb-1">Ajingi</p>
-                      <p className="font-bold">2,000</p>
+                  <div className="border-b border-[#EAECF0] h-[60px]">
+                    <div className="flex justify-between items-center mb-3">
+                      <div className="basis-[70%]">
+                        <p className="font-bold text-sm">Andi Lane</p>
+                        <p className="text-sm">Andilane@gmail.com</p>
+                      </div>
+                      <p className="text-sm basis-[20%]">3,000 Collected</p>
+                      <p className="basis-[10%]">
+                        <AiOutlineRight />
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="basis-[50%] bg-[#F9F5FF] p-4 rounded-md">
+              <h1 className="h-[49px] border-b border-[#EAECF0] mb-5 font-bold">
+                Top 5 Collectors
+              </h1>
+              {[1, 1, 1, 1, 1].map((data) => {
+                return (
+                  <div className="border-b border-[#EAECF0] h-[60px]">
+                    <div className="flex justify-between items-center mb-3">
+                      <div className="basis-[70%]">
+                        <p className="font-bold text-sm">Andi Lane</p>
+                        <p className="text-sm">Andilane@gmail.com</p>
+                      </div>
+                      <p className="text-sm basis-[20%]">3,000 Collected</p>
+                      <p className="basis-[10%]">
+                        <AiOutlineRight />
+                      </p>
                     </div>
                   </div>
                 );
@@ -270,4 +231,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default AdminDashboard;
