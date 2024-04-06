@@ -59,6 +59,20 @@ const data2 = [
     image: rafiki,
     css: "bg-white border border-gray-300",
   },
+  {
+    title: "Total Collector",
+    subtitle: "4,086",
+    figure: "16 states",
+    image: Character2,
+    css: "bg-[#FFFAEB]",
+  },
+  {
+    title: "Total Recyclers",
+    subtitle: "586",
+    figure: "16 states",
+    image: rafiki,
+    css: "bg-white border border-gray-300",
+  },
 ];
 const AdminDashboard = () => {
   const { closeNav } = useNav();
@@ -129,7 +143,7 @@ const AdminDashboard = () => {
         <div className="flex justify-between mb-3">
           <p className="font-bold">Participants Metrics</p>
         </div>
-        <div className="flex w-full gap-4">
+        <div className="flex flex-wrap w-full gap-4">
           {data2.map(({ title, subtitle, figure, image, css }) => {
             return (
               <>
@@ -139,7 +153,7 @@ const AdminDashboard = () => {
                   figure={figure}
                   image={image}
                   css={`
-                    ${css} h-max basis-1/2
+                    ${css} h-max basis-[49%]
                   `}
                   icon={true}
                   imageHeight={"h-[96px] w-[68px]"}
