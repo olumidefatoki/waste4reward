@@ -6,7 +6,7 @@ import InputText from "../input/InputText";
 import InputSelect from "../input/InputSelect";
 import { IoCloseOutline } from "react-icons/io5";
 
-export const RecyclerModal = ({ model, closeModal }) => {
+export const EditWaybillModal = ({ model, closeModal }) => {
   const modalRef = useRef(null);
   const [isLoading, setisLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -20,14 +20,14 @@ export const RecyclerModal = ({ model, closeModal }) => {
   return (
     <form className="flex flex-col gap-y-2 w-[640px] bg-white p-4 h-max">
       <div className="flex justtify-between">
-        <PiUsers style={{ width: 26, height: 26 }} />
+        <PiUsers style={{ width: 26, height: 26, cursor: "pointer" }} />
         <IoCloseOutline
           style={{ width: 26, height: 26, cursor: "pointer" }}
           onClick={() => closeModal()}
         />
       </div>
       <div className="">
-        <h1 className="capitalize font-bold">Create new Recycler</h1>
+        <h1 className="capitalize font-bold">Create new Waybill</h1>
         <p className="text-sm">Enter the details below</p>
       </div>
       <div className="flex justify-between">
@@ -61,7 +61,7 @@ export const RecyclerModal = ({ model, closeModal }) => {
           onClick={() => onSubmit()}
           className="bg-green-700 text-white flex justify-center items-center h-[40px] w-full gap-2"
         >
-          Create Recycler
+          Save Changes
         </button>
       </div>
     </form>

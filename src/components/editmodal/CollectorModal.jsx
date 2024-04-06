@@ -2,11 +2,11 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useRef, useState } from "react";
 import { PiUsers } from "react-icons/pi";
+import { IoCloseOutline } from "react-icons/io5";
 import InputText from "../input/InputText";
 import InputSelect from "../input/InputSelect";
-import { IoCloseOutline } from "react-icons/io5";
 
-export const RecyclerModal = ({ model, closeModal }) => {
+export const EditCollectorModal = ({ model, closeModal }) => {
   const modalRef = useRef(null);
   const [isLoading, setisLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -19,7 +19,7 @@ export const RecyclerModal = ({ model, closeModal }) => {
 
   return (
     <form className="flex flex-col gap-y-2 w-[640px] bg-white p-4 h-max">
-      <div className="flex justtify-between">
+      <div className="flex justify-between">
         <PiUsers style={{ width: 26, height: 26 }} />
         <IoCloseOutline
           style={{ width: 26, height: 26, cursor: "pointer" }}
@@ -27,12 +27,19 @@ export const RecyclerModal = ({ model, closeModal }) => {
         />
       </div>
       <div className="">
-        <h1 className="capitalize font-bold">Create new Recycler</h1>
+        <h1 className="capitalize font-bold">Create new Collector</h1>
         <p className="text-sm">Enter the details below</p>
       </div>
       <div className="flex justify-between">
         <InputText label={"FirstName"} placeholder={"Enter first name"} />
         <InputText label={"LastName"} placeholder={"Enter last name"} />
+      </div>
+      <div className="flex justify-between w-full">
+        <InputSelect label={"Gender"} options={["Select gender"]} />
+        <InputSelect
+          label={"Disability Status"}
+          options={["Select disability status"]}
+        />
       </div>
       <div className="w-full">
         <InputText label={"Phone Number"} placeholder={"Enter phone number"} />
@@ -40,15 +47,12 @@ export const RecyclerModal = ({ model, closeModal }) => {
       <div className="w-full">
         <InputText label={"Email Adress"} placeholder={"Enter email address"} />
       </div>
+      <div className="w-full">
+        <InputText label={"Adress"} placeholder={"Enter address"} />
+      </div>
       <div className="flex justify-between w-full">
         <InputSelect label={"State"} options={["select state"]} />
         <InputSelect label={"Lga"} options={["select lgs"]} />
-      </div>
-      <div className="w-full mb-10">
-        <InputText
-          label={"Year of Incorporation"}
-          placeholder={"Enter year of incorporation"}
-        />
       </div>
       <div className="flex gap-2 justify-center">
         <button
@@ -61,7 +65,7 @@ export const RecyclerModal = ({ model, closeModal }) => {
           onClick={() => onSubmit()}
           className="bg-green-700 text-white flex justify-center items-center h-[40px] w-full gap-2"
         >
-          Create Recycler
+          Save Changes
         </button>
       </div>
     </form>

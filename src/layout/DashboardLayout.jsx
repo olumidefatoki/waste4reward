@@ -23,7 +23,7 @@ const DashboardLayout = () => {
               closeNav ? "w-full pl-[100px]" : "w-full pl-[280px]"
             }`}
           >
-            <div className="p-2">
+            <div className="">
               <Header />
             </div>
             <Outlet />

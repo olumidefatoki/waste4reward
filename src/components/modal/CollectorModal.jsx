@@ -19,10 +19,10 @@ export const CollectorModal = ({ model, closeModal }) => {
 
   return (
     <form className="flex flex-col gap-y-2 w-[640px] bg-white p-4 h-max">
-      <div className="flex justtify-between">
-        <PiUsers style={{ width: 26, height: 26, cursor: "pointer" }} />
+      <div className="flex justify-between">
+        <PiUsers style={{ width: 26, height: 26 }} />
         <IoCloseOutline
-          style={{ width: 26, height: 26 }}
+          style={{ width: 26, height: 26, cursor: "pointer" }}
           onClick={() => closeModal()}
         />
       </div>
@@ -34,21 +34,25 @@ export const CollectorModal = ({ model, closeModal }) => {
         <InputText label={"FirstName"} placeholder={"Enter first name"} />
         <InputText label={"LastName"} placeholder={"Enter last name"} />
       </div>
+      <div className="flex justify-between w-full">
+        <InputSelect label={"Gender"} options={["Select gender"]} />
+        <InputSelect
+          label={"Disability Status"}
+          options={["Select disability status"]}
+        />
+      </div>
       <div className="w-full">
         <InputText label={"Phone Number"} placeholder={"Enter phone number"} />
       </div>
       <div className="w-full">
         <InputText label={"Email Adress"} placeholder={"Enter email address"} />
       </div>
+      <div className="w-full">
+        <InputText label={"Adress"} placeholder={"Enter address"} />
+      </div>
       <div className="flex justify-between w-full">
         <InputSelect label={"State"} options={["select state"]} />
         <InputSelect label={"Lga"} options={["select lgs"]} />
-      </div>
-      <div className="w-full mb-10">
-        <InputText
-          label={"Year of Incorporation"}
-          placeholder={"Enter year of incorporation"}
-        />
       </div>
       <div className="flex gap-2 justify-center">
         <button

@@ -2,7 +2,15 @@ import React from "react";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import InputSelect from "../input/InputSelect";
 
-const DashCard = ({ title, subtitle, figure, image, css, imageHeight }) => {
+const DashCard = ({
+  title,
+  subtitle,
+  figure,
+  image,
+  css,
+  imageHeight,
+  unit,
+}) => {
   return (
     <div
       className={`flex flex-col justify-center w-[391px] min-h-[122px] ${css} rounded-md`}
@@ -14,10 +22,14 @@ const DashCard = ({ title, subtitle, figure, image, css, imageHeight }) => {
       <div className="flex justify-between items-end place-content-between h-full">
         <div className="p-3">
           <div className="flex gap-2">
-            <p className="font-bold">{subtitle}</p>
-            <p className="text-green-400">MT</p>
+            <p className="font-bold text-2xl">{subtitle}</p>
+            {unit ? (
+              <p className="text-green-400 justify-self-end">{unit}</p>
+            ) : (
+              ""
+            )}
           </div>
-          <p>{figure}</p>
+          {figure ? <p>{figure}</p> : ""}
         </div>
         <div className={`${imageHeight}`}>
           <img

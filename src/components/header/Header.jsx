@@ -3,9 +3,9 @@ import Avater from "../../assets/images/Avatar.png";
 
 const Header = () => {
   return (
-    <div className="w-full flex justify-between items-center h-[74px] p-2">
-      <div className="w-40 h-7 ">
-        <select className="w-full bg-black text-white h-full">
+    <div className="w-full flex justify-between items-center h-[74px] border-b border-gray-300 p-2">
+      <div className="">
+        <select className="w-[231px] bg-black text-white h-[44px] rounded-md p-2">
           <option>Eci program</option>
         </select>
       </div>

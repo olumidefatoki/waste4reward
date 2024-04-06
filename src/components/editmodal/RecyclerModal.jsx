@@ -6,7 +6,7 @@ import InputText from "../input/InputText";
 import InputSelect from "../input/InputSelect";
 import { IoCloseOutline } from "react-icons/io5";
 
-export const RecyclerModal = ({ model, closeModal }) => {
+export const EditRecyclerModal = ({ model, closeModal }) => {
   const modalRef = useRef(null);
   const [isLoading, setisLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -61,7 +61,7 @@ export const RecyclerModal = ({ model, closeModal }) => {
           onClick={() => onSubmit()}
           className="bg-green-700 text-white flex justify-center items-center h-[40px] w-full gap-2"
         >
-          Create Recycler
+          Save Changes
         </button>
       </div>
     </form>

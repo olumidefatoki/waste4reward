@@ -61,7 +61,7 @@ export const AggregatorModal = ({ model, closeModal }) => {
           onClick={() => onSubmit()}
           className="bg-green-700 text-white flex justify-center items-center h-[40px] w-full gap-2"
         >
-          Create Aggregator
+          Save Changes
         </button>
       </div>
     </form>

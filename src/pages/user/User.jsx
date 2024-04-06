@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import TopCard from "../../components/card/TopCard";
 import CustomTable from "../../components/table/CustomTable";
 import { GoPlus } from "react-icons/go";
@@ -11,6 +11,9 @@ import Modal from "../../components/Modal";
 import { UserModal } from "../../components/modal/UserModal";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
+import ViewDetail from "../../components/modal/ViewDetail";
+import PaginationPane from "../../components/table/PaginationPane";
+import { EditUserModal } from "../../components/editmodal/UserModal";
 
 const headers = ["Company", "Email Address", "Phone Number", "State"];
 const rows = [
@@ -39,9 +42,24 @@ const rows = [
     state: "Sagamu",
   },
 ];
+
+const detail = {
+  "first Name": "Jehoshe",
+  "last Name": "Baidera",
+  "phone Number": "080331485238",
+  "email Address": "Jehoshebaidera@gmail.com",
+  address: "Wuse zone 3 Near Access bank Abuja, Nigeria",
+  state: "Sagamu",
+  lga: "amu",
+  "year of incorporation": "14 January 2024",
+  dateCreated: "14 January 2024",
+};
 const User = () => {
   const wrapperRef = useRef(null);
   const [showModal, setShowModal] = useOutsideClick(wrapperRef);
+  const [viewDetail, setViewDetail] = useState(false);
+  const [editDetail, setEditDetail] = useState(false);
+
   return (
     <div className="p-4">
       <div className="mb-10">
@@ -84,11 +102,12 @@ const User = () => {
             email: data.email,
             phone_number: data.phone_number,
             state: data.state,
-            edit: <MdOutlineRemoveRedEye />,
-            open: <FiEdit />,
+            edit: <MdOutlineRemoveRedEye onClick={() => setViewDetail(true)} />,
+            open: <FiEdit onClick={() => setEditDetail(true)} />,
           };
         })}
       />
+      <PaginationPane />
       {showModal && (
         <Modal
           variant="default"
@@ -96,6 +115,31 @@ const User = () => {
           closeModal={() => setShowModal(false)}
         >
           <UserModal />
+        </Modal>
+      )}
+      {editDetail && (
+        <Modal
+          variant="default"
+          refProp={wrapperRef}
+          closeModal={() => setEditDetail(false)}
+        >
+          <EditUserModal closeModal={() => setEditDetail(false)} />
+        </Modal>
+      )}
+      {viewDetail && (
+        <Modal
+          variant="default"
+          refProp={wrapperRef}
+          closeModal={() => setViewDetail(false)}
+        >
+          <ViewDetail
+            detail={detail}
+            closeModal={() => setViewDetail(false)}
+            title={"User Details"}
+            subtitle={"User details below"}
+            dateCreated={"14 January 2024"}
+            editbutton={true}
+          />
         </Modal>
       )}
     </div>

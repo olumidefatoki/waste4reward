@@ -20,9 +20,9 @@ export const WaybillModal = ({ model, closeModal }) => {
   return (
     <form className="flex flex-col gap-y-2 w-[640px] bg-white p-4 h-max">
       <div className="flex justtify-between">
-        <PiUsers style={{ width: 26, height: 26, cursor: "pointer" }} />
+        <PiUsers style={{ width: 26, height: 26 }} />
         <IoCloseOutline
-          style={{ width: 26, height: 26 }}
+          style={{ width: 26, height: 26, cursor: "pointer" }}
           onClick={() => closeModal()}
         />
       </div>

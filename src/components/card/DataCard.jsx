@@ -12,11 +12,7 @@ const DataCard = ({
   imageHeight,
 }) => {
   return (
-    <div
-      className={`flex flex-col justify-center   ${
-        css ? css : "w-full h-max"
-      } rounded-md`}
-    >
+    <div className={`flex flex-col justify-center ${css} rounded-md`}>
       <div className="flex justify-between items-center gap-2 pl-2 pt-4">
         <p>{title}</p>
         {icon ? (
@@ -28,14 +24,15 @@ const DataCard = ({
       <div className="flex justify-between items-end place-content-between h-full p-2">
         <div className="">
           <div className="flex gap-2">
-            <p className="font-bold">{subtitle}</p>
+            <p className="font-bold text-xl">{subtitle}</p>
           </div>
           {figure && <p>{figure}</p>}
         </div>
-        <div className={`${imageHeight}`}>
+        <div className={`${imageHeight} flex`}>
           <img
             src={image}
             alt="bottle water"
+            className="justify-self-end"
             style={{ width: "100%", height: "auto", objectFit: "contain" }}
           />
         </div>

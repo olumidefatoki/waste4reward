@@ -15,11 +15,11 @@ const TopCard = ({
         <p className="text-sm">{subtitle}</p>
       </div>
       <div className="flex gap-2">
-        <button className="flex justify-center items-center h-[40px] w-[101px] border border-gray-300 gap-2">
+        <button className="flex justify-center items-center h-[40px] w-[101px] border border-gray-300 gap-2 rounded-md">
           <IoCloudDownloadOutline /> Export
         </button>
         <button
-          className="bg-green-700 text-white flex justify-center items-center h-[40px] w-[167px] gap-2"
+          className="bg-green-700 text-white flex justify-center items-center h-[40px] w-[167px] gap-2 rounded-md"
           onClick={() => setShowModal()}
         >
           <Icon /> {buttonTitle}

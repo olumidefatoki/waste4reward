@@ -8,10 +8,13 @@ import InputSearch from "../../components/input/InputSearch";
 import Character from "../../assets/images/Characters.png";
 import Modal from "../../components/Modal";
 import { AggregatorModal } from "../../components/modal/AggregatorModal";
+import { EditAggregatorModal } from "../../components/editmodal/AggregatorModal";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import ViewDetail from "../../components/modal/ViewDetail";
+import PaginationTab from "../../components/table/PaginationTab";
+import PaginationPane from "../../components/table/PaginationPane";
 
 const headers = ["Company", "Email Address", "Phone Number", "State"];
 const rows = [
@@ -64,6 +67,7 @@ const Aggregator = () => {
   const [order, setOrder] = useState(0);
   const [allChecked, setAllChecked] = useState(false);
   const [viewDetail, setViewDetail] = useState(false);
+  const [editDetail, setEditDetail] = useState(false);
 
   const handleChangePage = (newPage) => {
     setPage(newPage);
@@ -117,17 +121,18 @@ const Aggregator = () => {
             phone_number: data.phone_number,
             state: data.state,
             edit: <MdOutlineRemoveRedEye onClick={() => setViewDetail(true)} />,
-            open: <FiEdit />,
+            open: <FiEdit onClick={() => setEditDetail(true)} />,
           };
         })}
       />
+      <PaginationPane />
       {showModal && (
         <Modal
           variant="default"
           refProp={wrapperRef}
           closeModal={() => setShowModal(false)}
         >
-          <AggregatorModal />
+          <AggregatorModal closeModal={() => setShowModal(false)} />
         </Modal>
       )}
       {viewDetail && (
@@ -136,7 +141,23 @@ const Aggregator = () => {
           refProp={wrapperRef}
           closeModal={() => setViewDetail(false)}
         >
-          <ViewDetail detail={detail} closeModal={() => setViewDetail(false)} />
+          <ViewDetail
+            detail={detail}
+            closeModal={() => setViewDetail(false)}
+            title={"Aggregator Details"}
+            subtitle={"Aggregator details below"}
+            dateCreated={"14 January 2024"}
+            editbutton={true}
+          />
+        </Modal>
+      )}
+      {editDetail && (
+        <Modal
+          variant="default"
+          refProp={wrapperRef}
+          closeModal={() => setEditDetail(false)}
+        >
+          <EditAggregatorModal closeModal={() => setEditDetail(false)} />
         </Modal>
       )}
     </div>

@@ -30,7 +30,7 @@ const SignIn = () => {
             action="https://waste4reward.org/dologin"
             method="POST"
           >
-            <div class="mb-3">
+            <div class="mb-3 w-full">
               <label class="form-label" for="username">
                 Username
               </label>
@@ -52,7 +52,7 @@ const SignIn = () => {
               </div>
             </div>
 
-            <div class="mb-3 ">
+            <div class="mb-3 w-full">
               <label class="form-label" for="userpassword">
                 Password
               </label>
