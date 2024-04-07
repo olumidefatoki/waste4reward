@@ -9,8 +9,12 @@ const InputSelect = ({ options = [], label, css }) => {
           css ? css : "w-[280px]"
         } p-2 rounded-md`}
       >
-        {options.map((data) => {
-          return <option className="p-2">{data}</option>;
+        {options.map((data, index) => {
+          return (
+            <option className="p-2" key={index}>
+              {data}
+            </option>
+          );
         })}
       </select>
     </div>

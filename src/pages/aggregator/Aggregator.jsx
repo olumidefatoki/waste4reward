@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CustomTable from "../../components/table/CustomTable";
 import TopCard from "../../components/card/TopCard";
 import { GoPlus } from "react-icons/go";
@@ -15,6 +15,9 @@ import { FiEdit } from "react-icons/fi";
 import ViewDetail from "../../components/modal/ViewDetail";
 import PaginationTab from "../../components/table/PaginationTab";
 import PaginationPane from "../../components/table/PaginationPane";
+import useAggregator from "../../hooks/useAggregator";
+import fetcher from "../../api/fetacher";
+import { getLga, getState } from "../../ds/resource";
 
 const headers = ["Company", "Email Address", "Phone Number", "State"];
 const rows = [
@@ -62,12 +65,45 @@ const detail = {
 const Aggregator = () => {
   const wrapperRef = useRef(null);
   const [showModal, setShowModal] = useOutsideClick(wrapperRef);
-  const [page, setPage] = useState(0);
+  const { gatAllAggregators } = useAggregator();
   const [orderBy, setOrderBy] = useState(0);
   const [order, setOrder] = useState(0);
   const [allChecked, setAllChecked] = useState(false);
   const [viewDetail, setViewDetail] = useState(false);
   const [editDetail, setEditDetail] = useState(false);
+  const [aggregators, setAggregators] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [states, setStates] = useState([]);
+  const [lga, setLga] = useState([]);
+  const limit = 10;
+
+  useEffect(() => {
+    const getAggregators = async () => {
+      const res = await gatAllAggregators(page, limit);
+      console.log({ res });
+      setTotalPages(res.data.totalPages);
+      setAggregators(res.data?.content);
+    };
+    getAggregators();
+  }, [page]);
+
+  useEffect(() => {
+    const getAllState = async () => {
+      const res = await getState();
+      console.log({ res }, "state");
+      setStates(res.data);
+    };
+    getAllState();
+  }, []);
+  useEffect(() => {
+    const getAllLga = async () => {
+      const res = await getLga();
+      console.log({ res }, "lga");
+      setLga(res.data);
+    };
+    getAllLga();
+  }, []);
 
   const handleChangePage = (newPage) => {
     setPage(newPage);
@@ -99,8 +135,8 @@ const Aggregator = () => {
       </div>
       <div className="mb-10 flex justify-between">
         <div className="flex gap-2">
-          <InputSelect options={["state"]} />
-          <InputSelect options={["lga"]} />
+          <InputSelect options={states.map((data) => data.name)} />
+          <InputSelect options={lga.map((data) => data.name)} />
         </div>
         <div className="min-w-[160px]">
           <InputSearch placeholder={"search"} />
@@ -108,24 +144,29 @@ const Aggregator = () => {
       </div>
       <CustomTable
         headers={headers}
-        rows={rows.map((data, index) => {
+        rows={aggregators?.map((data, index) => {
           return {
             checkbox: <input type="checkbox" />,
             company: (
               <div className="flex flex-col">
-                <p>{data.company}</p>
+                <p>{data.name}</p>
                 <p>{data.address}</p>
               </div>
             ),
             email: data.email,
-            phone_number: data.phone_number,
+            phone_number: data.phoneNumber,
             state: data.state,
             edit: <MdOutlineRemoveRedEye onClick={() => setViewDetail(true)} />,
             open: <FiEdit onClick={() => setEditDetail(true)} />,
           };
         })}
       />
-      <PaginationPane />
+      <PaginationPane
+        currentPage={page}
+        totalPages={totalPages}
+        nextPage={() => setPage((prev) => prev + 1)}
+        prevPage={() => setPage((prev) => (prev > 0 ? prev - 1 : prev))}
+      />
       {showModal && (
         <Modal
           variant="default"

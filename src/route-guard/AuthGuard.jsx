@@ -1,37 +1,23 @@
-// import { useEffect } from "react";
-// import PropTypes from "prop-types";
-// import { useLocation, useNavigate } from "react-router-dom";
-// import { Auth } from "aws-amplify";
+import { useEffect } from "react";
+import PropTypes from "prop-types";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Auth } from "aws-amplify";
+import { useSelector } from "react-redux";
 
-// const AuthGuard = ({ children }) => {
-//   /* const { islogin } = useSelector((state) => state.auth); */
-//   const navigate = useNavigate();
-//   const location = useLocation();
-//   const pathname = location.pathname;
+const AuthGuard = ({ children }) => {
+  const { islogin } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const accessToken = localStorage.getItem("accessToken");
 
-//   useEffect(() => {
-//     const checkUser = async () => {
-//       try {
-//         await Auth.currentAuthenticatedUser();
-//       } catch (error) {
-//         navigate(`/signin/?redirectUrl=${pathname}`, { replace: true });
-//       }
-//     };
+  useEffect(() => {
+    if (!islogin && !accessToken) {
+      navigate("/");
+    }
 
-//     checkUser();
+    return () => {};
+  }, [navigate]);
 
-//     return () => {};
-//   }, [navigate]);
+  return children;
+};
 
-//   return children;
-// };
-
-// AuthGuard.defaultProps = {
-//   children: null,
-// };
-
-// AuthGuard.propTypes = {
-//   children: PropTypes.node,
-// };
-
-// export default AuthGuard;
+export default AuthGuard;

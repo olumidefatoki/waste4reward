@@ -2,24 +2,33 @@ import React, { useState } from "react";
 import Logo from "../../assets/images/logo_large.png";
 import { GoGear } from "react-icons/go";
 import { BsBoxArrowRight } from "react-icons/bs";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { PiArrowFatLinesRight, PiArrowFatLinesLeft } from "react-icons/pi";
 import useNav from "../../hooks/useNav";
+import { useDispatch } from "react-redux";
+import { logout } from "../../feature/auth";
 
-const navs2 = [
-  {
-    route: "/settings",
-    name: "Settings",
-    Icon: GoGear,
-  },
-  {
-    route: "/logout",
-    name: "Logout",
-    Icon: BsBoxArrowRight,
-  },
-];
 const DashboardSidebar = ({ setCloseNav, closeNav, navs = [] }) => {
   let location = useLocation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const logout = () => {
+    dispatch(logout());
+    navigate("/");
+  };
+  const navs2 = [
+    {
+      route: "/settings",
+      name: "Settings",
+      Icon: GoGear,
+    },
+    {
+      route: "#",
+      name: "Logout",
+      Icon: BsBoxArrowRight,
+      action: logout,
+    },
+  ];
   return (
     <div
       className={`fixed top-0 bottom-0 h-screen mb-30 
@@ -86,9 +95,13 @@ const DashboardSidebar = ({ setCloseNav, closeNav, navs = [] }) => {
         </div>
         <div className="mb-20">
           <ul>
-            {navs2.map(({ Icon, name, route }, index) => {
+            {navs2.map(({ Icon, name, route, action }, index) => {
               return (
-                <Link to={`${route}`} key={`set-${index}`}>
+                <Link
+                  to={`${route}`}
+                  key={`set-${index}`}
+                  onClick={() => action()}
+                >
                   <li className="flex items-center gap-4 h-10 p-2">
                     <Icon style={{ width: 24, height: 24 }} />
                     {closeNav ? "" : name}

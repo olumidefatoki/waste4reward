@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import BottleWater from "../../assets/images/bottle-of-water.png";
 import DashCard from "../../components/card/DashCard";
@@ -14,6 +14,9 @@ import Granular from "../../assets/images/granular.png";
 import Pana from "../../assets/images/pana.png";
 import { AiOutlineRight } from "react-icons/ai";
 import BarChart from "../../components/charts/BarChart";
+import useAuth from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import useResource from "../../hooks/useResource";
 
 const data = [
   {
@@ -78,7 +81,32 @@ const barData = [
 ];
 const Dashboard = () => {
   const { closeNav } = useNav();
-  console.log({ closeNav });
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [typeOfPlastic, setTypeOfPlastic] = useState([]);
+  const [sourceOfPlastic, setSourceOfPlastic] = useState([]);
+  const { getAllSourceOfPlastics, getAllTypeOfPlastics } = useResource();
+  // console.log({ user });
+  useEffect(() => {
+    if (user?.userType === "SUPER_ADMIN") {
+      navigate("/admin", { replace: true });
+    }
+  }, []);
+  useEffect(() => {
+    const getSourceOfPlastic = async () => {
+      const res = await getAllSourceOfPlastics();
+      setSourceOfPlastic(res.data);
+    };
+    getSourceOfPlastic();
+  }, []);
+  useEffect(() => {
+    const getTypeOfPlastic = async () => {
+      const res = await getAllTypeOfPlastics();
+      setTypeOfPlastic(res.data);
+    };
+    getTypeOfPlastic();
+  }, []);
+
   return (
     <div className="p-4 h-max">
       <div className="mb-5">
@@ -104,22 +132,25 @@ const Dashboard = () => {
           </div>
           <div className="flex">
             <div className="flex flex-wrap gap-4 ">
-              {data.map(({ title, subtitle, figure, image, css, unit }) => {
-                return (
-                  <>
-                    <DashCard
-                      title={title}
-                      subtitle={subtitle}
-                      figure={figure}
-                      image={image}
-                      unit={unit}
-                      css={`
-                        ${css} basis-[48%]
-                      `}
-                    />
-                  </>
-                );
-              })}
+              {data.map(
+                ({ title, subtitle, figure, image, css, unit }, index) => {
+                  return (
+                    <>
+                      <DashCard
+                        key={`dash-${index}`}
+                        title={title}
+                        subtitle={subtitle}
+                        figure={figure}
+                        image={image}
+                        unit={unit}
+                        css={`
+                          ${css} basis-[48%]
+                        `}
+                      />
+                    </>
+                  );
+                }
+              )}
             </div>
             <div className="flex justify-center basis-[30%]">
               <div className="flex  flex-col items-center justify-center h-[268px] bg-blue-100 rounded-md">
@@ -146,10 +177,11 @@ const Dashboard = () => {
           <p className="font-bold">Participants Metrics</p>
         </div>
         <div className="flex w-full gap-4">
-          {data2.map(({ title, subtitle, figure, image, css }) => {
+          {data2.map(({ title, subtitle, figure, image, css }, index) => {
             return (
               <>
                 <DataCard
+                  key={`dat-${index}`}
                   title={title}
                   subtitle={subtitle}
                   figure={figure}
@@ -189,9 +221,9 @@ const Dashboard = () => {
             Top 5 collectors
           </h1>
           <div className="w-11/12 ">
-            {[1, 1, 1, 1, 1].map((data) => {
+            {[1, 1, 1, 1, 1].map((data, index) => {
               return (
-                <div className="border-b border-[#EAECF0] h-[60px]">
+                <div className="border-b border-[#EAECF0] h-[60px]" key={index}>
                   <div className="flex justify-between items-center mb-3">
                     <div className="basis-[70%]">
                       <p className="font-bold text-sm">Andi Lane</p>
@@ -236,9 +268,12 @@ const Dashboard = () => {
                 { color: "#FF8042" },
                 { color: "#0088FE" },
                 { color: "#00C49F" },
-              ].map((data) => {
+              ].map((data, index) => {
                 return (
-                  <div className="flex gap-2 basis-[112px] h-[54px]">
+                  <div
+                    className="flex gap-2 basis-[112px] h-[54px]"
+                    key={index}
+                  >
                     <div
                       className={`rounded-full w-[12px] h-[12px] mt-2`}
                       style={{ backgroundColor: `${data.color}` }}

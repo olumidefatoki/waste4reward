@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import TopCard from "../../components/card/TopCard";
 import CustomTable from "../../components/table/CustomTable";
 import { GoPlus } from "react-icons/go";
@@ -14,34 +14,11 @@ import { FiEdit } from "react-icons/fi";
 import ViewDetail from "../../components/modal/ViewDetail";
 import PaginationPane from "../../components/table/PaginationPane";
 import { EditCollectorModal } from "../../components/editmodal/CollectorModal";
+import { gatAllCollector } from "../../ds/collectors";
+import { getLga, getState } from "../../ds/resource";
+import useCollector from "../../hooks/useCollector";
 
 const headers = ["Company", "Email Address", "Phone Number", "State"];
-const rows = [
-  {
-    company: "JDSL Recycling Limited",
-    email: "	Jehoshebaidera@gmail.com",
-    phone_number: "080331485238",
-    state: "Sagamu",
-  },
-  {
-    company: "JDSL Recycling Limited",
-    email: "	Jehoshebaidera@gmail.com",
-    phone_number: "080331485238",
-    state: "Sagamu",
-  },
-  {
-    company: "JDSL Recycling Limited",
-    email: "	Jehoshebaidera@gmail.com",
-    phone_number: "080331485238",
-    state: "Sagamu",
-  },
-  {
-    company: "JDSL Recycling Limited",
-    email: "	Jehoshebaidera@gmail.com",
-    phone_number: "080331485238",
-    state: "Sagamu",
-  },
-];
 
 const detail = {
   "first Name": "Jehoshe",
@@ -59,6 +36,41 @@ const Collector = () => {
   const [showModal, setShowModal] = useOutsideClick(wrapperRef);
   const [viewDetail, setViewDetail] = useState(false);
   const [editDetail, setEditDetail] = useState(false);
+  const { gatAllCollectors } = useCollector();
+
+  const [collectors, setCollectors] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [states, setStates] = useState([]);
+  const [lga, setLga] = useState([]);
+  const limit = 10;
+
+  useEffect(() => {
+    const getAggregators = async () => {
+      const res = await gatAllCollectors(page, limit);
+      console.log({ res });
+      setTotalPages(res.data.totalPages);
+      setCollectors(res.data?.content);
+    };
+    getAggregators();
+  }, [page]);
+
+  useEffect(() => {
+    const getAllState = async () => {
+      const res = await getState();
+      console.log({ res }, "state");
+      setStates(res.data);
+    };
+    getAllState();
+  }, []);
+  useEffect(() => {
+    const getAllLga = async () => {
+      const res = await getLga();
+      console.log({ res }, "lga");
+      setLga(res.data);
+    };
+    getAllLga();
+  }, []);
 
   return (
     <div className="p-4">
@@ -82,8 +94,8 @@ const Collector = () => {
       </div>
       <div className="mb-10 flex justify-between">
         <div className="flex gap-2">
-          <InputSelect options={["state"]} />
-          <InputSelect options={["lga"]} />
+          <InputSelect options={states.map((data) => data.name)} />
+          <InputSelect options={lga.map((data) => data.name)} />
         </div>
         <div>
           <InputSearch placeholder={"search"} />
@@ -91,7 +103,7 @@ const Collector = () => {
       </div>
       <CustomTable
         headers={headers}
-        rows={rows.map((data, index) => {
+        rows={collectors.map((data, index) => {
           return {
             checkbox: <input type="checkbox" />,
             company: (
@@ -108,7 +120,12 @@ const Collector = () => {
           };
         })}
       />
-      <PaginationPane />
+      <PaginationPane
+        currentPage={page}
+        totalPages={totalPages}
+        nextPage={() => setPage((prev) => prev + 1)}
+        prevPage={() => setPage((prev) => (prev > 0 ? prev - 1 : prev))}
+      />
       {showModal && (
         <Modal
           variant="default"

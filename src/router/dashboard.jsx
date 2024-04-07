@@ -9,12 +9,17 @@ import User from "../pages/user";
 import Waybill from "../pages/waybill";
 import Admin from "../pages/admin";
 import AdminDashboard from "../pages/admin/dashboard/Dashboard";
+import AuthGuard from "../route-guard/AuthGuard";
 
 export const getDashboardRouter = () => {
   return [
     {
       path: "/",
-      element: <DashboardLayout />,
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
       // errorElement: <ErrorPage />,
       children: [
         {
@@ -60,7 +65,11 @@ export const getDashboardRouter = () => {
     },
     {
       path: "admin",
-      element: <Admin />,
+      element: (
+        <AuthGuard>
+          <Admin />
+        </AuthGuard>
+      ),
       // errorElement: <ErrorPage />,
       children: [
         {

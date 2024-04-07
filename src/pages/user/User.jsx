@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import TopCard from "../../components/card/TopCard";
 import CustomTable from "../../components/table/CustomTable";
 import { GoPlus } from "react-icons/go";
@@ -14,6 +14,8 @@ import { FiEdit } from "react-icons/fi";
 import ViewDetail from "../../components/modal/ViewDetail";
 import PaginationPane from "../../components/table/PaginationPane";
 import { EditUserModal } from "../../components/editmodal/UserModal";
+import useUser from "../../hooks/useUser";
+import useResource from "../../hooks/useResource";
 
 const headers = ["Company", "Email Address", "Phone Number", "State"];
 const rows = [
@@ -60,6 +62,43 @@ const User = () => {
   const [viewDetail, setViewDetail] = useState(false);
   const [editDetail, setEditDetail] = useState(false);
 
+  const { gatAllUsers } = useUser();
+  const { getAllStates, getAllLgas } = useResource();
+
+  const [users, setUsers] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [states, setStates] = useState([]);
+  const [lga, setLga] = useState([]);
+  const limit = 10;
+
+  useEffect(() => {
+    const getRecyclers = async () => {
+      const res = await gatAllUsers(page, limit);
+      console.log({ res });
+      setTotalPages(res.data.totalPages);
+      setUsers(res.data?.content);
+    };
+    getRecyclers();
+  }, [page]);
+
+  useEffect(() => {
+    const getAllState = async () => {
+      const res = await getAllStates();
+      console.log({ res }, "state");
+      setStates(res.data);
+    };
+    getAllState();
+  }, []);
+  useEffect(() => {
+    const getAllLga = async () => {
+      const res = await getAllLgas();
+      console.log({ res }, "lga");
+      setLga(res.data);
+    };
+    getAllLga();
+  }, []);
+
   return (
     <div className="p-4">
       <div className="mb-10">
@@ -81,8 +120,8 @@ const User = () => {
       </div>
       <div className="mb-10 flex justify-between">
         <div className="flex gap-2">
-          <InputSelect options={["state"]} />
-          <InputSelect options={["lga"]} />
+          <InputSelect options={states.map((data) => data.name)} />
+          <InputSelect options={lga.map((data) => data.name)} />
         </div>
         <div>
           <InputSearch placeholder={"search"} />
@@ -90,7 +129,7 @@ const User = () => {
       </div>
       <CustomTable
         headers={headers}
-        rows={rows.map((data, index) => {
+        rows={users.map((data, index) => {
           return {
             checkbox: <input type="checkbox" />,
             company: (
@@ -107,7 +146,12 @@ const User = () => {
           };
         })}
       />
-      <PaginationPane />
+      <PaginationPane
+        currentPage={page}
+        totalPages={totalPages}
+        nextPage={() => setPage((prev) => prev + 1)}
+        prevPage={() => setPage((prev) => (prev > 0 ? prev - 1 : prev))}
+      />
       {showModal && (
         <Modal
           variant="default"

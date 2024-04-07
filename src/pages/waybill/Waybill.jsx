@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import TopCard from "../../components/card/TopCard";
 import CustomTable from "../../components/table/CustomTable";
 import { GoPlus } from "react-icons/go";
@@ -13,6 +13,8 @@ import { FiEdit } from "react-icons/fi";
 import ViewDetail from "../../components/modal/ViewDetail";
 import PaginationPane from "../../components/table/PaginationPane";
 import { EditWaybillModal } from "../../components/editmodal/WaybillModal";
+import useWaybill from "../../hooks/useWaybill";
+import useResource from "../../hooks/useResource";
 
 const headers = ["Company", "Email Address", "Phone Number", "State"];
 const rows = [
@@ -59,6 +61,43 @@ const Waybill = () => {
   const [viewDetail, setViewDetail] = useState(false);
   const [editDetail, setEditDetail] = useState(false);
 
+  const { getAllWaybills } = useWaybill();
+  const { getAllStates, getAllLgas } = useResource();
+
+  const [waybill, setWaybills] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [states, setStates] = useState([]);
+  const [lga, setLga] = useState([]);
+  const limit = 10;
+
+  useEffect(() => {
+    const getWaybills = async () => {
+      const res = await getAllWaybills(page, limit);
+      console.log({ res });
+      setTotalPages(res.data.totalPages);
+      setWaybills(res.data?.content);
+    };
+    getWaybills();
+  }, [page]);
+
+  useEffect(() => {
+    const getAllState = async () => {
+      const res = await getAllStates();
+      console.log({ res }, "state");
+      setStates(res.data);
+    };
+    getAllState();
+  }, []);
+  useEffect(() => {
+    const getAllLga = async () => {
+      const res = await getAllLgas();
+      console.log({ res }, "lga");
+      setLga(res.data);
+    };
+    getAllLga();
+  }, []);
+
   return (
     <div className="p-4">
       <div className="mb-10">
@@ -75,8 +114,8 @@ const Waybill = () => {
       </div>
       <div className="mb-10 flex justify-between">
         <div className="flex gap-2">
-          <InputSelect options={["state"]} />
-          <InputSelect options={["lga"]} />
+          <InputSelect options={states.map((data) => data.name)} />
+          <InputSelect options={lga.map((data) => data.name)} />
         </div>
         <div>
           <InputSearch placeholder={"search"} />
@@ -84,7 +123,7 @@ const Waybill = () => {
       </div>
       <CustomTable
         headers={headers}
-        rows={rows.map((data, index) => {
+        rows={waybill.map((data, index) => {
           return {
             checkbox: <input type="checkbox" />,
             company: (
@@ -101,7 +140,12 @@ const Waybill = () => {
           };
         })}
       />
-      <PaginationPane />
+      <PaginationPane
+        currentPage={page}
+        totalPages={totalPages}
+        nextPage={() => setPage((prev) => prev + 1)}
+        prevPage={() => setPage((prev) => (prev > 0 ? prev - 1 : prev))}
+      />
       {showModal && (
         <Modal
           variant="default"
