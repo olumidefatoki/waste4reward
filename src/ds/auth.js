@@ -8,10 +8,8 @@ export const login = async (data) => {
       body: JSON.stringify(data),
       cache: "no-store",
     });
-    console.log(res);
     return res;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };

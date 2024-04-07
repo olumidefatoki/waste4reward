@@ -7,10 +7,6 @@ const useAggregator = () => {
   const [loading, setLoading] = useState();
   const dispatch = useDispatch();
   const gatAllAggregators = async (page = 1, size = 10) => {
-    console.log({
-      page,
-      size,
-    });
     setLoading(true);
     const res = await gatAllAggregator({ page, size });
     return JSON.parse(res);

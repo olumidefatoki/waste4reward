@@ -12,7 +12,6 @@ const useAuth = () => {
       password,
     };
     const res = await login(body);
-    console.log({ user: res.data.user });
     dispatch(setUser(res.data.user));
     setLoading(false);
     return res;

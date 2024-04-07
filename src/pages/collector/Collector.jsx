@@ -18,7 +18,14 @@ import { gatAllCollector } from "../../ds/collectors";
 import { getLga, getState } from "../../ds/resource";
 import useCollector from "../../hooks/useCollector";
 
-const headers = ["Company", "Email Address", "Phone Number", "State"];
+const headers = [
+  "Collector",
+  "Aggregators",
+  "Phone Number",
+  "Age",
+  "Disability",
+  "State",
+];
 
 const detail = {
   "first Name": "Jehoshe",
@@ -48,7 +55,6 @@ const Collector = () => {
   useEffect(() => {
     const getAggregators = async () => {
       const res = await gatAllCollectors(page, limit);
-      console.log({ res });
       setTotalPages(res.data.totalPages);
       setCollectors(res.data?.content);
     };
@@ -58,7 +64,6 @@ const Collector = () => {
   useEffect(() => {
     const getAllState = async () => {
       const res = await getState();
-      console.log({ res }, "state");
       setStates(res.data);
     };
     getAllState();
@@ -66,7 +71,6 @@ const Collector = () => {
   useEffect(() => {
     const getAllLga = async () => {
       const res = await getLga();
-      console.log({ res }, "lga");
       setLga(res.data);
     };
     getAllLga();
@@ -106,14 +110,17 @@ const Collector = () => {
         rows={collectors.map((data, index) => {
           return {
             checkbox: <input type="checkbox" />,
-            company: (
+            collector: (
               <div className="flex flex-col">
-                <p>{data.company}</p>
-                <p>{data.address}</p>
+                <p>
+                  {data.firstName} {data.lastName}
+                </p>
               </div>
             ),
-            email: data.email,
-            phone_number: data.phone_number,
+            aggregator: data.aggregator,
+            phone_number: data.phoneNumber,
+            Age: data.dateOfBirth,
+            disability: data.disabilityStatus,
             state: data.state,
             edit: <MdOutlineRemoveRedEye onClick={() => setViewDetail(true)} />,
             open: <FiEdit onClick={() => setEditDetail(true)} />,

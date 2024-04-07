@@ -21,10 +21,10 @@ const DashCard = ({
       </div>
       <div className="flex justify-between items-end place-content-between h-full">
         <div className="p-3">
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <p className="font-bold text-2xl">{subtitle}</p>
             {unit ? (
-              <p className="text-green-400 justify-self-end">{unit}</p>
+              <p className="text-green-400 justify-self-end text-xl">{unit}</p>
             ) : (
               ""
             )}

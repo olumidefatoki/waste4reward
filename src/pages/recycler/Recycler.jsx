@@ -17,7 +17,7 @@ import { EditRecyclerModal } from "../../components/editmodal/RecyclerModal";
 import { getLga, getState } from "../../ds/resource";
 import useRecycler from "../../hooks/useRecycler";
 
-const headers = ["Company", "Email Address", "Phone Number", "State"];
+const headers = ["recycler", "Email Address", "Address", "State", "Date"];
 
 const detail = {
   "first Name": "Jehoshe",
@@ -47,7 +47,6 @@ const Recycler = () => {
   useEffect(() => {
     const getRecyclers = async () => {
       const res = await gatAllRecyclers(page, limit);
-      console.log({ res });
       setTotalPages(res.data.totalPages);
       setRecyclers(res.data?.content);
     };
@@ -57,7 +56,6 @@ const Recycler = () => {
   useEffect(() => {
     const getAllState = async () => {
       const res = await getState();
-      console.log({ res }, "state");
       setStates(res.data);
     };
     getAllState();
@@ -65,7 +63,6 @@ const Recycler = () => {
   useEffect(() => {
     const getAllLga = async () => {
       const res = await getLga();
-      console.log({ res }, "lga");
       setLga(res.data);
     };
     getAllLga();
@@ -105,15 +102,16 @@ const Recycler = () => {
         rows={recyclers.map((data, index) => {
           return {
             checkbox: <input type="checkbox" />,
-            company: (
+            recycler: (
               <div className="flex flex-col">
                 <p>{data.company}</p>
                 <p>{data.address}</p>
               </div>
             ),
             email: data.email,
-            phone_number: data.phone_number,
+            address: data.address,
             state: data.state,
+            date: data.createdAt,
             edit: <MdOutlineRemoveRedEye onClick={() => setViewDetail(true)} />,
             open: <FiEdit onClick={() => setEditDetail(true)} />,
           };

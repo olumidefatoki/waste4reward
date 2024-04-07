@@ -86,7 +86,6 @@ const Dashboard = () => {
   const [typeOfPlastic, setTypeOfPlastic] = useState([]);
   const [sourceOfPlastic, setSourceOfPlastic] = useState([]);
   const { getAllSourceOfPlastics, getAllTypeOfPlastics } = useResource();
-  // console.log({ user });
   useEffect(() => {
     if (user?.userType === "SUPER_ADMIN") {
       navigate("/admin", { replace: true });

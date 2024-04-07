@@ -16,32 +16,13 @@ import { EditWaybillModal } from "../../components/editmodal/WaybillModal";
 import useWaybill from "../../hooks/useWaybill";
 import useResource from "../../hooks/useResource";
 
-const headers = ["Company", "Email Address", "Phone Number", "State"];
-const rows = [
-  {
-    company: "JDSL Recycling Limited",
-    email: "	Jehoshebaidera@gmail.com",
-    phone_number: "080331485238",
-    state: "Sagamu",
-  },
-  {
-    company: "JDSL Recycling Limited",
-    email: "	Jehoshebaidera@gmail.com",
-    phone_number: "080331485238",
-    state: "Sagamu",
-  },
-  {
-    company: "JDSL Recycling Limited",
-    email: "	Jehoshebaidera@gmail.com",
-    phone_number: "080331485238",
-    state: "Sagamu",
-  },
-  {
-    company: "JDSL Recycling Limited",
-    email: "	Jehoshebaidera@gmail.com",
-    phone_number: "080331485238",
-    state: "Sagamu",
-  },
+const headers = [
+  "Recycler",
+  "Aggregators",
+  "Quantity",
+  "Amount",
+  "Attachment",
+  "Date",
 ];
 
 const detail = {
@@ -74,7 +55,6 @@ const Waybill = () => {
   useEffect(() => {
     const getWaybills = async () => {
       const res = await getAllWaybills(page, limit);
-      console.log({ res });
       setTotalPages(res.data.totalPages);
       setWaybills(res.data?.content);
     };
@@ -84,7 +64,6 @@ const Waybill = () => {
   useEffect(() => {
     const getAllState = async () => {
       const res = await getAllStates();
-      console.log({ res }, "state");
       setStates(res.data);
     };
     getAllState();
@@ -92,7 +71,6 @@ const Waybill = () => {
   useEffect(() => {
     const getAllLga = async () => {
       const res = await getAllLgas();
-      console.log({ res }, "lga");
       setLga(res.data);
     };
     getAllLga();
@@ -126,15 +104,12 @@ const Waybill = () => {
         rows={waybill.map((data, index) => {
           return {
             checkbox: <input type="checkbox" />,
-            company: (
-              <div className="flex flex-col">
-                <p>{data.company}</p>
-                <p>{data.address}</p>
-              </div>
-            ),
-            email: data.email,
-            phone_number: data.phone_number,
-            state: data.state,
+            recycler: data.recycler,
+            aggregator: data.aggregator,
+            quantity: data.quantity,
+            amount: data.amount,
+            attachment: data.attachment1,
+            date: data.createdAt,
             edit: <MdOutlineRemoveRedEye onClick={() => setViewDetail(true)} />,
             open: <FiEdit onClick={() => setEditDetail(true)} />,
           };

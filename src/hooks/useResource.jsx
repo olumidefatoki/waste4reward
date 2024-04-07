@@ -6,6 +6,9 @@ import { gatAllAggregator } from "../ds/aggregators";
 import { gatAllCollector } from "../ds/collectors";
 import {
   getLga,
+  getParticipantReport,
+  getPerformanceReport,
+  getProgram,
   getSourceOfPlastic,
   getState,
   getTopAggregators,
@@ -57,6 +60,21 @@ const useResource = () => {
     const res = await getTopLocation();
     return res;
   };
+  const getAllProgram = async () => {
+    setLoading(true);
+    const res = await getProgram();
+    return res;
+  };
+  const getAllPerformanceReport = async () => {
+    setLoading(true);
+    const res = await getPerformanceReport();
+    return res;
+  };
+  const getAllParticipantReport = async () => {
+    setLoading(true);
+    const res = await getParticipantReport();
+    return res;
+  };
   return {
     loading,
     getAllStates,
@@ -69,6 +87,9 @@ const useResource = () => {
     getTopFiveCollectors,
     getTopFiveStates,
     getTopFiveLocations,
+    getAllProgram,
+    getAllPerformanceReport,
+    getAllParticipantReport,
   };
 };
 

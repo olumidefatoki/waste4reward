@@ -12,7 +12,6 @@ async function fetcher(url, options, searchParams, download) {
       ...options.headers,
     },
   });
-  console.log("rup", { res });
   if (download) {
     const data = await res.text();
     return data;

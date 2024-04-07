@@ -17,33 +17,7 @@ import { EditUserModal } from "../../components/editmodal/UserModal";
 import useUser from "../../hooks/useUser";
 import useResource from "../../hooks/useResource";
 
-const headers = ["Company", "Email Address", "Phone Number", "State"];
-const rows = [
-  {
-    company: "JDSL Recycling Limited",
-    email: "	Jehoshebaidera@gmail.com",
-    phone_number: "080331485238",
-    state: "Sagamu",
-  },
-  {
-    company: "JDSL Recycling Limited",
-    email: "	Jehoshebaidera@gmail.com",
-    phone_number: "080331485238",
-    state: "Sagamu",
-  },
-  {
-    company: "JDSL Recycling Limited",
-    email: "	Jehoshebaidera@gmail.com",
-    phone_number: "080331485238",
-    state: "Sagamu",
-  },
-  {
-    company: "JDSL Recycling Limited",
-    email: "	Jehoshebaidera@gmail.com",
-    phone_number: "080331485238",
-    state: "Sagamu",
-  },
-];
+const headers = ["User", "Email Address", "Organization", "Category"];
 
 const detail = {
   "first Name": "Jehoshe",
@@ -75,7 +49,6 @@ const User = () => {
   useEffect(() => {
     const getRecyclers = async () => {
       const res = await gatAllUsers(page, limit);
-      console.log({ res });
       setTotalPages(res.data.totalPages);
       setUsers(res.data?.content);
     };
@@ -85,7 +58,6 @@ const User = () => {
   useEffect(() => {
     const getAllState = async () => {
       const res = await getAllStates();
-      console.log({ res }, "state");
       setStates(res.data);
     };
     getAllState();
@@ -93,7 +65,6 @@ const User = () => {
   useEffect(() => {
     const getAllLga = async () => {
       const res = await getAllLgas();
-      console.log({ res }, "lga");
       setLga(res.data);
     };
     getAllLga();
@@ -132,15 +103,14 @@ const User = () => {
         rows={users.map((data, index) => {
           return {
             checkbox: <input type="checkbox" />,
-            company: (
+            name: (
               <div className="flex flex-col">
-                <p>{data.company}</p>
-                <p>{data.address}</p>
+                <p>{data.name}</p>
               </div>
             ),
             email: data.email,
-            phone_number: data.phone_number,
-            state: data.state,
+            organizationName: data.organization,
+            category: data.category,
             edit: <MdOutlineRemoveRedEye onClick={() => setViewDetail(true)} />,
             open: <FiEdit onClick={() => setEditDetail(true)} />,
           };

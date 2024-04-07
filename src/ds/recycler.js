@@ -19,10 +19,8 @@ export const gatAllRecycler = async ({ page, size }) => {
       params,
       true
     );
-    console.log(res);
     return res;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };

@@ -14,77 +14,16 @@ import { AiOutlineRight } from "react-icons/ai";
 import useResource from "../../../hooks/useResource";
 import { Navigate } from "react-router-dom";
 
-const data = [
-  {
-    title: "Total plastic collected",
-    subtitle: "11,855.96",
-    figure: "474,238,421 Bottles",
-    image: BottleWater,
-    unit: "Kg",
-    css: "bg-[#DCFAE6]",
-  },
-  {
-    title: "Total plastic collected",
-    subtitle: "1,255.22",
-    figure: "50,208,880 Bottles",
-    image: BottleWater,
-    unit: "Kg",
-    css: "bg-[#F4EBFF]",
-  },
-  {
-    title: "Total plastic collected",
-    subtitle: "NGN 23,542,000",
-    figure: "30,000 kg",
-    image: Granular,
-    css: "bg-[#FFE6D5]",
-  },
-  {
-    title: "Average Income per collector",
-    subtitle: "NGN 3,542",
-    // figure: "474,238,421 Bottles",
-    image: Pana,
-    css: "bg-[#E0F2FE]",
-  },
-];
-const data2 = [
-  {
-    title: "Total Collector",
-    subtitle: "4,086",
-    figure: "16 states",
-    image: Character2,
-    css: "bg-[#FFFAEB]",
-  },
-  {
-    title: "Total Recyclers",
-    subtitle: "586",
-    figure: "16 states",
-    image: rafiki,
-    css: "bg-white border border-gray-300",
-  },
-  {
-    title: "Total Collector",
-    subtitle: "4,086",
-    figure: "16 states",
-    image: Character2,
-    css: "bg-[#FFFAEB]",
-  },
-  {
-    title: "Total Recyclers",
-    subtitle: "586",
-    figure: "16 states",
-    image: rafiki,
-    css: "bg-white border border-gray-300",
-  },
-];
 const AdminDashboard = () => {
-  const { closeNav } = useNav();
-  console.log({ closeNav });
+  // const { closeNav } = useNav();
   const [typeOfPlastic, setTypeOfPlastic] = useState([]);
   const [sourceOfPlastic, setSourceOfPlastic] = useState([]);
   const [topFiveAggregator, setTopFiveAggregators] = useState([]);
   const [topFiveCollector, setTopFiveCollectors] = useState([]);
   const [topFiveStates, setTopFiveStates] = useState([]);
   const [topFiveLocation, setTopFiveLocation] = useState([]);
+  const [paReport, setPaReport] = useState({});
+  const [peReport, setPeReport] = useState({});
   const {
     getAllSourceOfPlastics,
     getAllTypeOfPlastics,
@@ -92,6 +31,9 @@ const AdminDashboard = () => {
     getTopFiveCollectors,
     getTopFiveLocations,
     getTopFiveStates,
+    getAllProgram,
+    getAllParticipantReport,
+    getAllPerformanceReport,
   } = useResource();
 
   useEffect(() => {
@@ -136,6 +78,95 @@ const AdminDashboard = () => {
     };
     getTopStates();
   }, []);
+  useEffect(() => {
+    const getPrograms = async () => {
+      const res = await getAllProgram();
+      setTopFiveStates(res.data);
+    };
+    getPrograms();
+  }, []);
+  useEffect(() => {
+    const getAllParticipantReports = async () => {
+      const res = await getAllParticipantReport();
+      setPaReport(res.data);
+    };
+    getAllParticipantReports();
+  }, []);
+  useEffect(() => {
+    const getAllPerformanceReports = async () => {
+      const res = await getAllPerformanceReport();
+      setPeReport(res.data);
+    };
+    getAllPerformanceReports();
+  }, []);
+
+  const peMetrics = [
+    {
+      title: "Total plastic collected",
+      subtitle: peReport.noOfPlasticCollected,
+      figure: "474,238,421 Bottles",
+      image: BottleWater,
+      unit: "Kg",
+      css: "bg-[#DCFAE6]",
+    },
+    {
+      title: "Total plastic processed",
+      subtitle: peReport.noOfPlasticProcessed,
+      figure: "50,208,880 Bottles",
+      image: BottleWater,
+      unit: "Kg",
+      css: "bg-[#F4EBFF]",
+    },
+    {
+      title: "Transaction value",
+      subtitle: `NGN ${peReport.transactionValue}`,
+      figure: "30,000 kg",
+      image: Granular,
+      css: "bg-[#FFE6D5]",
+    },
+    {
+      title: "Average Income per collector",
+      subtitle: `NGN ${peReport.averageCollector}`,
+      image: Pana,
+      css: "bg-[#E0F2FE]",
+    },
+  ];
+
+  const paMetrics = [
+    {
+      title: "Total Aggregators",
+      subtitle: paReport.noOfAggregator,
+      figure: `${paReport.aggregatorState} ${
+        paReport.aggregatorState === 1 ? "state" : "states"
+      }`,
+      image: Character2,
+      css: "bg-[#EAECF5]",
+    },
+    {
+      title: "Total Users",
+      subtitle: paReport.noOfUser,
+      image: rafiki,
+      css: "bg-white border border-gray-300",
+    },
+    {
+      title: "Total Recyclers",
+      subtitle: paReport.noOfRecycler,
+      figure: `${paReport.recyclerState} ${
+        paReport.recyclerState === 1 ? "state" : "states"
+      }`,
+      image: Character2,
+      css: "bg-white border border-gray-300",
+    },
+    {
+      title: "Total Collectors",
+      subtitle: paReport.noOfCollector,
+      figure: `${paReport.collectorState} ${
+        paReport.collectorState === 1 ? "state" : "states"
+      }`,
+      image: rafiki,
+      css: "bg-[#FFFAEB]",
+    },
+  ];
   return (
     <div className="p-4 h-max">
       <div className="mb-5">
@@ -161,7 +192,7 @@ const AdminDashboard = () => {
           </div>
           <div className="flex">
             <div className="flex flex-wrap gap-4 ">
-              {data.map(
+              {peMetrics.map(
                 ({ title, subtitle, figure, image, css, unit }, index) => {
                   return (
                     <>
@@ -189,7 +220,7 @@ const AdminDashboard = () => {
                     <p className="text-sm">Total Credit</p>
                     <div className="">
                       <div className="flex items-center gap-2 text-xl">
-                        <p className="font-bold">2,040</p>
+                        <p className="font-bold">{peReport.carbonCredit}</p>
                         <p className="text-green-400 text-sm">MT</p>
                       </div>
                     </div>
@@ -206,7 +237,7 @@ const AdminDashboard = () => {
           <p className="font-bold">Participants Metrics</p>
         </div>
         <div className="flex flex-wrap w-full gap-4">
-          {data2.map(({ title, subtitle, figure, image, css }, index) => {
+          {paMetrics.map(({ title, subtitle, figure, image, css }, index) => {
             return (
               <>
                 <DataCard
@@ -258,11 +289,11 @@ const AdminDashboard = () => {
                     key={index}
                   >
                     <div className="flex justify-between items-center mb-3">
-                      <div className="basis-[70%]">
+                      <div className="basis-[55%]">
                         <p className="font-bold text-sm">{data.aggregator}</p>
                         <p className="text-sm">{data.address}</p>
                       </div>
-                      <p className="text-sm basis-[20%]">
+                      <p className="text-sm basis-[35%]">
                         {data.quantity} Collected
                       </p>
                       <p className="basis-[10%]">
@@ -284,11 +315,11 @@ const AdminDashboard = () => {
                     key={index}
                   >
                     <div className="flex justify-between items-center mb-3">
-                      <div className="basis-[70%]">
+                      <div className="basis-[55%]">
                         <p className="font-bold text-sm">{data.collector}</p>
                         <p className="text-sm">{data.address}</p>
                       </div>
-                      <p className="text-sm basis-[20%]">
+                      <p className="text-sm basis-[35%]">
                         {data.quantity} Collected
                       </p>
                       <p className="basis-[10%]">
@@ -320,14 +351,14 @@ const AdminDashboard = () => {
                 return (
                   <div
                     className="border-b border-[#EAECF0] h-[60px]"
-                    key={index}
+                    key={`state-${index}`}
                   >
                     <div className="flex justify-between items-center mb-3">
-                      <div className="basis-[70%]">
+                      <div className="basis-[55%]">
                         <p className="font-bold text-sm">{data.state}</p>
                         <p className="text-sm">{data.address}</p>
                       </div>
-                      <p className="text-sm basis-[20%]">
+                      <p className="text-sm basis-[35%]">
                         {data.quantity} Collected
                       </p>{" "}
                       <p className="basis-[10%]">
@@ -349,11 +380,11 @@ const AdminDashboard = () => {
                     key={index}
                   >
                     <div className="flex justify-between items-center mb-3">
-                      <div className="basis-[70%]">
+                      <div className="basis-[55%]">
                         <p className="font-bold text-sm">{data.location}</p>
                         <p className="text-sm">{data.address}</p>
                       </div>
-                      <p className="text-sm basis-[20%]">
+                      <p className="text-sm basis-[35%]">
                         {data.quantity} Collected
                       </p>
                       <p className="basis-[10%]">

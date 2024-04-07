@@ -21,7 +21,6 @@ const SignIn = () => {
   };
 
   const signIn = async (data) => {
-    console.log({ data });
     try {
       setLoading(true);
       const res = await loginUser(data);

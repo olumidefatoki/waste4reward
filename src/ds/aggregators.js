@@ -8,7 +8,6 @@ export const gatAllAggregator = async ({ page, size }) => {
       page,
       size,
     };
-    console.log({ params });
     const res = await fetcher(
       "/aggregator",
       {
@@ -20,10 +19,8 @@ export const gatAllAggregator = async ({ page, size }) => {
       params,
       true
     );
-    console.log({ res });
     return res;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };

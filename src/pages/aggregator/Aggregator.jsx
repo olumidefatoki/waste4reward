@@ -65,12 +65,12 @@ const detail = {
 const Aggregator = () => {
   const wrapperRef = useRef(null);
   const [showModal, setShowModal] = useOutsideClick(wrapperRef);
-  const { gatAllAggregators } = useAggregator();
   const [orderBy, setOrderBy] = useState(0);
   const [order, setOrder] = useState(0);
   const [allChecked, setAllChecked] = useState(false);
   const [viewDetail, setViewDetail] = useState(false);
   const [editDetail, setEditDetail] = useState(false);
+  const { gatAllAggregators } = useAggregator();
   const [aggregators, setAggregators] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -81,7 +81,6 @@ const Aggregator = () => {
   useEffect(() => {
     const getAggregators = async () => {
       const res = await gatAllAggregators(page, limit);
-      console.log({ res });
       setTotalPages(res.data.totalPages);
       setAggregators(res.data?.content);
     };
@@ -91,7 +90,6 @@ const Aggregator = () => {
   useEffect(() => {
     const getAllState = async () => {
       const res = await getState();
-      console.log({ res }, "state");
       setStates(res.data);
     };
     getAllState();
@@ -99,7 +97,6 @@ const Aggregator = () => {
   useEffect(() => {
     const getAllLga = async () => {
       const res = await getLga();
-      console.log({ res }, "lga");
       setLga(res.data);
     };
     getAllLga();

@@ -49,7 +49,6 @@ const navs = [
 
 const DashboardLayout = () => {
   const { closeNav, setCloseNav } = useNav();
-  console.log({ closeNav });
   return (
     <div className="">
       <div className="">
