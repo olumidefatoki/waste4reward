@@ -24,3 +24,23 @@ export const gatAllAggregator = async ({ page, size }) => {
     throw error;
   }
 };
+export const getAllAggregatorList = async () => {
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+    const res = await fetcher(
+      "/aggregator/list",
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+      true
+    );
+    console.log({ res });
+    return res;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};

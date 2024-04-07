@@ -31,6 +31,7 @@ const detail = {
   dateCreated: "14 January 2024",
 };
 const User = () => {
+  const { paReport } = useResource();
   const wrapperRef = useRef(null);
   const [showModal, setShowModal] = useOutsideClick(wrapperRef);
   const [viewDetail, setViewDetail] = useState(false);
@@ -85,7 +86,7 @@ const User = () => {
         <DataCard
           image={Group}
           title={"Total Recycler"}
-          subtitle={584}
+          subtitle={paReport.noOfUser || 0}
           css={"border border-gray-300"}
         />
       </div>

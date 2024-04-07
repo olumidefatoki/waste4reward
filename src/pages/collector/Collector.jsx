@@ -17,6 +17,7 @@ import { EditCollectorModal } from "../../components/editmodal/CollectorModal";
 import { gatAllCollector } from "../../ds/collectors";
 import { getLga, getState } from "../../ds/resource";
 import useCollector from "../../hooks/useCollector";
+import useResource from "../../hooks/useResource";
 
 const headers = [
   "Collector",
@@ -39,6 +40,7 @@ const detail = {
   dateCreated: "14 January 2024",
 };
 const Collector = () => {
+  const { paReport } = useResource();
   const wrapperRef = useRef(null);
   const [showModal, setShowModal] = useOutsideClick(wrapperRef);
   const [viewDetail, setViewDetail] = useState(false);
@@ -92,8 +94,10 @@ const Collector = () => {
           css={"bg-[#FFFAEB]"}
           image={Character}
           title={"Total collectors"}
-          subtitle={"4,086"}
-          figure={"16 state"}
+          subtitle={paReport.noOfCollector || 0}
+          figure={`${paReport.collectorState || 0} ${
+            paReport.collectorState === 1 ? "state" : "states"
+          }`}
         />
       </div>
       <div className="mb-10 flex justify-between">

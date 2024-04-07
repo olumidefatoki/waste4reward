@@ -16,6 +16,7 @@ import PaginationPane from "../../components/table/PaginationPane";
 import { EditRecyclerModal } from "../../components/editmodal/RecyclerModal";
 import { getLga, getState } from "../../ds/resource";
 import useRecycler from "../../hooks/useRecycler";
+import useResource from "../../hooks/useResource";
 
 const headers = ["recycler", "Email Address", "Address", "State", "Date"];
 
@@ -31,6 +32,7 @@ const detail = {
   dateCreated: "14 January 2024",
 };
 const Recycler = () => {
+  const { paReport } = useResource();
   const wrapperRef = useRef(null);
   const [showModal, setShowModal] = useOutsideClick(wrapperRef);
   const [viewDetail, setViewDetail] = useState(false);
@@ -84,8 +86,10 @@ const Recycler = () => {
           image={rafiki}
           css={"border boder-gray-300"}
           title={"Total recycler"}
-          subtitle={518}
-          figure={"16 state"}
+          subtitle={paReport.noOfRecycler || 0}
+          figure={`${paReport.recyclerState || 0} ${
+            paReport.recyclerState === 1 ? "state" : "states"
+          }`}
         />
       </div>
       <div className="mb-10 flex justify-between">

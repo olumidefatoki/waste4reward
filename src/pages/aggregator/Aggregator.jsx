@@ -18,6 +18,7 @@ import PaginationPane from "../../components/table/PaginationPane";
 import useAggregator from "../../hooks/useAggregator";
 import fetcher from "../../api/fetacher";
 import { getLga, getState } from "../../ds/resource";
+import useResource from "../../hooks/useResource";
 
 const headers = ["Company", "Email Address", "Phone Number", "State"];
 const rows = [
@@ -63,6 +64,8 @@ const detail = {
   dateCreated: "14 January 2024",
 };
 const Aggregator = () => {
+  const { gatAllAggregators } = useAggregator();
+  const { paReport } = useResource();
   const wrapperRef = useRef(null);
   const [showModal, setShowModal] = useOutsideClick(wrapperRef);
   const [orderBy, setOrderBy] = useState(0);
@@ -70,7 +73,6 @@ const Aggregator = () => {
   const [allChecked, setAllChecked] = useState(false);
   const [viewDetail, setViewDetail] = useState(false);
   const [editDetail, setEditDetail] = useState(false);
-  const { gatAllAggregators } = useAggregator();
   const [aggregators, setAggregators] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -124,8 +126,10 @@ const Aggregator = () => {
       <div className="mb-10">
         <DataCard
           title={"Total aggregators"}
-          subtitle={20}
-          figure={"20 states"}
+          subtitle={paReport.noOfAggregator || 0}
+          figure={`${paReport.aggregatorState || 0} ${
+            paReport.aggregatorState === 1 ? "state" : "states"
+          }`}
           image={Character}
           css={"bg-[#B9E6FE]"}
         />

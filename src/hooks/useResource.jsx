@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { login } from "../ds/auth";
 import { useDispatch } from "react-redux";
 import { setUser } from "../feature/auth";
@@ -20,6 +20,24 @@ import {
 const useResource = () => {
   const [loading, setLoading] = useState();
   const dispatch = useDispatch();
+  const [paReport, setPaReport] = useState({});
+  const [peReport, setPeReport] = useState({});
+
+  useEffect(() => {
+    const getAllParticipantReports = async () => {
+      const res = await getAllParticipantReport();
+      setPaReport(res.data);
+    };
+    getAllParticipantReports();
+  }, []);
+  useEffect(() => {
+    const getAllPerformanceReports = async () => {
+      const res = await getAllPerformanceReport();
+      setPeReport(res.data);
+    };
+    getAllPerformanceReports();
+  }, []);
+
   const getAllStates = async () => {
     setLoading(true);
     const res = await getState();
@@ -90,6 +108,8 @@ const useResource = () => {
     getAllProgram,
     getAllPerformanceReport,
     getAllParticipantReport,
+    paReport,
+    peReport,
   };
 };
 

@@ -223,7 +223,7 @@ const Dashboard = () => {
             {[1, 1, 1, 1, 1].map((data, index) => {
               return (
                 <div className="border-b border-[#EAECF0] h-[60px]" key={index}>
-                  <div className="flex justify-between items-center mb-3">
+                  <div className="flex justify-between items-center mb-3 h-full">
                     <div className="basis-[70%]">
                       <p className="font-bold text-sm">Andi Lane</p>
                       <p className="text-sm">Andilane@gmail.com</p>
