@@ -99,27 +99,35 @@ const Waybill = () => {
           <InputSearch placeholder={"search"} />
         </div>
       </div>
-      <CustomTable
-        headers={headers}
-        rows={waybill.map((data, index) => {
-          return {
-            checkbox: <input type="checkbox" />,
-            recycler: data.recycler,
-            aggregator: data.aggregator,
-            quantity: data.quantity,
-            amount: data.amount,
-            attachment: data.attachment1,
-            date: data.createdAt,
-            edit: <MdOutlineRemoveRedEye onClick={() => setViewDetail(true)} />,
-            open: <FiEdit onClick={() => setEditDetail(true)} />,
-          };
-        })}
-      />
+      {waybill.length > 0 ? (
+        <CustomTable
+          headers={headers}
+          rows={waybill.map((data, index) => {
+            return {
+              checkbox: <input type="checkbox" />,
+              recycler: data.recycler,
+              aggregator: data.aggregator,
+              quantity: data.quantity,
+              amount: data.amount,
+              attachment: data.attachment1,
+              date: data.createdAt,
+              edit: (
+                <MdOutlineRemoveRedEye onClick={() => setViewDetail(true)} />
+              ),
+              open: <FiEdit onClick={() => setEditDetail(true)} />,
+            };
+          })}
+        />
+      ) : (
+        <div className="flex justify-center">
+          <p className="text-center">Loading...</p>
+        </div>
+      )}
       <PaginationPane
-        currentPage={page}
-        totalPages={totalPages}
-        nextPage={() => setPage((prev) => prev + 1)}
-        prevPage={() => setPage((prev) => (prev > 0 ? prev - 1 : prev))}
+        currentPage={page > 1 ? page : 1}
+        totalPages={totalPages || 1}
+        nextPage={() => setPage((prev) => (prev >= totalPages ? 1 : prev + 1))}
+        prevPage={() => setPage((prev) => (prev > 1 ? prev - 1 : prev))}
       />
       {showModal && (
         <Modal

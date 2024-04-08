@@ -10,6 +10,8 @@ import Character2 from "../../../assets/images/Character.png";
 import LineCharts from "../../../components/charts/LineChart";
 import Granular from "../../../assets/images/granular.png";
 import Pana from "../../../assets/images/pana.png";
+import Group from "../../../assets/images/group.png";
+import Character from "../../../assets/images/Characters.png";
 import { AiOutlineRight } from "react-icons/ai";
 import useResource from "../../../hooks/useResource";
 import ProgressBar from "@ramonak/react-progress-bar";
@@ -117,13 +119,13 @@ const AdminDashboard = () => {
       figure: `${paReport.aggregatorState || 0} ${
         paReport.aggregatorState === 1 ? "state" : "states"
       }`,
-      image: Character2,
+      image: Character,
       css: "bg-[#EAECF5]",
     },
     {
       title: "Total Users",
       subtitle: paReport.noOfUser || 0,
-      image: rafiki,
+      image: Group,
       css: "bg-white border border-gray-300",
     },
     {
@@ -132,7 +134,7 @@ const AdminDashboard = () => {
       figure: `${paReport.recyclerState || 0} ${
         paReport.recyclerState === 1 ? "state" : "states"
       }`,
-      image: Character2,
+      image: rafiki,
       css: "bg-white border border-gray-300",
     },
     {
@@ -141,7 +143,7 @@ const AdminDashboard = () => {
       figure: `${paReport.collectorState || 0} ${
         paReport.collectorState === 1 ? "state" : "states"
       }`,
-      image: rafiki,
+      image: Character2,
       css: "bg-[#FFFAEB]",
     },
   ];
@@ -368,31 +370,31 @@ const AdminDashboard = () => {
                 },
                 {
                   location: "Enugu",
-                  qty: "3000 plastic",
+                  qty: "2000 plastic",
                   color: "orange",
                   completed: 28,
                 },
                 {
                   location: "Lagos",
-                  qty: "3000 plastic",
+                  qty: "5000 plastic",
                   color: "purple",
                   completed: 24,
                 },
                 {
                   location: "Benue",
-                  qty: "3000 plastic",
+                  qty: "1000 plastic",
                   color: "blue",
                   completed: 20,
                 },
                 {
                   location: "Niger",
-                  qty: "3000 plastic",
+                  qty: "5000 plastic",
                   color: "red",
                   completed: 18,
                 },
                 {
                   location: "Kaduna",
-                  qty: "3000 plastic",
+                  qty: "2000 plastic",
                   color: "black",
                   completed: 16,
                 },

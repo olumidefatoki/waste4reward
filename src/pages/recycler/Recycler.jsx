@@ -101,31 +101,39 @@ const Recycler = () => {
           <InputSearch placeholder={"search"} />
         </div>
       </div>
-      <CustomTable
-        headers={headers}
-        rows={recyclers.map((data, index) => {
-          return {
-            checkbox: <input type="checkbox" />,
-            recycler: (
-              <div className="flex flex-col">
-                <p>{data.company}</p>
-                <p>{data.address}</p>
-              </div>
-            ),
-            email: data.email,
-            address: data.address,
-            state: data.state,
-            date: data.createdAt,
-            edit: <MdOutlineRemoveRedEye onClick={() => setViewDetail(true)} />,
-            open: <FiEdit onClick={() => setEditDetail(true)} />,
-          };
-        })}
-      />
+      {recyclers.length > 0 ? (
+        <CustomTable
+          headers={headers}
+          rows={recyclers.map((data, index) => {
+            return {
+              checkbox: <input type="checkbox" />,
+              recycler: (
+                <div className="flex flex-col">
+                  <p>{data.company}</p>
+                  <p>{data.address}</p>
+                </div>
+              ),
+              email: data.email,
+              address: data.address,
+              state: data.state,
+              date: data.createdAt,
+              edit: (
+                <MdOutlineRemoveRedEye onClick={() => setViewDetail(true)} />
+              ),
+              open: <FiEdit onClick={() => setEditDetail(true)} />,
+            };
+          })}
+        />
+      ) : (
+        <div className="flex justify-center">
+          <p className="text-center">Loading...</p>
+        </div>
+      )}
       <PaginationPane
-        currentPage={page}
-        totalPages={totalPages}
-        nextPage={() => setPage((prev) => prev + 1)}
-        prevPage={() => setPage((prev) => (prev > 0 ? prev - 1 : prev))}
+        currentPage={page > 1 ? page : 1}
+        totalPages={totalPages || 1}
+        nextPage={() => setPage((prev) => (prev >= totalPages ? 1 : prev + 1))}
+        prevPage={() => setPage((prev) => (prev > 1 ? prev - 1 : prev))}
       />
       {showModal && (
         <Modal

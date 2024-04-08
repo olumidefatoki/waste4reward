@@ -99,29 +99,37 @@ const User = () => {
           <InputSearch placeholder={"search"} />
         </div>
       </div>
-      <CustomTable
-        headers={headers}
-        rows={users.map((data, index) => {
-          return {
-            checkbox: <input type="checkbox" />,
-            name: (
-              <div className="flex flex-col">
-                <p>{data.name}</p>
-              </div>
-            ),
-            email: data.email,
-            organizationName: data.organization,
-            category: data.category,
-            edit: <MdOutlineRemoveRedEye onClick={() => setViewDetail(true)} />,
-            open: <FiEdit onClick={() => setEditDetail(true)} />,
-          };
-        })}
-      />
+      {users.length > 0 ? (
+        <CustomTable
+          headers={headers}
+          rows={users.map((data, index) => {
+            return {
+              checkbox: <input type="checkbox" />,
+              name: (
+                <div className="flex flex-col">
+                  <p>{data.name}</p>
+                </div>
+              ),
+              email: data.email,
+              organizationName: data.organization,
+              category: data.category,
+              edit: (
+                <MdOutlineRemoveRedEye onClick={() => setViewDetail(true)} />
+              ),
+              open: <FiEdit onClick={() => setEditDetail(true)} />,
+            };
+          })}
+        />
+      ) : (
+        <div className="flex justify-center">
+          <p className="text-center">Loading...</p>
+        </div>
+      )}
       <PaginationPane
-        currentPage={page}
-        totalPages={totalPages}
-        nextPage={() => setPage((prev) => prev + 1)}
-        prevPage={() => setPage((prev) => (prev > 0 ? prev - 1 : prev))}
+        currentPage={page > 1 ? page : 1}
+        totalPages={totalPages || 1}
+        nextPage={() => setPage((prev) => (prev >= totalPages ? 1 : prev + 1))}
+        prevPage={() => setPage((prev) => (prev > 1 ? prev - 1 : prev))}
       />
       {showModal && (
         <Modal
