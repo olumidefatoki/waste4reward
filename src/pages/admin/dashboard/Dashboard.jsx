@@ -12,7 +12,9 @@ import Granular from "../../../assets/images/granular.png";
 import Pana from "../../../assets/images/pana.png";
 import { AiOutlineRight } from "react-icons/ai";
 import useResource from "../../../hooks/useResource";
+import ProgressBar from "@ramonak/react-progress-bar";
 import { Navigate } from "react-router-dom";
+import MapFile from "../../../components/map/MapFile";
 
 const AdminDashboard = () => {
   const {
@@ -350,7 +352,75 @@ const AdminDashboard = () => {
             </button>
           </div>
         </div>
-        <div></div>
+        <div className="flex justify-between mb-5 ">
+          <div className="basis-[70%] h-[500px]">
+            <MapFile />
+          </div>
+          <div className="basis-[35%] bg-[#F9FAFB] p-4 rounded-md mr-3">
+            <h1 className="mb-3 text-xl font-bold">26 states</h1>
+            <div className="flex flex-col gap-4">
+              {[
+                {
+                  location: "Abuja",
+                  qty: "3000 plastic",
+                  color: "green",
+                  completed: 32,
+                },
+                {
+                  location: "Enugu",
+                  qty: "3000 plastic",
+                  color: "orange",
+                  completed: 28,
+                },
+                {
+                  location: "Lagos",
+                  qty: "3000 plastic",
+                  color: "purple",
+                  completed: 24,
+                },
+                {
+                  location: "Benue",
+                  qty: "3000 plastic",
+                  color: "blue",
+                  completed: 20,
+                },
+                {
+                  location: "Niger",
+                  qty: "3000 plastic",
+                  color: "red",
+                  completed: 18,
+                },
+                {
+                  location: "Kaduna",
+                  qty: "3000 plastic",
+                  color: "black",
+                  completed: 16,
+                },
+              ].map((data, index) => {
+                return (
+                  <div
+                    className={`flex flex-col gap-2 p-2 ${
+                      index === 0 ? "bg-[#ECFDF3]" : ""
+                    }`}
+                  >
+                    <p className="text-sm">{data.location}</p>
+                    <div className="flex justify-between items-center">
+                      <ProgressBar
+                        completed={data.completed}
+                        bgColor={data.color}
+                        height="10px"
+                        isLabelVisible={false}
+                        className="w-[150px]"
+                      />
+                      <p>{data.qty}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+        <div className="border-b border-gray-300 "></div>
         <div className="w-11/12 p-4 rounded-md">
           <div className="flex gap-4">
             <div className="basis-[50%] p-4 rounded-md">
