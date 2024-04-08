@@ -155,3 +155,48 @@ export const getPerformanceReport = async (data, accessToken) => {
     throw error;
   }
 };
+
+export const getPlasticCollectionReport = async (year) => {
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+    const params = {
+      year,
+    };
+    const res = await fetcher(
+      "/dashboard/plasticCollectionReport",
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+      params,
+      true
+    );
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getPlasticProcessedReport = async (year) => {
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+    const params = {
+      year,
+    };
+    const res = await fetcher(
+      "/dashboard/plasticProcessedReport",
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+      params,
+      true
+    );
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};

@@ -30,6 +30,10 @@ const AdminDashboard = () => {
     paReport,
     peReport,
     topFiveCollector,
+    processedReport,
+    collectionReport,
+    setCollectionYear,
+    setProcessedYear,
   } = useResource();
   const [typeOfPlastic, setTypeOfPlastic] = useState([]);
   const [sourceOfPlastic, setSourceOfPlastic] = useState([]);
@@ -248,19 +252,26 @@ const AdminDashboard = () => {
             <div className="w-max border border-gray-300 bg-[#F9FAFB] p-2 text-sm rounded-tl rounded-bl">
               Project Overview
             </div>
-            <button className="w-max border border-gray-300 p-2 text-sm">
-              2022
-            </button>
-            <button className="w-max border border-gray-300 p-2 text-sm">
-              2023
-            </button>
-            <button className="w-max border border-gray-300 p-2 text-sm rounded-tr rounded-br">
-              2024
-            </button>
+            {[2022, 2023, 2024].map((data, index) => {
+              return (
+                <button
+                  key={index}
+                  className="w-max border border-gray-300 p-2 text-sm"
+                  onClick={() => setCollectionYear(data)}
+                >
+                  {data}
+                </button>
+              );
+            })}
           </div>
         </div>
         <div className="h-[500px]">
-          <LineCharts fill="#8884d8" />
+          <LineCharts
+            fill="#8884d8"
+            datakeyX={"month"}
+            dataKeyB={"plastics"}
+            lineData={collectionReport}
+          />
         </div>
       </div>
       <div className="h-max border border-gray-300 rounded-md mb-10 p-2">
@@ -490,19 +501,32 @@ const AdminDashboard = () => {
             <div className="w-max border border-gray-300 bg-[#F9FAFB] p-2 text-sm rounded-tl rounded-bl">
               Project Overview
             </div>
-            <button className="w-max border border-gray-300 p-2 text-sm">
-              2022
-            </button>
-            <button className="w-max border border-gray-300 p-2 text-sm">
-              2023
-            </button>
-            <button className="w-max border border-gray-300 p-2 text-sm rounded-tr rounded-br">
-              2024
-            </button>
+            {[
+              { id: 1, year: 2022 },
+              { id: 2, year: 2023 },
+              { id: 3, year: 2024 },
+            ].map((data, index) => {
+              return (
+                <button
+                  key={index}
+                  className={`w-max border border-gray-300 p-2 text-sm ${
+                    index === data.id ? "bg-[#F9FAFB]" : ""
+                  }`}
+                  onClick={() => setProcessedYear(data.year)}
+                >
+                  {data.year}
+                </button>
+              );
+            })}
           </div>
         </div>
         <div className="h-[500px]">
-          <LineCharts fill="#F79009" />
+          <LineCharts
+            fill="#F79009"
+            datakeyX={"month"}
+            dataKeyB={"plastics"}
+            lineData={processedReport}
+          />
         </div>
       </div>
     </div>

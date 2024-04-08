@@ -8,6 +8,8 @@ import {
   getLga,
   getParticipantReport,
   getPerformanceReport,
+  getPlasticCollectionReport,
+  getPlasticProcessedReport,
   getProgram,
   getSourceOfPlastic,
   getState,
@@ -23,6 +25,10 @@ const useResource = () => {
   const [paReport, setPaReport] = useState({});
   const [peReport, setPeReport] = useState({});
   const [topFiveCollector, setTopFiveCollectors] = useState([]);
+  const [collectionReport, setCollectionReport] = useState([]);
+  const [processedReport, setProcessedReport] = useState([]);
+  const [procssedYear, setProcessedYear] = useState(2022);
+  const [collectionYear, setCollectionYear] = useState(2022);
 
   useEffect(() => {
     const getAllParticipantReports = async () => {
@@ -45,6 +51,20 @@ const useResource = () => {
     };
     getTopCollectors();
   }, []);
+  useEffect(() => {
+    const getReport = async () => {
+      const res = await getPlasticCollectionReport(collectionYear);
+      setCollectionReport(JSON.parse(res).data);
+    };
+    getReport();
+  }, [collectionYear]);
+  useEffect(() => {
+    const getReport = async () => {
+      const resPlastic = await getPlasticProcessedReport(procssedYear);
+      setProcessedReport(JSON.parse(resPlastic).data);
+    };
+    getReport();
+  }, [procssedYear]);
 
   const getAllStates = async () => {
     setLoading(true);
@@ -119,6 +139,10 @@ const useResource = () => {
     paReport,
     peReport,
     topFiveCollector,
+    collectionReport,
+    processedReport,
+    setProcessedYear,
+    setCollectionYear,
   };
 };
 

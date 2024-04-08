@@ -86,7 +86,7 @@ const data = [
   },
 ];
 
-const LineCharts = ({ fill }) => {
+const LineCharts = ({ fill, datakeyX, dataKeyB, lineData }) => {
   //   static demoUrl = "https://codesandbox.io/s/simple-bar-chart-tpz8r";
 
   return (
@@ -94,7 +94,7 @@ const LineCharts = ({ fill }) => {
       <BarChart
         width={50}
         height={300}
-        data={data}
+        data={lineData}
         margin={{
           top: 5,
           //   right: 30,
@@ -103,12 +103,12 @@ const LineCharts = ({ fill }) => {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
+        <XAxis dataKey={datakeyX} />
         <YAxis />
         <Tooltip />
         {/* <Legend /> */}
         <Bar
-          dataKey="pv"
+          dataKey={dataKeyB}
           fill={fill}
           //   activeBar={<Rectangle fill="pink" stroke="blue" />}
         />
