@@ -43,8 +43,8 @@ const Collector = () => {
   const { paReport } = useResource();
   const wrapperRef = useRef(null);
   const [showModal, setShowModal] = useOutsideClick(wrapperRef);
-  const [viewDetail, setViewDetail] = useState(false);
-  const [editDetail, setEditDetail] = useState(false);
+  const [viewDetail, setViewDetail] = useOutsideClick(wrapperRef);
+  const [editDetail, setEditDetail] = useOutsideClick(wrapperRef);
   const { gatAllCollectors } = useCollector();
 
   const [collectors, setCollectors] = useState([]);
@@ -143,7 +143,7 @@ const Collector = () => {
           refProp={wrapperRef}
           closeModal={() => setShowModal(false)}
         >
-          <CollectorModal />
+          <CollectorModal closeModal={() => setShowModal(false)} />
         </Modal>
       )}
       {editDetail && (
@@ -152,7 +152,10 @@ const Collector = () => {
           refProp={wrapperRef}
           closeModal={() => setEditDetail(false)}
         >
-          <EditCollectorModal closeModal={() => setEditDetail(false)} />
+          <CollectorModal
+            closeModal={() => setEditDetail(false)}
+            requestType={"edit"}
+          />
         </Modal>
       )}
       {viewDetail && (

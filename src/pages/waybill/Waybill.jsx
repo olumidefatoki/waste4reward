@@ -39,8 +39,8 @@ const detail = {
 const Waybill = () => {
   const wrapperRef = useRef(null);
   const [showModal, setShowModal] = useOutsideClick(wrapperRef);
-  const [viewDetail, setViewDetail] = useState(false);
-  const [editDetail, setEditDetail] = useState(false);
+  const [viewDetail, setViewDetail] = useOutsideClick(wrapperRef);
+  const [editDetail, setEditDetail] = useOutsideClick(wrapperRef);
 
   const { getAllWaybills } = useWaybill();
   const { getAllStates, getAllLgas } = useResource();
@@ -127,7 +127,7 @@ const Waybill = () => {
           refProp={wrapperRef}
           closeModal={() => setShowModal(false)}
         >
-          <WaybillModal />
+          <WaybillModal closeModal={() => setShowModal(false)} />
         </Modal>
       )}
       {editDetail && (
@@ -136,7 +136,10 @@ const Waybill = () => {
           refProp={wrapperRef}
           closeModal={() => setEditDetail(false)}
         >
-          <EditWaybillModal closeModal={() => setEditDetail(false)} />
+          <WaybillModal
+            closeModal={() => setEditDetail(false)}
+            requestType={"edit"}
+          />
         </Modal>
       )}
       {viewDetail && (
@@ -148,9 +151,10 @@ const Waybill = () => {
           <ViewDetail
             detail={detail}
             closeModal={() => setViewDetail(false)}
-            title={"Waybill Details"}
-            // subtitle={"Aggregator details below"}
-            // dateCreated={"14 January 2024"}
+            title={"Collector Details"}
+            subtitle={"Collector details below"}
+            dateCreated={"14 January 2024"}
+            editbutton={true}
           />
         </Modal>
       )}

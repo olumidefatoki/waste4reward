@@ -22,6 +22,7 @@ const useResource = () => {
   const dispatch = useDispatch();
   const [paReport, setPaReport] = useState({});
   const [peReport, setPeReport] = useState({});
+  const [topFiveCollector, setTopFiveCollectors] = useState([]);
 
   useEffect(() => {
     const getAllParticipantReports = async () => {
@@ -36,6 +37,13 @@ const useResource = () => {
       setPeReport(res.data);
     };
     getAllPerformanceReports();
+  }, []);
+  useEffect(() => {
+    const getTopCollectors = async () => {
+      const res = await getTopFiveCollectors();
+      setTopFiveCollectors(res.data);
+    };
+    getTopCollectors();
   }, []);
 
   const getAllStates = async () => {
@@ -110,6 +118,7 @@ const useResource = () => {
     getAllParticipantReport,
     paReport,
     peReport,
+    topFiveCollector,
   };
 };
 

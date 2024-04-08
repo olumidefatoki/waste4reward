@@ -24,3 +24,18 @@ export const gatAllCollector = async ({ page, size }) => {
     throw error;
   }
 };
+export const createCollector = async (data) => {
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+    const res = await fetcher("/collector", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};

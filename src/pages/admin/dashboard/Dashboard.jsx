@@ -25,11 +25,11 @@ const AdminDashboard = () => {
     getAllProgram,
     paReport,
     peReport,
+    topFiveCollector,
   } = useResource();
   const [typeOfPlastic, setTypeOfPlastic] = useState([]);
   const [sourceOfPlastic, setSourceOfPlastic] = useState([]);
   const [topFiveAggregator, setTopFiveAggregators] = useState([]);
-  const [topFiveCollector, setTopFiveCollectors] = useState([]);
   const [topFiveStates, setTopFiveStates] = useState([]);
   const [topFiveLocation, setTopFiveLocation] = useState([]);
 
@@ -53,13 +53,6 @@ const AdminDashboard = () => {
       setTopFiveAggregators(res.data);
     };
     getTopAggregators();
-  }, []);
-  useEffect(() => {
-    const getTopCollectors = async () => {
-      const res = await getTopFiveCollectors();
-      setTopFiveCollectors(res.data);
-    };
-    getTopCollectors();
   }, []);
   useEffect(() => {
     const getTopLocations = async () => {
@@ -210,7 +203,6 @@ const AdminDashboard = () => {
                       </div>
                     </div>
                   </div>
-                  {/* <p>80% of the reductions occurred in the state of Ibadan.</p> */}
                 </div>
               </div>
             </div>
@@ -248,19 +240,39 @@ const AdminDashboard = () => {
             <p className="font-bold">Collector Performance metric</p>
             <p className="text-sm">Track the rate pf collection over time.</p>
           </div>
-          <div></div>
+          <div className="flex rounded-md w-max">
+            <div className="w-max border border-gray-300 bg-[#F9FAFB] p-2 text-sm rounded-tl rounded-bl">
+              Project Overview
+            </div>
+            <button className="w-max border border-gray-300 p-2 text-sm">
+              2022
+            </button>
+            <button className="w-max border border-gray-300 p-2 text-sm">
+              2023
+            </button>
+            <button className="w-max border border-gray-300 p-2 text-sm rounded-tr rounded-br">
+              2024
+            </button>
+          </div>
         </div>
         <div className="h-[500px]">
           <LineCharts fill="#8884d8" />
         </div>
       </div>
       <div className="h-max border border-gray-300 rounded-md mb-10 p-2">
-        <div className="flex justify-between items-center border-b border-gray-300 mb-10 h-20 p-4">
-          <div>
-            <p className="font-bold">Collector Performance metric</p>
-          </div>
-          <div></div>
+        {/* <div className=" border-b border-gray-300 mb-10 h-20 p-4"> */}
+        <div className="flex rounded-md w-max">
+          <button className="w-max border border-gray-300 bg-[#F9FAFB] p-2 text-sm rounded-tl rounded-bl">
+            2022
+          </button>
+          <button className="w-max border border-gray-300 p-2 text-sm">
+            2023
+          </button>
+          <button className="w-max border border-gray-300 p-2 text-sm rounded-tr rounded-br">
+            2024
+          </button>
         </div>
+        {/* </div> */}
         <div className="w-11/12 p-4 rounded-md">
           <div className="flex gap-4">
             <div className="basis-[50%] bg-[#ECFDF3] p-4 rounded-md">
@@ -323,7 +335,20 @@ const AdminDashboard = () => {
           <div>
             <p className="font-bold">Collection Location</p>
           </div>
-          <div></div>
+          <div className="flex rounded-md w-max">
+            <div className="w-max border border-gray-300 bg-[#F9FAFB] p-2 text-sm rounded-tl rounded-bl">
+              Project Overview
+            </div>
+            <button className="w-max border border-gray-300 p-2 text-sm">
+              2022
+            </button>
+            <button className="w-max border border-gray-300 p-2 text-sm">
+              2023
+            </button>
+            <button className="w-max border border-gray-300 p-2 text-sm rounded-tr rounded-br">
+              2024
+            </button>
+          </div>
         </div>
         <div></div>
         <div className="w-11/12 p-4 rounded-md">
@@ -389,7 +414,20 @@ const AdminDashboard = () => {
             <p className="font-bold">Plastic processed</p>
             <p className="text-sm">Track the rate pf collection over time.</p>
           </div>
-          <div></div>
+          <div className="flex rounded-md w-max">
+            <div className="w-max border border-gray-300 bg-[#F9FAFB] p-2 text-sm rounded-tl rounded-bl">
+              Project Overview
+            </div>
+            <button className="w-max border border-gray-300 p-2 text-sm">
+              2022
+            </button>
+            <button className="w-max border border-gray-300 p-2 text-sm">
+              2023
+            </button>
+            <button className="w-max border border-gray-300 p-2 text-sm rounded-tr rounded-br">
+              2024
+            </button>
+          </div>
         </div>
         <div className="h-[500px]">
           <LineCharts fill="#F79009" />

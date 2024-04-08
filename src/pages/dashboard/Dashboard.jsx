@@ -18,55 +18,6 @@ import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import useResource from "../../hooks/useResource";
 
-const data = [
-  {
-    title: "Total plastic collected",
-    subtitle: "11,855.96",
-    figure: "474,238,421 Bottles",
-    image: BottleWater,
-    unit: "Kg",
-    css: "bg-[#DCFAE6]",
-  },
-  {
-    title: "Total plastic collected",
-    subtitle: "1,255.22",
-    figure: "50,208,880 Bottles",
-    image: BottleWater,
-    unit: "Kg",
-    css: "bg-[#F4EBFF]",
-  },
-  {
-    title: "Total plastic collected",
-    subtitle: "NGN 23,542,000",
-    figure: "30,000 kg",
-    image: Granular,
-    css: "bg-[#FFE6D5]",
-  },
-  {
-    title: "Average Income per collector",
-    subtitle: "NGN 3,542",
-    // figure: "474,238,421 Bottles",
-    image: Pana,
-    css: "bg-[#E0F2FE]",
-  },
-];
-const data2 = [
-  {
-    title: "Total Collector",
-    subtitle: "4,086",
-    figure: "16 states",
-    image: Character2,
-    css: "bg-[#FFFAEB]",
-  },
-  {
-    title: "Total Recyclers",
-    subtitle: "586",
-    figure: "16 states",
-    image: rafiki,
-    css: "bg-white border border-gray-300",
-  },
-];
-
 const barData = [
   { name: "Group A", value: 400 },
   { name: "Group B", value: 300 },
@@ -80,12 +31,22 @@ const barData = [
   { name: "Group J", value: 200 },
 ];
 const Dashboard = () => {
-  const { closeNav } = useNav();
+  const {
+    getAllSourceOfPlastics,
+    getAllTypeOfPlastics,
+    getTopFiveAggregators,
+    getTopFiveCollectors,
+    getTopFiveLocations,
+    getTopFiveStates,
+    getAllProgram,
+    paReport,
+    peReport,
+    topFiveCollector,
+  } = useResource();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [typeOfPlastic, setTypeOfPlastic] = useState([]);
   const [sourceOfPlastic, setSourceOfPlastic] = useState([]);
-  const { getAllSourceOfPlastics, getAllTypeOfPlastics } = useResource();
   useEffect(() => {
     if (user?.userType === "SUPER_ADMIN") {
       navigate("/admin", { replace: true });
@@ -106,6 +67,58 @@ const Dashboard = () => {
     getTypeOfPlastic();
   }, []);
 
+  const peMetrics = [
+    {
+      title: "Total plastic collected",
+      subtitle: peReport.noOfPlasticCollected || 0,
+      figure: "474,238,421 Bottles",
+      image: BottleWater,
+      unit: "Kg",
+      css: "bg-[#DCFAE6]",
+    },
+    {
+      title: "Total plastic processed",
+      subtitle: peReport.noOfPlasticProcessed || 0,
+      figure: "50,208,880 Bottles",
+      image: BottleWater,
+      unit: "Kg",
+      css: "bg-[#F4EBFF]",
+    },
+    {
+      title: "Transaction value",
+      subtitle: `NGN ${peReport.transactionValue || 0}`,
+      figure: "30,000 kg",
+      image: Granular,
+      css: "bg-[#FFE6D5]",
+    },
+    {
+      title: "Average Income per collector",
+      subtitle: `NGN ${peReport.averageCollector || 0}`,
+      image: Pana,
+      css: "bg-[#E0F2FE]",
+    },
+  ];
+  const data2 = [
+    {
+      title: "Total Collectors",
+      subtitle: paReport.noOfCollector || 0,
+      figure: `${paReport.collectorState || 0} ${
+        paReport.collectorState === 1 ? "state" : "states"
+      }`,
+      image: rafiki,
+      css: "bg-[#FFFAEB]",
+    },
+    {
+      title: "Total Recyclers",
+      subtitle: paReport.noOfRecycler || 0,
+      figure: `${paReport.recyclerState || 0} ${
+        paReport.recyclerState === 1 ? "state" : "states"
+      }`,
+      image: Character2,
+      css: "bg-white border border-gray-300",
+    },
+  ];
+
   return (
     <div className="p-4 h-max">
       <div className="mb-5">
@@ -121,22 +134,22 @@ const Dashboard = () => {
             <div className="flex gap-2">
               <InputSelect
                 css={"min-w-[185px]"}
-                options={["type of plastic"]}
+                options={typeOfPlastic.map((data) => data.name)}
               />
               <InputSelect
                 css={"min-w-[185px]"}
-                options={["source of plastic"]}
+                options={sourceOfPlastic.map((data) => data.name)}
               />
             </div>
           </div>
           <div className="flex">
             <div className="flex flex-wrap gap-4 ">
-              {data.map(
+              {peMetrics.map(
                 ({ title, subtitle, figure, image, css, unit }, index) => {
                   return (
                     <>
                       <DashCard
-                        key={`dash-${index}`}
+                        key={index}
                         title={title}
                         subtitle={subtitle}
                         figure={figure}
@@ -159,7 +172,9 @@ const Dashboard = () => {
                     <p className="text-sm">Total Credit</p>
                     <div className="">
                       <div className="flex items-center gap-2 text-xl">
-                        <p className="font-bold">2,040</p>
+                        <p className="font-bold">
+                          {peReport.carbonCredit || 0}
+                        </p>
                         <p className="text-green-400 text-sm">MT</p>
                       </div>
                     </div>
@@ -180,7 +195,7 @@ const Dashboard = () => {
             return (
               <>
                 <DataCard
-                  key={`dat-${index}`}
+                  key={index}
                   title={title}
                   subtitle={subtitle}
                   figure={figure}
@@ -202,7 +217,20 @@ const Dashboard = () => {
             <p className="font-bold">Collector Performance metric</p>
             <p className="text-sm">Track the rate pf collection over time.</p>
           </div>
-          <div></div>
+          <div className="flex rounded-md w-max">
+            <div className="w-max border border-gray-300 bg-[#F9FAFB] p-2 text-sm rounded-tl rounded-bl">
+              Project Overview
+            </div>
+            <button className="w-max border border-gray-300 p-2 text-sm">
+              2022
+            </button>
+            <button className="w-max border border-gray-300 p-2 text-sm">
+              2023
+            </button>
+            <button className="w-max border border-gray-300 p-2 text-sm rounded-tr rounded-br">
+              2024
+            </button>
+          </div>
         </div>
         <div className="h-[500px]">
           <LineCharts fill="#8884d8" />
@@ -213,22 +241,37 @@ const Dashboard = () => {
           <div>
             <p className="font-bold">Collector Performance metric</p>
           </div>
-          <div></div>
+          <div className="flex rounded-md w-max">
+            <div className="w-max border border-gray-300 bg-[#F9FAFB] p-2 text-sm rounded-tl rounded-bl">
+              Project Overview
+            </div>
+            <button className="w-max border border-gray-300 p-2 text-sm">
+              2022
+            </button>
+            <button className="w-max border border-gray-300 p-2 text-sm">
+              2023
+            </button>
+            <button className="w-max border border-gray-300 p-2 text-sm rounded-tr rounded-br">
+              2024
+            </button>
+          </div>
         </div>
         <div className="w-11/12 bg-[#F9F5FF] p-4 rounded-md">
           <h1 className="h-[49px] border-b border-[#EAECF0] mb-5 font-bold">
             Top 5 collectors
           </h1>
           <div className="w-11/12 ">
-            {[1, 1, 1, 1, 1].map((data, index) => {
+            {topFiveCollector.map((data, index) => {
               return (
                 <div className="border-b border-[#EAECF0] h-[60px]" key={index}>
                   <div className="flex justify-between items-center mb-3 h-full">
-                    <div className="basis-[70%]">
-                      <p className="font-bold text-sm">Andi Lane</p>
-                      <p className="text-sm">Andilane@gmail.com</p>
+                    <div className="basis-[55%]">
+                      <p className="font-bold text-sm">{data.collector}</p>
+                      <p className="text-sm">{data.address}</p>
                     </div>
-                    <p className="text-sm basis-[20%]">3,000 Collected</p>
+                    <p className="text-sm basis-[35%]">
+                      {data.quantity} Collected
+                    </p>
                     <p className="basis-[10%]">
                       <AiOutlineRight />
                     </p>
@@ -243,6 +286,20 @@ const Dashboard = () => {
         <div className="flex justify-between items-center border-b border-gray-300 mb-10 h-20 p-4">
           <div>
             <p className="font-bold">State Locations</p>
+          </div>
+          <div className="flex rounded-md w-max">
+            <div className="w-max border border-gray-300 bg-[#F9FAFB] p-2 text-sm rounded-tl rounded-bl">
+              Project Overview
+            </div>
+            <button className="w-max border border-gray-300 p-2 text-sm">
+              2022
+            </button>
+            <button className="w-max border border-gray-300 p-2 text-sm">
+              2023
+            </button>
+            <button className="w-max border border-gray-300 p-2 text-sm rounded-tr rounded-br">
+              2024
+            </button>
           </div>
         </div>
         <div className="h-[500px] flex items-center justify-center">
@@ -294,7 +351,20 @@ const Dashboard = () => {
             <p className="font-bold">Plastic processed</p>
             <p className="text-sm">Track the rate pf collection over time.</p>
           </div>
-          <div></div>
+          <div className="flex rounded-md w-max">
+            <div className="w-max border border-gray-300 bg-[#F9FAFB] p-2 text-sm rounded-tl rounded-bl">
+              Project Overview
+            </div>
+            <button className="w-max border border-gray-300 p-2 text-sm">
+              2022
+            </button>
+            <button className="w-max border border-gray-300 p-2 text-sm">
+              2023
+            </button>
+            <button className="w-max border border-gray-300 p-2 text-sm rounded-tr rounded-br">
+              2024
+            </button>
+          </div>
         </div>
         <div className="h-[500px]">
           <LineCharts fill="#F79009" />

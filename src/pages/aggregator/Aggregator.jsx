@@ -68,11 +68,11 @@ const Aggregator = () => {
   const { paReport } = useResource();
   const wrapperRef = useRef(null);
   const [showModal, setShowModal] = useOutsideClick(wrapperRef);
+  const [viewDetail, setViewDetail] = useOutsideClick(wrapperRef);
+  const [editDetail, setEditDetail] = useOutsideClick(wrapperRef);
   const [orderBy, setOrderBy] = useState(0);
   const [order, setOrder] = useState(0);
   const [allChecked, setAllChecked] = useState(false);
-  const [viewDetail, setViewDetail] = useState(false);
-  const [editDetail, setEditDetail] = useState(false);
   const [aggregators, setAggregators] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -177,6 +177,18 @@ const Aggregator = () => {
           <AggregatorModal closeModal={() => setShowModal(false)} />
         </Modal>
       )}
+      {editDetail && (
+        <Modal
+          variant="default"
+          refProp={wrapperRef}
+          closeModal={() => setEditDetail(false)}
+        >
+          <AggregatorModal
+            closeModal={() => setEditDetail(false)}
+            requestType={"edit"}
+          />
+        </Modal>
+      )}
       {viewDetail && (
         <Modal
           variant="default"
@@ -186,20 +198,11 @@ const Aggregator = () => {
           <ViewDetail
             detail={detail}
             closeModal={() => setViewDetail(false)}
-            title={"Aggregator Details"}
-            subtitle={"Aggregator details below"}
+            title={"Collector Details"}
+            subtitle={"Collector details below"}
             dateCreated={"14 January 2024"}
             editbutton={true}
           />
-        </Modal>
-      )}
-      {editDetail && (
-        <Modal
-          variant="default"
-          refProp={wrapperRef}
-          closeModal={() => setEditDetail(false)}
-        >
-          <EditAggregatorModal closeModal={() => setEditDetail(false)} />
         </Modal>
       )}
     </div>

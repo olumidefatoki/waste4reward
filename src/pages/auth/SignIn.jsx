@@ -124,7 +124,7 @@ const SignIn = () => {
                         className="bg-sky-500 flex justify-center items-center gap-2 text-center w-full text-white h-8"
                         type="submit"
                       >
-                        Log In <BsBoxArrowRight />
+                        {loading ? "loading..." : "Log In"} <BsBoxArrowRight />
                       </button>
                     </div>
                   </div>

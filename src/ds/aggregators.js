@@ -44,3 +44,19 @@ export const getAllAggregatorList = async () => {
     throw error;
   }
 };
+
+export const createAggregator = async (data) => {
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+    const res = await fetcher("/aggregator", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};

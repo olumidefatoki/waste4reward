@@ -1,6 +1,14 @@
 import React from "react";
 
-const InputSelect = ({ options = [], label, css }) => {
+const InputSelect = ({
+  options = [],
+  label,
+  css,
+  handleChange,
+  value,
+  name,
+  ...props
+}) => {
   return (
     <div className="flex flex-col">
       {label && <label>{label}</label>}
@@ -8,6 +16,9 @@ const InputSelect = ({ options = [], label, css }) => {
         className={`border border-gray-300 h-[44px] ${
           css ? css : "w-[280px]"
         } p-2 rounded-md`}
+        onChange={handleChange}
+        name={name}
+        {...props}
       >
         {options.map((data, index) => {
           return (

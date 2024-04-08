@@ -35,8 +35,8 @@ const Recycler = () => {
   const { paReport } = useResource();
   const wrapperRef = useRef(null);
   const [showModal, setShowModal] = useOutsideClick(wrapperRef);
-  const [viewDetail, setViewDetail] = useState(false);
-  const [editDetail, setEditDetail] = useState(false);
+  const [viewDetail, setViewDetail] = useOutsideClick(wrapperRef);
+  const [editDetail, setEditDetail] = useOutsideClick(wrapperRef);
   const { gatAllRecyclers } = useRecycler();
 
   const [recyclers, setRecyclers] = useState([]);
@@ -133,7 +133,7 @@ const Recycler = () => {
           refProp={wrapperRef}
           closeModal={() => setShowModal(false)}
         >
-          <RecyclerModal />
+          <RecyclerModal closeModal={() => setShowModal(false)} />
         </Modal>
       )}
       {editDetail && (
@@ -142,10 +142,12 @@ const Recycler = () => {
           refProp={wrapperRef}
           closeModal={() => setEditDetail(false)}
         >
-          <EditRecyclerModal closeModal={() => setEditDetail(false)} />
+          <RecyclerModal
+            closeModal={() => setEditDetail(false)}
+            requestType={"edit"}
+          />
         </Modal>
       )}
-
       {viewDetail && (
         <Modal
           variant="default"
@@ -155,8 +157,8 @@ const Recycler = () => {
           <ViewDetail
             detail={detail}
             closeModal={() => setViewDetail(false)}
-            title={"Recycler Details"}
-            subtitle={"Recycler details below"}
+            title={"Collector Details"}
+            subtitle={"Collector details below"}
             dateCreated={"14 January 2024"}
             editbutton={true}
           />

@@ -34,8 +34,8 @@ const User = () => {
   const { paReport } = useResource();
   const wrapperRef = useRef(null);
   const [showModal, setShowModal] = useOutsideClick(wrapperRef);
-  const [viewDetail, setViewDetail] = useState(false);
-  const [editDetail, setEditDetail] = useState(false);
+  const [viewDetail, setViewDetail] = useOutsideClick(wrapperRef);
+  const [editDetail, setEditDetail] = useOutsideClick(wrapperRef);
 
   const { gatAllUsers } = useUser();
   const { getAllStates, getAllLgas } = useResource();
@@ -129,7 +129,7 @@ const User = () => {
           refProp={wrapperRef}
           closeModal={() => setShowModal(false)}
         >
-          <UserModal />
+          <UserModal closeModal={() => setShowModal(false)} />
         </Modal>
       )}
       {editDetail && (
@@ -138,7 +138,10 @@ const User = () => {
           refProp={wrapperRef}
           closeModal={() => setEditDetail(false)}
         >
-          <EditUserModal closeModal={() => setEditDetail(false)} />
+          <UserModal
+            closeModal={() => setEditDetail(false)}
+            requestType={"edit"}
+          />
         </Modal>
       )}
       {viewDetail && (
@@ -150,8 +153,8 @@ const User = () => {
           <ViewDetail
             detail={detail}
             closeModal={() => setViewDetail(false)}
-            title={"User Details"}
-            subtitle={"User details below"}
+            title={"Collector Details"}
+            subtitle={"Collector details below"}
             dateCreated={"14 January 2024"}
             editbutton={true}
           />

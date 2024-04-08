@@ -2,7 +2,11 @@ import React, { useCallback, useEffect, useState } from "react";
 import { login } from "../ds/auth";
 import { useDispatch } from "react-redux";
 import { setUser } from "../feature/auth";
-import { gatAllAggregator, getAllAggregatorList } from "../ds/aggregators";
+import {
+  createAggregator,
+  gatAllAggregator,
+  getAllAggregatorList,
+} from "../ds/aggregators";
 import { getTopAggregators } from "../ds/resource";
 const useAggregator = () => {
   const [loading, setLoading] = useState();
@@ -23,11 +27,17 @@ const useAggregator = () => {
     gatAllAggregatorLists();
   }, []);
 
+  const createNewAggregator = async (data) => {
+    const res = await createAggregator(data);
+    return res;
+  };
+
   return {
     loading,
     gatAllAggregators,
     gatAllAggregatorLists,
     aggregatorCount,
+    createNewAggregator,
   };
 };
 
