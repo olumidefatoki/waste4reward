@@ -8,13 +8,18 @@ import {
   getAllAggregatorList,
 } from "../ds/aggregators";
 import { getTopAggregators } from "../ds/resource";
-const useAggregator = () => {
+const useAggregator = (query, selectedState) => {
   const [loading, setLoading] = useState();
   const [aggregatorCount, setAggregatorCount] = useState();
   const dispatch = useDispatch();
-  const gatAllAggregators = async (page = 1, size = 10) => {
+  const gatAllAggregators = async (
+    page = 1,
+    size = 10,
+    name = query,
+    state = selectedState
+  ) => {
     setLoading(true);
-    const res = await gatAllAggregator({ page, size });
+    const res = await gatAllAggregator({ page, size, name, state });
     return JSON.parse(res);
   };
   const gatAllAggregatorLists = useCallback(async () => {

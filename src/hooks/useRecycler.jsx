@@ -5,12 +5,17 @@ import { setUser } from "../feature/auth";
 import { gatAllAggregator } from "../ds/aggregators";
 import { gatAllCollector } from "../ds/collectors";
 import { createRecycler, gatAllRecycler } from "../ds/recycler";
-const useRecycler = () => {
+const useRecycler = (query, selectedState) => {
   const [loading, setLoading] = useState();
   const dispatch = useDispatch();
-  const gatAllRecyclers = async (page = 1, size = 10) => {
+  const gatAllRecyclers = async (
+    page = 1,
+    size = 10,
+    name = query,
+    state = selectedState
+  ) => {
     setLoading(true);
-    const res = await gatAllRecycler({ page, size });
+    const res = await gatAllRecycler({ page, size, name, state });
     return JSON.parse(res);
   };
   const createNewRecycler = async (data) => {

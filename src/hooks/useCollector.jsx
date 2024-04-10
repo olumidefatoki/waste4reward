@@ -4,12 +4,17 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../feature/auth";
 import { gatAllAggregator } from "../ds/aggregators";
 import { createCollector, gatAllCollector } from "../ds/collectors";
-const useCollector = () => {
+const useCollector = (query, selectedState) => {
   const [loading, setLoading] = useState();
   const dispatch = useDispatch();
-  const gatAllCollectors = async (page = 1, size = 10) => {
+  const gatAllCollectors = async (
+    page = 1,
+    size = 10,
+    name = query,
+    state = selectedState
+  ) => {
     setLoading(true);
-    const res = await gatAllCollector({ page, size });
+    const res = await gatAllCollector({ page, size, name, state });
     return JSON.parse(res);
   };
   const createNewCollector = async (data) => {

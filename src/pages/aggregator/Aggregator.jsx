@@ -64,7 +64,8 @@ const detail = {
   dateCreated: "14 January 2024",
 };
 const Aggregator = () => {
-  const { gatAllAggregators } = useAggregator();
+  const [query, setQuery] = useState("");
+  const [selectedState, setSelectedState] = useState("");
   const { paReport } = useResource();
   const wrapperRef = useRef(null);
   const [showModal, setShowModal] = useOutsideClick(wrapperRef);
@@ -80,6 +81,8 @@ const Aggregator = () => {
   const [lga, setLga] = useState([]);
   const limit = 10;
 
+  const { gatAllAggregators } = useAggregator(query, selectedState);
+
   useEffect(() => {
     const getAggregators = async () => {
       const res = await gatAllAggregators(page, limit);
@@ -87,7 +90,7 @@ const Aggregator = () => {
       setAggregators(res.data?.content);
     };
     getAggregators();
-  }, [page]);
+  }, [page, query, selectedState]);
 
   useEffect(() => {
     const getAllState = async () => {
@@ -136,11 +139,19 @@ const Aggregator = () => {
       </div>
       <div className="mb-10 flex justify-between">
         <div className="flex gap-2">
-          <InputSelect options={states.map((data) => data.name)} />
+          <InputSelect
+            options={states.map((data) => data.name)}
+            placeholder="Select State"
+            handleChange={(e) => setSelectedState(e.target.value)}
+          />
           <InputSelect options={lga.map((data) => data.name)} />
         </div>
         <div className="min-w-[160px]">
-          <InputSearch placeholder={"search"} />
+          <InputSearch
+            placeholder={"search"}
+            inputValue={query}
+            setInputValue={setQuery}
+          />
         </div>
       </div>
       {aggregators.length > 0 ? (

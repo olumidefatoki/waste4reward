@@ -38,11 +38,13 @@ const detail = {
 };
 const Waybill = () => {
   const wrapperRef = useRef(null);
+  const [query, setQuery] = useState("");
+  const [selectedState, setSelectedState] = useState("");
   const [showModal, setShowModal] = useOutsideClick(wrapperRef);
   const [viewDetail, setViewDetail] = useOutsideClick(wrapperRef);
   const [editDetail, setEditDetail] = useOutsideClick(wrapperRef);
 
-  const { getAllWaybills } = useWaybill();
+  const { getAllWaybills } = useWaybill(query, selectedState);
   const { getAllStates, getAllLgas } = useResource();
 
   const [waybill, setWaybills] = useState([]);
@@ -59,7 +61,7 @@ const Waybill = () => {
       setWaybills(res.data?.content);
     };
     getWaybills();
-  }, [page]);
+  }, [page, query, selectedState]);
 
   useEffect(() => {
     const getAllState = async () => {
@@ -92,11 +94,19 @@ const Waybill = () => {
       </div>
       <div className="mb-10 flex justify-between">
         <div className="flex gap-2">
-          <InputSelect options={states.map((data) => data.name)} />
+          <InputSelect
+            options={states.map((data) => data.name)}
+            placeholder="Select State"
+            handleChange={(e) => setSelectedState(e.target.value)}
+          />
           <InputSelect options={lga.map((data) => data.name)} />
         </div>
         <div>
-          <InputSearch placeholder={"search"} />
+          <InputSearch
+            placeholder={"search"}
+            inputValue={query}
+            setInputValue={setQuery}
+          />
         </div>
       </div>
       {waybill.length > 0 ? (

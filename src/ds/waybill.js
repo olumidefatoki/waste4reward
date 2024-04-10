@@ -1,13 +1,17 @@
 import api from "../api/axios";
 import fetcher from "../api/fetacher";
 
-export const gatAllWaybill = async ({ page, size }) => {
+export const gatAllWaybill = async ({ page, size, name, state }) => {
   try {
     const accessToken = localStorage.getItem("accessToken");
     const params = {
       page,
       size,
     };
+    if (name) {
+      params.name = name;
+    }
+
     const res = await fetcher(
       "/waybill",
       {

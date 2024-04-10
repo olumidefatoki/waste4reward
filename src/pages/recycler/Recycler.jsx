@@ -37,14 +37,16 @@ const Recycler = () => {
   const [showModal, setShowModal] = useOutsideClick(wrapperRef);
   const [viewDetail, setViewDetail] = useOutsideClick(wrapperRef);
   const [editDetail, setEditDetail] = useOutsideClick(wrapperRef);
-  const { gatAllRecyclers } = useRecycler();
 
   const [recyclers, setRecyclers] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [states, setStates] = useState([]);
+  const [query, setQuery] = useState("");
+  const [selectedState, setSelectedState] = useState("");
   const [lga, setLga] = useState([]);
   const limit = 10;
+  const { gatAllRecyclers } = useRecycler(query, selectedState);
 
   useEffect(() => {
     const getRecyclers = async () => {
@@ -53,7 +55,7 @@ const Recycler = () => {
       setRecyclers(res.data?.content);
     };
     getRecyclers();
-  }, [page]);
+  }, [page, query, selectedState]);
 
   useEffect(() => {
     const getAllState = async () => {
@@ -94,11 +96,19 @@ const Recycler = () => {
       </div>
       <div className="mb-10 flex justify-between">
         <div className="flex gap-2">
-          <InputSelect options={states.map((data) => data.name)} />
+          <InputSelect
+            options={states.map((data) => data.name)}
+            placeholder="Select State"
+            handleChange={(e) => setSelectedState(e.target.value)}
+          />
           <InputSelect options={lga.map((data) => data.name)} />
         </div>
         <div>
-          <InputSearch placeholder={"search"} />
+          <InputSearch
+            placeholder={"search"}
+            inputValue={query}
+            setInputValue={setQuery}
+          />
         </div>
       </div>
       {recyclers.length > 0 ? (
@@ -110,7 +120,7 @@ const Recycler = () => {
               recycler: (
                 <div className="flex flex-col">
                   <p>{data.company}</p>
-                  <p>{data.address}</p>
+                  <p>{data.name}</p>
                 </div>
               ),
               email: data.email,

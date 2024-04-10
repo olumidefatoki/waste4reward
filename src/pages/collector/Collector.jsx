@@ -40,12 +40,15 @@ const detail = {
   dateCreated: "14 January 2024",
 };
 const Collector = () => {
+  const [query, setQuery] = useState("");
+  const [selectedState, setSelectedState] = useState("");
+
   const { paReport } = useResource();
   const wrapperRef = useRef(null);
   const [showModal, setShowModal] = useOutsideClick(wrapperRef);
   const [viewDetail, setViewDetail] = useOutsideClick(wrapperRef);
   const [editDetail, setEditDetail] = useOutsideClick(wrapperRef);
-  const { gatAllCollectors } = useCollector();
+  const { gatAllCollectors } = useCollector(query, selectedState);
 
   const [collectors, setCollectors] = useState([]);
   const [page, setPage] = useState(1);
@@ -61,7 +64,7 @@ const Collector = () => {
       setCollectors(res.data?.content);
     };
     getAggregators();
-  }, [page]);
+  }, [page, query, selectedState]);
 
   useEffect(() => {
     const getAllState = async () => {
@@ -102,11 +105,19 @@ const Collector = () => {
       </div>
       <div className="mb-10 flex justify-between">
         <div className="flex gap-2">
-          <InputSelect options={states.map((data) => data.name)} />
+          <InputSelect
+            options={states.map((data) => data.name)}
+            placeholder="Select State"
+            handleChange={(e) => setSelectedState(e.target.value)}
+          />
           <InputSelect options={lga.map((data) => data.name)} />
         </div>
         <div>
-          <InputSearch placeholder={"search"} />
+          <InputSearch
+            placeholder={"search"}
+            inputValue={query}
+            setInputValue={setQuery}
+          />
         </div>
       </div>
 

@@ -7,6 +7,7 @@ const InputSelect = ({
   handleChange,
   value,
   name,
+  placeholder,
   ...props
 }) => {
   return (
@@ -20,6 +21,7 @@ const InputSelect = ({
         name={name}
         {...props}
       >
+        <option>{placeholder}</option>
         {options.map((data, index) => {
           return (
             <option className="p-2" key={index}>
