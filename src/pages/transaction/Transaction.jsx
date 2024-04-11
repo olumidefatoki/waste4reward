@@ -19,8 +19,8 @@ import { AggregatorModal } from "../../components/modal/AggregatorModal";
 import PaginationPane from "../../components/table/PaginationPane";
 
 const headers = [
-  "Aggregaor",
   "Collector",
+  "Aggregaor",
   "Price",
   "Quantity",
   "Amount",
@@ -113,6 +113,7 @@ const Transaction = () => {
           subtitle={"List of transactions on the platform."}
           buttonTitle={"New Transaction"}
           Icon={GoPlus}
+          exportType="transaction"
         />
       </div>
       <div className="mb-10">

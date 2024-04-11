@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import { login } from "../ds/auth";
 import { useDispatch } from "react-redux";
-import { setUser } from "../feature/auth";
-import { gatAllAggregator } from "../ds/aggregators";
-import { gatAllCollector } from "../ds/collectors";
-import { createRecycler, gatAllRecycler } from "../ds/recycler";
-const useRecycler = (query, selectedState) => {
+
+import {
+  createRecycler,
+  gatAllRecycler,
+  getRecyclerDetail,
+} from "../ds/recycler";
+const useRecycler = (query, selectedState, recyclerId) => {
   const [loading, setLoading] = useState();
-  const dispatch = useDispatch();
+
   const gatAllRecyclers = async (
     page = 1,
     size = 10,
@@ -18,6 +19,14 @@ const useRecycler = (query, selectedState) => {
     const res = await gatAllRecycler({ page, size, name, state });
     return JSON.parse(res);
   };
+
+  const getSingleRecycler = async () => {
+    setLoading(true);
+    const res = await getRecyclerDetail({ id: recyclerId });
+    setLoading(false);
+    return JSON.parse(res);
+  };
+
   const createNewRecycler = async (data) => {
     const res = await createRecycler(data);
     return res;
@@ -26,6 +35,7 @@ const useRecycler = (query, selectedState) => {
   return {
     loading,
     gatAllRecyclers,
+    getSingleRecycler,
     createNewRecycler,
   };
 };

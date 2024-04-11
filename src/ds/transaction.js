@@ -29,3 +29,26 @@ export const getAllTransactions = async ({ page, size, name, state }) => {
     throw error;
   }
 };
+
+export const downloadTransaction = async () => {
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+    const res = await fetcher(
+      "/transaction/download",
+      {
+        method: "GET",
+        // responseType: "blob",
+        headers: {
+          // Accept: "application/pdf",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+      true
+    );
+
+    return res;
+  } catch (error) {
+    console.log("error");
+    throw error;
+  }
+};

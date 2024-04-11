@@ -87,6 +87,7 @@ const Waybill = () => {
           buttonTitle={"New Waybill"}
           Icon={GoPlus}
           setShowModal={() => setShowModal(true)}
+          exportType="waybill"
         />
       </div>
       <div className="mb-10">

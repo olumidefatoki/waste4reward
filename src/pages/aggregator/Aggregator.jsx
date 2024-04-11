@@ -21,48 +21,7 @@ import { getLga, getState } from "../../ds/resource";
 import useResource from "../../hooks/useResource";
 
 const headers = ["Company", "Email Address", "Phone Number", "State"];
-const rows = [
-  {
-    company: "JDSL Recycling Limited",
-    address: "Wuse zone 3 Near Access bank Abuja, Nigeria",
-    email: "	Jehoshebaidera@gmail.com",
-    phone_number: "080331485238",
-    state: "Sagamu",
-  },
-  {
-    company: "JDSL Recycling Limited",
-    address: "Wuse zone 3 Near Access bank Abuja, Nigeria",
-    email: "Jehoshebaidera@gmail.com",
-    phone_number: "080331485238",
-    state: "Sagamu",
-  },
-  {
-    company: "JDSL Recycling Limited",
-    address: "Wuse zone 3 Near Access bank Abuja, Nigeria",
-    email: "Jehoshebaidera@gmail.com",
-    phone_number: "080331485238",
-    state: "Sagamu",
-  },
-  {
-    company: "JDSL Recycling Limited",
-    address: "Wuse zone 3 Near Access bank Abuja, Nigeria",
-    email: "Jehoshebaidera@gmail.com",
-    phone_number: "080331485238",
-    state: "Sagamu",
-  },
-];
 
-const detail = {
-  "first Name": "Jehoshe",
-  "last Name": "Baidera",
-  "phone Number": "080331485238",
-  "email Address": "Jehoshebaidera@gmail.com",
-  address: "Wuse zone 3 Near Access bank Abuja, Nigeria",
-  state: "Sagamu",
-  lga: "amu",
-  "year of incorporation": "14 January 2024",
-  dateCreated: "14 January 2024",
-};
 const Aggregator = () => {
   const [query, setQuery] = useState("");
   const [selectedState, setSelectedState] = useState("");
@@ -81,7 +40,20 @@ const Aggregator = () => {
   const [lga, setLga] = useState([]);
   const limit = 10;
 
-  const { gatAllAggregators } = useAggregator(query, selectedState);
+  const [aggregatorId, setAggregatorId] = useState(1);
+  const [aggregatorDetail, setAggregatorDetail] = useState({});
+
+  const { loading, gatAllAggregators, getSingleAggregator } = useAggregator(
+    query,
+    selectedState,
+    aggregatorId
+  );
+
+  const getAggregator = async () => {
+    const res = await getSingleAggregator(aggregatorId);
+    console.log(res.data);
+    setAggregatorDetail(res.data);
+  };
 
   useEffect(() => {
     const getAggregators = async () => {
@@ -115,6 +87,16 @@ const Aggregator = () => {
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
+
+  const handleViewDetail = (id) => {
+    setAggregatorId(id);
+    setViewDetail(true);
+  };
+
+  useEffect(() => {
+    getAggregator();
+  }, [aggregatorId]);
+
   return (
     <div className="p-4">
       <div className="mb-10">
@@ -124,6 +106,7 @@ const Aggregator = () => {
           buttonTitle={"New Aggregator"}
           Icon={GoPlus}
           setShowModal={() => setShowModal(true)}
+          exportType="aggregator"
         />
       </div>
       <div className="mb-10">
@@ -170,7 +153,9 @@ const Aggregator = () => {
               phone_number: data.phoneNumber,
               state: data.state,
               edit: (
-                <MdOutlineRemoveRedEye onClick={() => setViewDetail(true)} />
+                <MdOutlineRemoveRedEye
+                  onClick={() => handleViewDetail(data.id)}
+                />
               ),
               open: <FiEdit onClick={() => setEditDetail(true)} />,
             };
@@ -215,12 +200,13 @@ const Aggregator = () => {
           closeModal={() => setViewDetail(false)}
         >
           <ViewDetail
-            detail={detail}
+            detail={aggregatorDetail}
             closeModal={() => setViewDetail(false)}
-            title={"Collector Details"}
-            subtitle={"Collector details below"}
-            dateCreated={"14 January 2024"}
+            title={"Aggregator Details"}
+            subtitle={"Aggregator details below"}
+            loading={loading}
             editbutton={true}
+            id={aggregatorId}
           />
         </Modal>
       )}

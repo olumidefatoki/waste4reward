@@ -11,7 +11,7 @@ export const gatAllAggregator = async ({ page, size, name, state }) => {
     if (name) {
       params.name = name;
     }
-    if (state !== "Select State") {
+    if (!!state && state !== "Select State") {
       params.state = state;
     }
     const res = await fetcher(
@@ -30,6 +30,30 @@ export const gatAllAggregator = async ({ page, size, name, state }) => {
     throw error;
   }
 };
+
+export const getAggregatorDetail = async ({ id }) => {
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+    const params = {
+      id,
+    };
+    const res = await fetcher(
+      `/aggregator/${params.id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+      params,
+      true
+    );
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getAllAggregatorList = async () => {
   try {
     const accessToken = localStorage.getItem("accessToken");
@@ -63,6 +87,29 @@ export const createAggregator = async (data) => {
     });
     return res;
   } catch (error) {
+    throw error;
+  }
+};
+
+export const downloadAggregator = async () => {
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+    const res = await fetcher(
+      "/aggregator/download",
+      {
+        method: "GET",
+        // responseType: "blob",
+        headers: {
+          // Accept: "application/pdf",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+      true
+    );
+
+    return res;
+  } catch (error) {
+    console.log("error");
     throw error;
   }
 };

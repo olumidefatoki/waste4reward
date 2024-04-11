@@ -63,7 +63,6 @@ export const AggregatorModal = ({ model, closeModal, requestType }) => {
       onSubmit={createAggregator}
     >
       {({ handleChange, errors, values, setFieldValue, handleSubmit }) => {
-        console.log({ values });
         return (
           <Form className="flex flex-col gap-y-2 w-[640px] bg-white p-4 h-max">
             <div className="flex justify-between">
@@ -115,7 +114,8 @@ export const AggregatorModal = ({ model, closeModal, requestType }) => {
                 Cancel
               </button>
               <button
-                onClick={() => handleSubmit()}
+                type="submit"
+                onClick={() => createAggregator()}
                 className="bg-green-700 text-white flex justify-center items-center h-[40px] w-full gap-2"
               >
                 {requestType === "edit" ? "Save Changes" : "Create Aggregator"}

@@ -48,22 +48,35 @@ const Collector = () => {
   const [showModal, setShowModal] = useOutsideClick(wrapperRef);
   const [viewDetail, setViewDetail] = useOutsideClick(wrapperRef);
   const [editDetail, setEditDetail] = useOutsideClick(wrapperRef);
-  const { gatAllCollectors } = useCollector(query, selectedState);
 
   const [collectors, setCollectors] = useState([]);
+  const [collectorId, setCollectorId] = useState(1);
+  const [collectorDetail, setCollectorDetail] = useState({});
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [states, setStates] = useState([]);
   const [lga, setLga] = useState([]);
   const limit = 10;
 
+  const { loading, gatAllCollectors, getSingleCollector } = useCollector(
+    query,
+    selectedState,
+    collectorId
+  );
+
+  const getCollector = async () => {
+    const res = await getSingleCollector(collectorId);
+    console.log(res.data);
+    setCollectorDetail(res.data);
+  };
+
   useEffect(() => {
-    const getAggregators = async () => {
+    const getCollectors = async () => {
       const res = await gatAllCollectors(page, limit);
       setTotalPages(res.data.totalPages);
       setCollectors(res.data?.content);
     };
-    getAggregators();
+    getCollectors();
   }, [page, query, selectedState]);
 
   useEffect(() => {
@@ -81,6 +94,15 @@ const Collector = () => {
     getAllLga();
   }, []);
 
+  const handleViewDetail = (id) => {
+    setCollectorId(id);
+    setViewDetail(true);
+  };
+
+  useEffect(() => {
+    getCollector();
+  }, [collectorId]);
+
   return (
     <div className="p-4">
       <div className="mb-10">
@@ -90,6 +112,7 @@ const Collector = () => {
           buttonTitle={"New Collector"}
           Icon={GoPlus}
           setShowModal={() => setShowModal(true)}
+          exportType="collector"
         />
       </div>
       <div className="mb-10">
@@ -140,7 +163,9 @@ const Collector = () => {
               disability: data.disabilityStatus,
               state: data.state,
               edit: (
-                <MdOutlineRemoveRedEye onClick={() => setViewDetail(true)} />
+                <MdOutlineRemoveRedEye
+                  onClick={() => handleViewDetail(data.id)}
+                />
               ),
               open: <FiEdit onClick={() => setEditDetail(true)} />,
             };
@@ -185,12 +210,13 @@ const Collector = () => {
           closeModal={() => setViewDetail(false)}
         >
           <ViewDetail
-            detail={detail}
+            detail={collectorDetail}
             closeModal={() => setViewDetail(false)}
             title={"Collector Details"}
             subtitle={"Collector details below"}
-            dateCreated={"14 January 2024"}
+            loading={loading}
             editbutton={true}
+            id={collectorId}
           />
         </Modal>
       )}

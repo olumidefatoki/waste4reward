@@ -39,6 +39,8 @@ const Recycler = () => {
   const [editDetail, setEditDetail] = useOutsideClick(wrapperRef);
 
   const [recyclers, setRecyclers] = useState([]);
+  const [recyclerId, setRecyclerId] = useState(1);
+  const [recyclerDetail, setRecyclerDetail] = useState({});
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [states, setStates] = useState([]);
@@ -46,7 +48,18 @@ const Recycler = () => {
   const [selectedState, setSelectedState] = useState("");
   const [lga, setLga] = useState([]);
   const limit = 10;
-  const { gatAllRecyclers } = useRecycler(query, selectedState);
+
+  const { loading, gatAllRecyclers, getSingleRecycler } = useRecycler(
+    query,
+    selectedState,
+    recyclerId
+  );
+
+  const getRecycler = async () => {
+    const res = await getSingleRecycler(recyclerId);
+    console.log(res.data);
+    setRecyclerDetail(res.data);
+  };
 
   useEffect(() => {
     const getRecyclers = async () => {
@@ -72,6 +85,15 @@ const Recycler = () => {
     getAllLga();
   }, []);
 
+  const handleViewDetail = (id) => {
+    setRecyclerId(id);
+    setViewDetail(true);
+  };
+
+  useEffect(() => {
+    getRecycler();
+  }, [recyclerId]);
+
   return (
     <div className="p-4">
       <div className="mb-10">
@@ -81,6 +103,7 @@ const Recycler = () => {
           buttonTitle={"New Recycler"}
           Icon={GoPlus}
           setShowModal={() => setShowModal(true)}
+          exportType="recycler"
         />
       </div>
       <div className="mb-10">
@@ -128,7 +151,9 @@ const Recycler = () => {
               state: data.state,
               date: data.createdAt,
               edit: (
-                <MdOutlineRemoveRedEye onClick={() => setViewDetail(true)} />
+                <MdOutlineRemoveRedEye
+                  onClick={() => handleViewDetail(data.id)}
+                />
               ),
               open: <FiEdit onClick={() => setEditDetail(true)} />,
             };
@@ -173,12 +198,13 @@ const Recycler = () => {
           closeModal={() => setViewDetail(false)}
         >
           <ViewDetail
-            detail={detail}
+            detail={recyclerDetail}
             closeModal={() => setViewDetail(false)}
-            title={"Collector Details"}
-            subtitle={"Collector details below"}
-            dateCreated={"14 January 2024"}
+            title={"Recycler Details"}
+            subtitle={"Recycler details below"}
+            loading={loading}
             editbutton={true}
+            id={recyclerId}
           />
         </Modal>
       )}
