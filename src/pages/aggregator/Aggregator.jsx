@@ -38,20 +38,22 @@ const Aggregator = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [states, setStates] = useState([]);
   const [lga, setLga] = useState([]);
+
   const limit = 10;
 
   const [aggregatorId, setAggregatorId] = useState(1);
   const [aggregatorDetail, setAggregatorDetail] = useState({});
 
-  const { loading, gatAllAggregators, getSingleAggregator } = useAggregator(
-    query,
-    selectedState,
-    aggregatorId
-  );
+  const {
+    loading,
+    gatAllAggregators,
+    getSingleAggregator,
+    gatAllAggregatorLists,
+  } = useAggregator(query, selectedState, aggregatorId);
 
   const getAggregator = async () => {
     const res = await getSingleAggregator(aggregatorId);
-    console.log(res.data);
+    // console.log(res.data);
     setAggregatorDetail(res.data);
   };
 
@@ -78,6 +80,15 @@ const Aggregator = () => {
     };
     getAllLga();
   }, []);
+
+  // useEffect(() => {
+  //   const getAggregatorsList = async () => {
+  //     const res = await gatAllAggregatorLists();
+  //     // setAggregatorList(res.data);
+  //     console.log(res.data);
+  //   };
+  //   getAggregatorsList();
+  // }, []);
 
   const handleChangePage = (newPage) => {
     setPage(newPage);

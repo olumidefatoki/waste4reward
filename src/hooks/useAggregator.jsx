@@ -35,8 +35,9 @@ const useAggregator = (query, selectedState, aggregatorId) => {
   const gatAllAggregatorLists = useCallback(async () => {
     setLoading(true);
     const res = await getAllAggregatorList();
-    console.log({ res }, "hook");
+    // console.log({ res }, "hook");
     setAggregatorCount(res.data.length);
+    return res;
   }, []);
 
   useEffect(() => {

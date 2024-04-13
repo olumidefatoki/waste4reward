@@ -17,6 +17,7 @@ import { EditCollectorModal } from "../../components/editmodal/CollectorModal";
 import { gatAllCollector } from "../../ds/collectors";
 import { getLga, getState } from "../../ds/resource";
 import useCollector from "../../hooks/useCollector";
+import useAggregator from "../../hooks/useAggregator";
 import useResource from "../../hooks/useResource";
 
 const headers = [
@@ -48,7 +49,7 @@ const Collector = () => {
   const [showModal, setShowModal] = useOutsideClick(wrapperRef);
   const [viewDetail, setViewDetail] = useOutsideClick(wrapperRef);
   const [editDetail, setEditDetail] = useOutsideClick(wrapperRef);
-
+  const [aggregatorList, setAggregatorList] = useState([]);
   const [collectors, setCollectors] = useState([]);
   const [collectorId, setCollectorId] = useState(1);
   const [collectorDetail, setCollectorDetail] = useState({});
@@ -58,6 +59,7 @@ const Collector = () => {
   const [lga, setLga] = useState([]);
   const limit = 10;
 
+  const { gatAllAggregatorLists } = useAggregator();
   const { loading, gatAllCollectors, getSingleCollector } = useCollector(
     query,
     selectedState,
@@ -94,6 +96,15 @@ const Collector = () => {
     getAllLga();
   }, []);
 
+  useEffect(() => {
+    const getAggregatorsList = async () => {
+      const res = await gatAllAggregatorLists();
+      setAggregatorList(res.data);
+      // console.log(res.data);
+    };
+    getAggregatorsList();
+  }, []);
+
   const handleViewDetail = (id) => {
     setCollectorId(id);
     setViewDetail(true);
@@ -128,6 +139,11 @@ const Collector = () => {
       </div>
       <div className="mb-10 flex justify-between">
         <div className="flex gap-2">
+          <InputSelect
+            options={aggregatorList.map((data) => data.name)}
+            placeholder="Aggregators"
+            // handleChange={(e) => setSelectedState(e.target.value)}
+          />
           <InputSelect
             options={states.map((data) => data.name)}
             placeholder="Select State"

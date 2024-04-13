@@ -26,11 +26,11 @@ const ViewDetail = ({
           <h1 className="capitalize font-bold">{title}</h1>
           {subtitle ? <p className="text-sm">{subtitle}</p> : ""}
         </div>
-        {editbutton ? (
+        {/* {editbutton ? (
           <button className="w-max p-1 border border-gray-300">Edit</button>
         ) : (
           ""
-        )}
+        )} */}
       </div>
       {loading ? (
         <div className="flex justify-center">
@@ -40,15 +40,26 @@ const ViewDetail = ({
         <div className="flex gap-10">
           <div className="flex flex-col gap-2">
             {Object?.keys(detail)?.map((data, index) => {
+              if (!detail[data]) {
+                return null;
+              }
               return <p className="capitalize">{data}</p>;
             })}
           </div>
           <div className="flex flex-col gap-2">
-            {Object?.values(detail)?.map((data, index) => {
-              if (!data) {
-                return <p>---</p>;
+            {Object?.entries(detail)?.map(([key, value]) => {
+              console.log(key);
+              if (!value) {
+                return null;
               }
-              return <p className="capitalize">{data}</p>;
+              if (key === "yearOfIncorporation") {
+                return (
+                  <p className="capitalize">
+                    {moment(value).format("YYYY-MM-DD")}
+                  </p>
+                );
+              }
+              return <p className="capitalize">{value}</p>;
             })}
           </div>
         </div>
@@ -56,7 +67,7 @@ const ViewDetail = ({
 
       <div className="bg-[#EDFCF2] flex flex-col justify-center rounded-md h-[100px] w-[576px] pl-4">
         <p>Date Created</p>
-        <p>{detail.createdAt ? detail.createdAt : "---"}</p>
+        <p>{detail.createdAt ? detail.createdAt : "Not available"}</p>
       </div>
     </div>
   );
