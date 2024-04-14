@@ -1,13 +1,17 @@
 import api from "../api/axios";
 import fetcher from "../api/fetacher";
 
-export const gatAllUser = async ({ page, size }) => {
+export const gatAllUser = async ({ page, size, nameOrEmailOrPhoneNumber }) => {
   try {
     const accessToken = localStorage.getItem("accessToken");
     const params = {
       page,
       size,
     };
+
+    if (nameOrEmailOrPhoneNumber) {
+      params.nameOrEmailOrPhoneNumber = nameOrEmailOrPhoneNumber;
+    }
     const res = await fetcher(
       "/user",
       {

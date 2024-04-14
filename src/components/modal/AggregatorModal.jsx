@@ -61,7 +61,7 @@ export const AggregatorModal = ({ model, closeModal, requestType }) => {
       if (requestType === "edit") {
         setLoading(true);
         const res = await createNewAggregator();
-        console.log({ res });
+        // console.log({ res });
       }
       setLoading(true);
       const res = await createNewAggregator(formdata);

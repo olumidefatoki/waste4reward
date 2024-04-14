@@ -21,7 +21,7 @@ const InputSelect2 = ({
         name={name}
         {...props}
       >
-        <option>{placeholder}</option>
+        <option value={null}>{placeholder}</option>
         {options.map((option, index) => {
           return (
             <option className="p-2" key={index} value={option.value}>

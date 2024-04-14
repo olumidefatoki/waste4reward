@@ -1,5 +1,6 @@
 import api from "../api/axios";
 import fetcher from "../api/fetacher";
+import fileFetch from "../api/fileFetcher";
 
 export const gatAllWaybill = async ({ page, size, name, state }) => {
   try {
@@ -23,6 +24,22 @@ export const gatAllWaybill = async ({ page, size, name, state }) => {
       params,
       true
     );
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const createWaybill = async (data) => {
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+    const res = await fileFetch("/waybill", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     return res;
   } catch (error) {
     throw error;

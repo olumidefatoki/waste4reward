@@ -21,6 +21,7 @@ const headers = ["User", "Email Address", "Organization", "User type"];
 
 const User = () => {
   const { paReport } = useResource();
+  const [query, setQuery] = useState("");
   const [userId, setUserId] = useState(false);
   const [userDetail, setUserDetail] = useState({});
   const wrapperRef = useRef(null);
@@ -28,46 +29,30 @@ const User = () => {
   const [viewDetail, setViewDetail] = useOutsideClick(wrapperRef);
   const [editDetail, setEditDetail] = useOutsideClick(wrapperRef);
 
-  const { gatAllUsers, getSingleUser } = useUser(userId);
+  const { loading, gatAllUsers, getSingleUser } = useUser(query, userId);
   const { getAllStates, getAllLgas } = useResource();
 
   const [users, setUsers] = useState([]);
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [states, setStates] = useState([]);
-  const [lga, setLga] = useState([]);
+
   const limit = 10;
 
   const getUser = async () => {
     const res = await getSingleUser(userId);
-    console.log(res.data);
+    // console.log(res.data);
     setUserDetail(res.data);
   };
 
   useEffect(() => {
     const getUsers = async () => {
       const res = await gatAllUsers(page, limit);
-      setTotalPages(res.data.totalPages);
-      setUsers(res.data?.content);
+      setTotalPages(res?.data?.totalPages);
+      setUsers(res?.data?.content);
     };
     getUsers();
-  }, [page]);
-
-  useEffect(() => {
-    const getAllState = async () => {
-      const res = await getAllStates();
-      setStates(res.data);
-    };
-    getAllState();
-  }, []);
-  useEffect(() => {
-    const getAllLga = async () => {
-      const res = await getAllLgas();
-      setLga(res.data);
-    };
-    getAllLga();
-  }, []);
+  }, [page, query]);
 
   // const handleViewDetail = (id) => {
   //   setUserId(id);
@@ -92,21 +77,30 @@ const User = () => {
       <div className="mb-10">
         <DataCard
           image={Group}
-          title={"Total Recycler"}
+          title={"Total Users"}
           subtitle={paReport.noOfUser || 0}
           css={"border border-gray-300"}
         />
       </div>
       <div className="mb-10 flex justify-between">
-        <div className="flex gap-2">
-          <InputSelect options={states.map((data) => data.name)} />
-          <InputSelect options={lga.map((data) => data.name)} />
-        </div>
+        <div className="flex gap-2"></div>
         <div>
-          <InputSearch placeholder={"search"} />
+          <InputSearch
+            placeholder={"search"}
+            inputValue={query}
+            setInputValue={setQuery}
+          />
         </div>
       </div>
-      {users.length > 0 ? (
+      {loading ? (
+        <div className="flex justify-center">
+          <p className="text-center">Loading...</p>
+        </div>
+      ) : users?.length === 0 ? (
+        <div className="flex justify-center">
+          <p className="text-center">No data.</p>
+        </div>
+      ) : (
         <CustomTable
           headers={headers}
           rows={users.map((data, index) => {
@@ -129,10 +123,6 @@ const User = () => {
             };
           })}
         />
-      ) : (
-        <div className="flex justify-center">
-          <p className="text-center">Loading...</p>
-        </div>
       )}
       <PaginationPane
         currentPage={page > 1 ? page : 1}

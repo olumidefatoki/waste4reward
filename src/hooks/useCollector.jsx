@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { login } from "../ds/auth";
 import { useDispatch } from "react-redux";
 import { setUser } from "../feature/auth";
@@ -6,6 +6,7 @@ import { gatAllAggregator } from "../ds/aggregators";
 import {
   createCollector,
   gatAllCollector,
+  getAllCollectorList,
   getCollectorDetail,
 } from "../ds/collectors";
 const useCollector = (
@@ -17,6 +18,7 @@ const useCollector = (
 ) => {
   const [loading, setLoading] = useState();
   const dispatch = useDispatch();
+  const [collectorCount, setCollectorCount] = useState();
 
   const gatAllCollectors = async (
     page = 1,
@@ -46,6 +48,18 @@ const useCollector = (
     return JSON.parse(res);
   };
 
+  const gatAllCollectorList = useCallback(async () => {
+    setLoading(true);
+    const res = await getAllCollectorList();
+    // console.log({ res }, "hook");
+    setCollectorCount(res.data.length);
+    return res;
+  }, []);
+
+  useEffect(() => {
+    gatAllCollectorList();
+  }, []);
+
   const createNewCollector = async (data) => {
     const res = await createCollector(data);
     return res;
@@ -53,6 +67,7 @@ const useCollector = (
   return {
     loading,
     gatAllCollectors,
+    gatAllCollectorList,
     getSingleCollector,
     createNewCollector,
   };

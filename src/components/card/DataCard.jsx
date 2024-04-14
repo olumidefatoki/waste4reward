@@ -30,7 +30,7 @@ const DataCard = ({
         </div>
         <div className={`${imageHeight} flex`}>
           <img
-            src={image}
+            src={BottleWater}
             alt="bottle water"
             className="justify-self-end"
             style={{ width: "100%", height: "auto", objectFit: "contain" }}

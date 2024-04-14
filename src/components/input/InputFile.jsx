@@ -1,11 +1,11 @@
 import React from "react";
 
-const InputText = ({ placeholder, label, handleChange, value, name }) => {
+const InputFile = ({ placeholder, label, handleChange, value, name }) => {
   return (
     <div className="flex flex-col gap-2">
       <label>{label}</label>
       <input
-        type="text"
+        type="file"
         placeholder={placeholder}
         onChange={handleChange}
         value={value}
@@ -17,4 +17,4 @@ const InputText = ({ placeholder, label, handleChange, value, name }) => {
   );
 };
 
-export default InputText;
+export default InputFile;

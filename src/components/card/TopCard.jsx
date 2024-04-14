@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { IoCloudDownloadOutline } from "react-icons/io5";
 import { downloadAggregator } from "../../ds/aggregators";
 import { downloadCollector } from "../../ds/collectors";
@@ -14,7 +14,10 @@ const TopCard = ({
   exportType,
   setShowModal = () => {},
 }) => {
+  const [exporting, setExporting] = useState(false);
+
   const exportList = async () => {
+    setExporting(true);
     try {
       // Fetch data
       const res =
@@ -47,8 +50,11 @@ const TopCard = ({
       // Clean up
       document.body.removeChild(link);
       URL.revokeObjectURL(href);
+
+      setExporting(false);
     } catch (error) {
       console.error("Error exporting list:", error);
+      setExporting(false);
     }
   };
 
@@ -63,7 +69,7 @@ const TopCard = ({
           className="flex justify-center items-center h-[40px] w-[101px] border border-gray-300 gap-2 rounded-md"
           onClick={() => exportList()}
         >
-          <IoCloudDownloadOutline /> Export
+          <IoCloudDownloadOutline /> {exporting ? "Exporting..." : "Export"}
         </button>
         <button
           className="bg-green-700 text-white flex justify-center items-center h-[40px] w-[167px] gap-2 rounded-md"

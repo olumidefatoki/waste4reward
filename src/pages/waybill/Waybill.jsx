@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState, useEffect, forwardRef } from "react";
 import TopCard from "../../components/card/TopCard";
 import CustomTable from "../../components/table/CustomTable";
 import { GoPlus } from "react-icons/go";
 import DataCard from "../../components/card/DataCard";
 import InputSelect from "../../components/input/InputSelect";
+import InputSelect2 from "../../components/input/InputSelect2";
 import InputSearch from "../../components/input/InputSearch";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import Modal from "../../components/Modal";
@@ -13,8 +14,16 @@ import { FiEdit } from "react-icons/fi";
 import ViewDetail from "../../components/modal/ViewDetail";
 import PaginationPane from "../../components/table/PaginationPane";
 import { EditWaybillModal } from "../../components/editmodal/WaybillModal";
+import useAggregator from "../../hooks/useAggregator";
+import useRecycler from "../../hooks/useRecycler";
 import useWaybill from "../../hooks/useWaybill";
 import useResource from "../../hooks/useResource";
+
+//date range
+import moment from "moment";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import useCollector from "../../hooks/useCollector";
 
 const headers = [
   "Recycler",
@@ -44,7 +53,7 @@ const Waybill = () => {
   const [viewDetail, setViewDetail] = useOutsideClick(wrapperRef);
   const [editDetail, setEditDetail] = useOutsideClick(wrapperRef);
 
-  const { getAllWaybills } = useWaybill(query, selectedState);
+  const { getAllWaybills, createNewWaybill } = useWaybill(query, selectedState);
   const { getAllStates, getAllLgas } = useResource();
 
   const [waybill, setWaybills] = useState([]);
@@ -53,6 +62,57 @@ const Waybill = () => {
   const [states, setStates] = useState([]);
   const [lga, setLga] = useState([]);
   const limit = 10;
+
+  const [aggregatorList, setAggregatorList] = useState([]);
+  const [aggId, setAggId] = useState("");
+
+  const [recyclerList, setRecyclerList] = useState([]);
+  const [recycId, setRecycId] = useState("");
+
+  const [collectorList, setCollectorList] = useState([]);
+  const [colId, setColId] = useState("");
+  const { gatAllAggregatorLists } = useAggregator();
+  const { gatAllCollectorList } = useCollector();
+  const { gatAllRecyclers } = useRecycler();
+
+  //for date range
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  const [formatStartDate, setFormatStartDate] = useState(null);
+  const [formatEndDate, setFormatEndDate] = useState(null);
+
+  const onChange = (dates) => {
+    const [start, end] = dates;
+
+    console.log(start);
+    setStartDate(start);
+    setEndDate(end);
+
+    {
+      start
+        ? setFormatStartDate(moment(start).format("YYYY-MM-DD"))
+        : setFormatStartDate(null);
+    }
+
+    {
+      end
+        ? setFormatEndDate(moment(end).format("YYYY-MM-DD"))
+        : setFormatEndDate(null);
+    }
+  };
+
+  const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
+    <div className="flex flex-col gap-2">
+      <div
+        className="example-custom-input border border-gray-300 h-[44px] w-[280px] p-2 rounded-md"
+        onClick={onClick}
+        ref={ref}
+      >
+        <h3>{value ? value : "Select date range"}</h3>
+      </div>
+    </div>
+  ));
 
   useEffect(() => {
     const getWaybills = async () => {
@@ -78,6 +138,50 @@ const Waybill = () => {
     getAllLga();
   }, []);
 
+  //get lists
+  useEffect(() => {
+    const getAggregatorsList = async () => {
+      const res = await gatAllAggregatorLists();
+      const list = res?.data?.map((item) => {
+        return {
+          label: item.name,
+          value: item.id,
+        };
+      });
+
+      setAggregatorList([...list]);
+    };
+
+    const getCollectorsList = async () => {
+      const res = await gatAllCollectorList();
+      const list = res.data.map((item) => {
+        return {
+          label: item.name,
+          value: item.id,
+        };
+      });
+      // console.log(list);
+      setCollectorList([...list]);
+      // console.log(res.data);
+    };
+
+    const getRecyclersList = async () => {
+      const res = await gatAllRecyclers();
+      const list = res?.data?.content?.map((item) => {
+        return {
+          label: item.name,
+          value: item.id,
+        };
+      });
+
+      setRecyclerList([...list]);
+    };
+
+    getAggregatorsList();
+    getCollectorsList();
+    getRecyclersList();
+  }, []);
+
   return (
     <div className="p-4">
       <div className="mb-10">
@@ -95,19 +199,53 @@ const Waybill = () => {
       </div>
       <div className="mb-10 flex justify-between">
         <div className="flex gap-2">
+          <InputSelect2
+            options={aggregatorList}
+            placeholder="All Aggregators"
+            handleChange={(e) => setAggId(e.target.value)}
+            css="w-[150px]"
+          />
+          <InputSelect2
+            options={collectorList}
+            placeholder="All Collectors"
+            handleChange={(e) => setColId(e.target.value)}
+            css="w-[150px]"
+          />
           <InputSelect
             options={states.map((data) => data.name)}
-            placeholder="Select State"
+            placeholder="All States"
             handleChange={(e) => setSelectedState(e.target.value)}
+            css="w-[150px]"
           />
-          <InputSelect options={lga.map((data) => data.name)} />
         </div>
-        <div>
-          <InputSearch
+        <div className="flex gap-2">
+          {/* date range*/}
+          <DatePicker
+            selected={startDate}
+            onChange={onChange}
+            startDate={startDate}
+            endDate={endDate}
+            selectsRange
+            customInput={<ExampleCustomInput />}
+            showYearDropdown
+            yearDropdownItemNumber={100}
+            scrollableYearDropdown
+            isClearable
+          />
+
+          {/* <InputSearch
             placeholder={"search"}
             inputValue={query}
             setInputValue={setQuery}
-          />
+            css="w-[150px]"
+          /> */}
+
+          <button
+            className="flex justify-center items-center h-[44px] w-[101px] border border-gray-300 gap-2 rounded-md"
+            // onClick={() => fetchTransactions()}
+          >
+            Apply
+          </button>
         </div>
       </div>
       {waybill.length > 0 ? (
@@ -144,7 +282,11 @@ const Waybill = () => {
           refProp={wrapperRef}
           closeModal={() => setShowModal(false)}
         >
-          <WaybillModal closeModal={() => setShowModal(false)} />
+          <WaybillModal
+            closeModal={() => setShowModal(false)}
+            aggregatorList={aggregatorList}
+            recyclerList={recyclerList}
+          />
         </Modal>
       )}
       {editDetail && (

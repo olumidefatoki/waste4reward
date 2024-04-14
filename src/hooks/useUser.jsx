@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { gatAllUser, createUser, getUserDetail } from "../ds/user";
-const useUser = (userId) => {
+const useUser = (query, userId) => {
   const [loading, setLoading] = useState();
   const dispatch = useDispatch();
 
-  const gatAllUsers = async (page = 1, size = 10) => {
+  const gatAllUsers = async (
+    page = 1,
+    size = 10,
+    nameOrEmailOrPhoneNumber = query
+  ) => {
     setLoading(true);
-    const res = await gatAllUser({ page, size });
+    const res = await gatAllUser({ page, size, nameOrEmailOrPhoneNumber });
+    setLoading(false);
     return JSON.parse(res);
   };
 

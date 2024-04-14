@@ -67,6 +67,27 @@ export const getCollectorDetail = async ({ id }) => {
   }
 };
 
+export const getAllCollectorList = async () => {
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+    const res = await fetcher(
+      "/collector/list",
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+      true
+    );
+    // console.log({ res });
+    return res;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 export const createCollector = async (data) => {
   try {
     const accessToken = localStorage.getItem("accessToken");

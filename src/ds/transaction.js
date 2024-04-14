@@ -1,18 +1,41 @@
 import fetcher from "../api/fetacher";
 
-export const getAllTransactions = async ({ page, size, name, state }) => {
+export const getAllTransactions = async ({
+  page,
+  size,
+  nameOrEmailOrPhoneNumber,
+  state,
+  aggregatorId,
+  collectorId,
+  startDate,
+  endDate,
+}) => {
   try {
     const accessToken = localStorage.getItem("accessToken");
     const params = {
       page,
       size,
     };
-    if (name) {
-      params.name = name;
+    if (nameOrEmailOrPhoneNumber) {
+      params.nameOrEmailOrPhoneNumber = nameOrEmailOrPhoneNumber;
     }
-    if (state !== "Select State") {
+    if (state !== "All States") {
       params.state = state;
     }
+    if (aggregatorId !== "All Aggregators") {
+      params.aggregatorId = aggregatorId;
+    }
+
+    if (collectorId !== "All Collectors") {
+      params.collectorId = collectorId;
+    }
+    if (startDate) {
+      params.startDate = startDate;
+    }
+    if (endDate) {
+      params.endDate = endDate;
+    }
+
     const res = await fetcher(
       "/transaction",
       {
@@ -24,6 +47,22 @@ export const getAllTransactions = async ({ page, size, name, state }) => {
       params,
       true
     );
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const createTransaction = async (data) => {
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+    const res = await fetcher("/transaction", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     return res;
   } catch (error) {
     throw error;
