@@ -1,18 +1,31 @@
 import api from "../api/axios";
 import fetcher from "../api/fetacher";
 
-export const gatAllCollector = async ({ page, size, name, state }) => {
+export const gatAllCollector = async ({
+  page,
+  size,
+  nameOrEmailOrPhoneNumber,
+  aggregatorId,
+  state,
+  location,
+}) => {
   try {
     const accessToken = localStorage.getItem("accessToken");
     const params = {
       page,
       size,
     };
-    if (name) {
-      params.name = name;
+    if (nameOrEmailOrPhoneNumber) {
+      params.nameOrEmailOrPhoneNumber = nameOrEmailOrPhoneNumber;
     }
-    if (!!state && state !== "Select State") {
+    if (!!state && state !== "All States") {
       params.state = state;
+    }
+    if (!!location && location !== "All LGAs") {
+      params.location = location;
+    }
+    if (!!aggregatorId) {
+      params.aggregatorId = aggregatorId;
     }
     const res = await fetcher(
       "/collector",

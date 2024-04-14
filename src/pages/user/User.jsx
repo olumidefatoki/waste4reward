@@ -17,43 +17,41 @@ import { EditUserModal } from "../../components/editmodal/UserModal";
 import useUser from "../../hooks/useUser";
 import useResource from "../../hooks/useResource";
 
-const headers = ["User", "Email Address", "Organization", "Category"];
+const headers = ["User", "Email Address", "Organization", "User type"];
 
-const detail = {
-  "first Name": "Jehoshe",
-  "last Name": "Baidera",
-  "phone Number": "080331485238",
-  "email Address": "Jehoshebaidera@gmail.com",
-  address: "Wuse zone 3 Near Access bank Abuja, Nigeria",
-  state: "Sagamu",
-  lga: "amu",
-  "year of incorporation": "14 January 2024",
-  dateCreated: "14 January 2024",
-};
 const User = () => {
   const { paReport } = useResource();
+  const [userId, setUserId] = useState(false);
+  const [userDetail, setUserDetail] = useState({});
   const wrapperRef = useRef(null);
   const [showModal, setShowModal] = useOutsideClick(wrapperRef);
   const [viewDetail, setViewDetail] = useOutsideClick(wrapperRef);
   const [editDetail, setEditDetail] = useOutsideClick(wrapperRef);
 
-  const { gatAllUsers } = useUser();
+  const { gatAllUsers, getSingleUser } = useUser(userId);
   const { getAllStates, getAllLgas } = useResource();
 
   const [users, setUsers] = useState([]);
+
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [states, setStates] = useState([]);
   const [lga, setLga] = useState([]);
   const limit = 10;
 
+  const getUser = async () => {
+    const res = await getSingleUser(userId);
+    console.log(res.data);
+    setUserDetail(res.data);
+  };
+
   useEffect(() => {
-    const getRecyclers = async () => {
+    const getUsers = async () => {
       const res = await gatAllUsers(page, limit);
       setTotalPages(res.data.totalPages);
       setUsers(res.data?.content);
     };
-    getRecyclers();
+    getUsers();
   }, [page]);
 
   useEffect(() => {
@@ -70,6 +68,15 @@ const User = () => {
     };
     getAllLga();
   }, []);
+
+  // const handleViewDetail = (id) => {
+  //   setUserId(id);
+  //   setViewDetail(true);
+  // };
+
+  // useEffect(() => {
+  //   getUser();
+  // }, [userId]);
 
   return (
     <div className="p-4">
@@ -112,10 +119,12 @@ const User = () => {
               ),
               email: data.email,
               organizationName: data.organization,
-              category: data.category,
-              edit: (
-                <MdOutlineRemoveRedEye onClick={() => setViewDetail(true)} />
-              ),
+              userType: data.userType,
+              // edit: (
+              //   <MdOutlineRemoveRedEye
+              //     onClick={() => handleViewDetail(data.id)}
+              //   />
+              // ),
               open: <FiEdit onClick={() => setEditDetail(true)} />,
             };
           })}
@@ -159,10 +168,10 @@ const User = () => {
           closeModal={() => setViewDetail(false)}
         >
           <ViewDetail
-            detail={detail}
+            detail={userDetail}
             closeModal={() => setViewDetail(false)}
-            title={"Collector Details"}
-            subtitle={"Collector details below"}
+            title={"User Details"}
+            subtitle={"User details below"}
             dateCreated={"14 January 2024"}
             editbutton={true}
           />

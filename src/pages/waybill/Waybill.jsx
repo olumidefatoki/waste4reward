@@ -122,9 +122,7 @@ const Waybill = () => {
               amount: data.amount,
               attachment: data.attachment1,
               date: data.createdAt,
-              edit: (
-                <MdOutlineRemoveRedEye onClick={() => setViewDetail(true)} />
-              ),
+              edit: <MdOutlineRemoveRedEye />,
               open: <FiEdit onClick={() => setEditDetail(true)} />,
             };
           })}

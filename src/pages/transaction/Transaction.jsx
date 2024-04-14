@@ -150,9 +150,7 @@ const Transaction = () => {
               quantity: data.quantity,
               amount: "NGN " + toMoney(data.amount),
               state: data.state,
-              edit: (
-                <MdOutlineRemoveRedEye onClick={() => setViewDetail(true)} />
-              ),
+              edit: <MdOutlineRemoveRedEye />,
               open: <FiEdit onClick={() => setEditDetail(true)} />,
             };
           })}

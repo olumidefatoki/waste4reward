@@ -5,7 +5,7 @@ import { PiUsers } from "react-icons/pi";
 import { IoCloseOutline } from "react-icons/io5";
 import InputText from "../input/InputText";
 import InputSelect from "../input/InputSelect";
-// import { Form, Formik } from "formik";
+import toast from "react-hot-toast";
 import useAggregator from "../../hooks/useAggregator";
 import { createAggregatorSchema } from "../../utils/validationSchema/aggregatorSchema";
 
@@ -33,22 +33,6 @@ export const AggregatorModal = ({ model, closeModal, requestType }) => {
     };
     getAllLga();
   }, []);
-
-  // const [isLoading, setisLoading] = useState(false);
-  // const [errorMsg, setErrorMsg] = useState("");
-  // const [showToast, setShowToast] = useState(false);
-  // const [showErrToast, setShowErrToast] = useState(false);
-
-  //   {
-  //     "address": "{{$randomStreetAddress}}",
-  //    "name": "{{$randomCompanyName}}",
-  //    "phoneNumber": "{{phoneNumber}}",
-  //    "email": "{{$randomEmail}}",
-  //    "location": "BWARI",
-  //    "state": "FCT",
-  //    "yearOfIncorporation": "2024-01-01"
-
-  // }
 
   const [aggregatorDetail, setAggregatorDetail] = useState({
     address: "",
@@ -81,17 +65,17 @@ export const AggregatorModal = ({ model, closeModal, requestType }) => {
       }
       setLoading(true);
       const res = await createNewAggregator(formdata);
-      console.log({ res });
-      // toast.success("successfully signed in", {
-      //   className: "toast-success",
-      // });
+      // console.log({ res });
+      if (res.errors) {
+        toast.error(Object.values(res.errors)[0]);
+        return;
+      }
+      toast.success("Aggregator created");
+      closeModal();
     } catch (error) {
-      // toast.error(error.message || "something went wrong", {
-      //   className: "toast-error",
-      // });
+      toast.error(error.message || "something went wrong");
     } finally {
       setLoading(false);
-      closeModal();
     }
   };
 
@@ -166,6 +150,7 @@ export const AggregatorModal = ({ model, closeModal, requestType }) => {
         <div className="flex justify-between w-full">
           <InputSelect
             label={"State"}
+            placeholder="Select state"
             options={states.map((data) => data.name)}
             handleChange={(e) =>
               setAggregatorDetail({
@@ -176,6 +161,7 @@ export const AggregatorModal = ({ model, closeModal, requestType }) => {
           />
           <InputSelect
             label={"Lga"}
+            placeholder="Select lga"
             options={lga.map((data) => data.name)}
             handleChange={(e) =>
               setAggregatorDetail({
@@ -210,7 +196,11 @@ export const AggregatorModal = ({ model, closeModal, requestType }) => {
             onClick={() => createAggregator()}
             className="bg-green-700 text-white flex justify-center items-center h-[40px] w-full gap-2"
           >
-            {requestType === "edit" ? "Save Changes" : "Create Aggregator"}
+            {requestType === "edit"
+              ? "Save Changes"
+              : loading
+              ? "Creating..."
+              : "Create Aggregator"}
           </button>
         </div>
       </div>

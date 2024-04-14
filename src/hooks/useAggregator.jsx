@@ -9,7 +9,7 @@ import {
   getAggregatorDetail,
 } from "../ds/aggregators";
 import { getTopAggregators } from "../ds/resource";
-const useAggregator = (query, selectedState, aggregatorId) => {
+const useAggregator = (query, selectedState, selectedLga, aggregatorId) => {
   const [loading, setLoading] = useState();
   const [aggregatorCount, setAggregatorCount] = useState();
   const dispatch = useDispatch();
@@ -17,11 +17,20 @@ const useAggregator = (query, selectedState, aggregatorId) => {
   const gatAllAggregators = async (
     page = 1,
     size = 10,
-    name = query,
-    state = selectedState
+    nameOrEmailOrPhoneNumber = query,
+    state = selectedState,
+    location = selectedLga
   ) => {
     setLoading(true);
-    const res = await gatAllAggregator({ page, size, name, state });
+    const res = await gatAllAggregator({
+      page,
+      size,
+      nameOrEmailOrPhoneNumber,
+      state,
+      location,
+    });
+
+    setLoading(false);
     return JSON.parse(res);
   };
 

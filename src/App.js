@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
 import { getAuthRouter } from "./router/auth";
 import { getDashboardRouter } from "./router/dashboard";
+import toast, { Toaster } from "react-hot-toast";
 
 function App() {
   const [router, setRouter] = useState([]);
@@ -31,6 +32,7 @@ function App() {
       <div>
         {hasRouter && (
           <Suspense fallback={<div>Loading...</div>}>
+            <Toaster />
             <RouterProvider router={router} />
           </Suspense>
         )}

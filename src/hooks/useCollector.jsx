@@ -8,18 +8,34 @@ import {
   gatAllCollector,
   getCollectorDetail,
 } from "../ds/collectors";
-const useCollector = (query, selectedState, collectorId) => {
+const useCollector = (
+  query,
+  selectedState,
+  selectedLga,
+  aggId,
+  collectorId
+) => {
   const [loading, setLoading] = useState();
   const dispatch = useDispatch();
 
   const gatAllCollectors = async (
     page = 1,
     size = 10,
-    name = query,
-    state = selectedState
+    nameOrEmailOrPhoneNumber = query,
+    state = selectedState,
+    location = selectedLga,
+    aggregatorId = aggId
   ) => {
     setLoading(true);
-    const res = await gatAllCollector({ page, size, name, state });
+    const res = await gatAllCollector({
+      page,
+      size,
+      nameOrEmailOrPhoneNumber,
+      state,
+      location,
+      aggregatorId,
+    });
+    setLoading(false);
     return JSON.parse(res);
   };
 

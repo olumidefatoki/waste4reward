@@ -1,20 +1,46 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, forwardRef } from "react";
 import { PiUsers } from "react-icons/pi";
 import { IoCloseOutline } from "react-icons/io5";
 import InputText from "../input/InputText";
 import InputSelect from "../input/InputSelect";
+import InputSelect2 from "../input/InputSelect2";
 import { Form, Formik } from "formik";
 import { createCollectorSchema } from "../../utils/validationSchema/collectorSchema";
 import useCollector from "../../hooks/useCollector";
 
 import { getState, getLga } from "../../ds/resource";
+import moment from "moment";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
-export const CollectorModal = ({ model, closeModal, requestType }) => {
+import toast, { Toaster } from "react-hot-toast";
+
+export const CollectorModal = ({
+  model,
+  closeModal,
+  requestType,
+  aggregatorList,
+}) => {
   const modalRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const { createNewCollector } = useCollector();
+
+  const [startDate, setStartDate] = useState();
+
+  const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
+    <div className="flex flex-col gap-2">
+      <label>Date of birth</label>
+      <div
+        className="example-custom-input border border-gray-300 h-[44px] w-[280px] p-2 rounded-md"
+        onClick={onClick}
+        ref={ref}
+      >
+        <h3>{value ? value : "Select date of birth"}</h3>
+      </div>
+    </div>
+  ));
 
   const [states, setStates] = useState([]);
   const [lga, setLga] = useState([]);
@@ -57,20 +83,6 @@ export const CollectorModal = ({ model, closeModal, requestType }) => {
     console.log(collectorDetail);
     setLoading(true);
 
-    //   {
-    //     "firstName": "{{$randomFirstName}}",
-    //     "lastName": "{{$randomLastName}}",
-    //      "address": "{{$randomStreetAddress}}",
-    //     "phoneNumber": "{{phoneNumber}}",
-    //     "email": "{{$randomEmail}}",
-    //     "location": "BWARI",
-    //     "state": "FCT",
-    //     "gender": "male",
-    //     "dateOfBirth": "2001-01-07",
-    //     "aggregatorId": 3,
-    //     "disabilityStatus": "Able"
-    // }
-
     try {
       if (requestType === "edit") {
         setLoading(true);
@@ -79,22 +91,21 @@ export const CollectorModal = ({ model, closeModal, requestType }) => {
       }
       setLoading(true);
       const res = await createNewCollector(collectorDetail);
-      console.log({ res });
-      // toast.success("successfully signed in", {
-      //   className: "toast-success",
-      // });
+      if (res.errors) {
+        toast.error(Object.values(res.errors)[0]);
+        return;
+      }
+      toast.success("Collector created");
+      closeModal();
     } catch (error) {
-      // toast.error(error.message || "something went wrong", {
-      //   className: "toast-error",
-      // });
+      toast.error(error.message || "something went wrong");
     } finally {
       setLoading(false);
-      closeModal();
     }
   };
 
   return (
-    <div>
+    <div style={{ height: "500px" }}>
       <div className="flex flex-col gap-y-2 w-[640px] bg-white p-4 h-max">
         <div className="flex justify-between">
           <PiUsers style={{ width: 26, height: 26 }} />
@@ -136,7 +147,8 @@ export const CollectorModal = ({ model, closeModal, requestType }) => {
         <div className="flex justify-between w-full">
           <InputSelect
             label={"Gender"}
-            options={["Select gender", "male", "female"]}
+            placeholder="Select gender"
+            options={["Male", "Female"]}
             handleChange={(e) =>
               setCollectorDetail({
                 ...collectorDetail,
@@ -144,18 +156,24 @@ export const CollectorModal = ({ model, closeModal, requestType }) => {
               })
             }
           />
-          <InputSelect
-            label={"Disability Status"}
-            options={["Select disability status", "able", "disable"]}
-            handleChange={(e) =>
+
+          {/* date of birth */}
+          <DatePicker
+            selected={startDate}
+            onChange={(date) => {
+              setStartDate(date);
               setCollectorDetail({
                 ...collectorDetail,
-                disabilityStatus: e.target.value,
-              })
-            }
+                dateOfBirth: moment(date).format("YYYY-MM-DD"),
+              });
+            }}
+            customInput={<ExampleCustomInput />}
+            showYearDropdown
+            yearDropdownItemNumber={100}
+            scrollableYearDropdown
           />
         </div>
-        <div className="w-full">
+        <div className="flex justify-between w-full">
           <InputText
             label={"Phone Number"}
             placeholder={"Enter phone number"}
@@ -167,8 +185,19 @@ export const CollectorModal = ({ model, closeModal, requestType }) => {
               })
             }
           />
+          <InputSelect2
+            label={"Aggregator"}
+            options={aggregatorList}
+            placeholder="Select aggregator"
+            handleChange={(e) =>
+              setCollectorDetail({
+                ...collectorDetail,
+                aggregatorId: e.target.value,
+              })
+            }
+          />
         </div>
-        <div className="w-full">
+        <div className="flex justify-between w-full">
           <InputText
             label={"Email Address"}
             placeholder={"Enter email address"}
@@ -177,6 +206,17 @@ export const CollectorModal = ({ model, closeModal, requestType }) => {
               setCollectorDetail({
                 ...collectorDetail,
                 email: e.target.value,
+              })
+            }
+          />
+          <InputSelect
+            label={"Disability Status"}
+            placeholder="Select disability status"
+            options={["Able", "Disabled"]}
+            handleChange={(e) =>
+              setCollectorDetail({
+                ...collectorDetail,
+                disabilityStatus: e.target.value,
               })
             }
           />
@@ -232,7 +272,7 @@ export const CollectorModal = ({ model, closeModal, requestType }) => {
             {requestType === "edit"
               ? "save changes"
               : loading
-              ? "Saving..."
+              ? "Creating..."
               : "Create Collector"}
           </button>
         </div>

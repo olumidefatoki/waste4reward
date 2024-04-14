@@ -15,6 +15,7 @@ const InputSearch = ({ placeholder, inputValue, setInputValue }) => {
         onChange={(e) => {
           setInputValue(e.target.value);
         }}
+        style={{ outline: "none" }}
       />
     </div>
   );

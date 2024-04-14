@@ -20,11 +20,12 @@ import fetcher from "../../api/fetacher";
 import { getLga, getState } from "../../ds/resource";
 import useResource from "../../hooks/useResource";
 
-const headers = ["Company", "Email Address", "Phone Number", "State"];
+const headers = ["Company", "Email Address", "Phone Number", "Location"];
 
 const Aggregator = () => {
   const [query, setQuery] = useState("");
   const [selectedState, setSelectedState] = useState("");
+  const [selectedLga, setSelectedLga] = useState("");
   const { paReport } = useResource();
   const wrapperRef = useRef(null);
   const [showModal, setShowModal] = useOutsideClick(wrapperRef);
@@ -49,7 +50,7 @@ const Aggregator = () => {
     gatAllAggregators,
     getSingleAggregator,
     gatAllAggregatorLists,
-  } = useAggregator(query, selectedState, aggregatorId);
+  } = useAggregator(query, selectedState, selectedLga, aggregatorId);
 
   const getAggregator = async () => {
     const res = await getSingleAggregator(aggregatorId);
@@ -57,14 +58,15 @@ const Aggregator = () => {
     setAggregatorDetail(res.data);
   };
 
+  const getAggregators = async () => {
+    const res = await gatAllAggregators(page, limit);
+    setTotalPages(res?.data?.totalPages);
+    setAggregators(res?.data?.content);
+  };
+
   useEffect(() => {
-    const getAggregators = async () => {
-      const res = await gatAllAggregators(page, limit);
-      setTotalPages(res.data.totalPages);
-      setAggregators(res.data?.content);
-    };
     getAggregators();
-  }, [page, query, selectedState]);
+  }, []);
 
   useEffect(() => {
     const getAllState = async () => {
@@ -135,20 +137,39 @@ const Aggregator = () => {
         <div className="flex gap-2">
           <InputSelect
             options={states.map((data) => data.name)}
-            placeholder="Select State"
+            placeholder="All States"
             handleChange={(e) => setSelectedState(e.target.value)}
           />
-          <InputSelect options={lga.map((data) => data.name)} />
+          <InputSelect
+            options={lga.map((data) => data.name)}
+            placeholder="All LGAs"
+            handleChange={(e) => setSelectedLga(e.target.value)}
+          />
         </div>
-        <div className="min-w-[160px]">
+        <div className="flex gap-2">
           <InputSearch
             placeholder={"search"}
             inputValue={query}
             setInputValue={setQuery}
           />
+
+          <button
+            className="flex justify-center items-center h-[44px] w-[101px] border border-gray-300 gap-2 rounded-md"
+            onClick={() => getAggregators()}
+          >
+            Apply
+          </button>
         </div>
       </div>
-      {aggregators.length > 0 ? (
+      {loading ? (
+        <div className="flex justify-center">
+          <p className="text-center">Loading...</p>
+        </div>
+      ) : aggregators?.length === 0 ? (
+        <div className="flex justify-center">
+          <p className="text-center">No data.</p>
+        </div>
+      ) : (
         <CustomTable
           headers={headers}
           rows={aggregators?.map((data, index) => {
@@ -162,7 +183,7 @@ const Aggregator = () => {
               ),
               email: data.email,
               phone_number: data.phoneNumber,
-              state: data.state,
+              location: data.location,
               edit: (
                 <MdOutlineRemoveRedEye
                   onClick={() => handleViewDetail(data.id)}
@@ -172,10 +193,6 @@ const Aggregator = () => {
             };
           })}
         />
-      ) : (
-        <div className="flex justify-center">
-          <p className="text-center">Loading...</p>
-        </div>
       )}
       <PaginationPane
         currentPage={page > 1 ? page : 1}

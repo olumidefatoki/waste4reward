@@ -7,119 +7,156 @@ import InputSelect from "../input/InputSelect";
 import { IoCloseOutline } from "react-icons/io5";
 import { Form, Formik } from "formik";
 import useUser from "../../hooks/useUser";
-import { createUserSchema } from "../../utils/validationSchema/user";
+import toast from "react-hot-toast";
+import { orange } from "@mui/material/colors";
 
 export const UserModal = ({ model, closeModal, requestType }) => {
   const modalRef = useRef(null);
   const [loading, setLoading] = useState(false);
-  const { createNewRecycler } = useUser();
+  const { createNewUser } = useUser();
 
-  // const [isLoading, setisLoading] = useState(false);
-  // const [errorMsg, setErrorMsg] = useState("");
-  // const [showToast, setShowToast] = useState(false);
-  // const [showErrToast, setShowErrToast] = useState(false);
-  const initialValues = {
+  const [states, setStates] = useState([]);
+  const [lga, setLga] = useState([]);
+
+  const [userDetail, setUserDetail] = useState({
     firstName: "",
     lastName: "",
-    address: "",
-    phoneNumber: "",
+    organization: "",
+    userType: "",
     email: "",
-    location: "",
-    state: "",
-    gender: "",
-    dateOfBirth: "",
-    aggregatorId: "",
-    disabilityStatus: "",
-  };
+  });
 
-  const createRecycler = async (data) => {
-    console.log({ data });
+  const createUser = async () => {
+    setLoading(true);
     try {
       if (requestType === "edit") {
         setLoading(true);
-        const res = await createNewRecycler(data);
-        console.log({ res });
+        const res = await createNewUser(userDetail);
+        // console.log({ res });
       }
       setLoading(true);
-      const res = await createNewRecycler(data);
-      console.log({ res });
-      // toast.success("successfully signed in", {
-      //   className: "toast-success",
-      // });
+      const res = await createNewUser(userDetail);
+      // console.log({ res });
+      if (res.errors) {
+        toast.error(Object.values(res.errors)[0]);
+        return;
+      }
+      toast.success("User created");
+      closeModal();
     } catch (error) {
-      // toast.error(error.message || "something went wrong", {
-      //   className: "toast-error",
-      // });
+      toast.error(error.message || "something went wrong");
     } finally {
       setLoading(false);
-      closeModal();
     }
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={createUserSchema}
-      onSubmit={createRecycler}
-    >
-      {({ handleChange, errors, values, setFieldValue, handleSubmit }) => {
-        console.log({ values });
-        return (
-          <Form className="flex flex-col gap-y-2 w-[640px] bg-white p-4 h-max">
-            <div className="flex justify-between">
-              <PiUsers style={{ width: 26, height: 26 }} />
-              <IoCloseOutline
-                style={{ width: 26, height: 26, cursor: "pointer" }}
-                onClick={() => closeModal()}
-              />
-            </div>
-            <div className="">
-              <h1 className="capitalize font-bold">Create new User</h1>
-              <p className="text-sm">Enter the details below</p>
-            </div>
-            <div className="flex justify-between">
-              <InputText label={"FirstName"} placeholder={"Enter first name"} />
-              <InputText label={"LastName"} placeholder={"Enter last name"} />
-            </div>
-            <div className="w-full">
-              <InputText
-                label={"Phone Number"}
-                placeholder={"Enter phone number"}
-              />
-            </div>
-            <div className="w-full">
-              <InputText
-                label={"Email Adress"}
-                placeholder={"Enter email address"}
-              />
-            </div>
-            <div className="flex justify-between w-full">
-              <InputSelect label={"State"} options={["select state"]} />
-              <InputSelect label={"Lga"} options={["select lgs"]} />
-            </div>
-            <div className="w-full mb-10">
-              <InputText
-                label={"Year of Incorporation"}
-                placeholder={"Enter year of incorporation"}
-              />
-            </div>
-            <div className="flex gap-2 justify-center">
-              <button
-                className="mx-auto px-2 w-full h-[40px] font-normal text-xs flex justify-center items-center gap-3 disabled:cursor-not-allowed border border-pfBlack md:w-272"
-                onClick={() => closeModal()}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => handleSubmit()}
-                className="bg-green-700 text-white flex justify-center items-center h-[40px] w-full gap-2"
-              >
-                {requestType === "edit" ? "Save Changes" : "Create User"}
-              </button>
-            </div>
-          </Form>
-        );
-      }}
-    </Formik>
+    <div>
+      <div>
+        <div className="flex flex-col gap-y-2 w-[640px] bg-white p-4 h-max">
+          <div className="flex justify-between">
+            <PiUsers style={{ width: 26, height: 26 }} />
+            <IoCloseOutline
+              style={{ width: 26, height: 26, cursor: "pointer" }}
+              onClick={() => closeModal()}
+            />
+          </div>
+          <div className="">
+            <h1 className="capitalize font-bold">
+              {requestType === "edit" ? "Edit user" : "Create new user"}
+            </h1>
+            <p className="text-sm">Enter the details below</p>
+          </div>
+          <div className="flex justify-between">
+            <InputText
+              label={"First name"}
+              placeholder={"Enter first name"}
+              value={userDetail.firstName}
+              handleChange={(e) =>
+                setUserDetail({
+                  ...userDetail,
+                  firstName: e.target.value,
+                })
+              }
+              css="w-full"
+            />
+            <InputText
+              label={"Last name"}
+              placeholder={"Enter last name"}
+              value={userDetail.lastName}
+              handleChange={(e) =>
+                setUserDetail({
+                  ...userDetail,
+                  lastName: e.target.value,
+                })
+              }
+              css="w-full"
+            />
+          </div>
+
+          <div className="w-full">
+            <InputText
+              label={"Organisation"}
+              placeholder={"Enter  organisation"}
+              value={userDetail.organization}
+              handleChange={(e) =>
+                setUserDetail({
+                  ...userDetail,
+                  organization: e.target.value,
+                })
+              }
+            />
+          </div>
+          <div className="w-full">
+            <InputText
+              label={"Email Address"}
+              placeholder={"Enter email address"}
+              value={userDetail.email}
+              handleChange={(e) =>
+                setUserDetail({
+                  ...userDetail,
+                  email: e.target.value,
+                })
+              }
+            />
+          </div>
+          <div className="w-full">
+            <InputSelect
+              label={"User type"}
+              placeholder="Select user type"
+              options={["Aggregator", "Partner"]}
+              handleChange={(e) =>
+                setUserDetail({
+                  ...userDetail,
+                  userType: e.target.value,
+                })
+              }
+              css="w-full"
+            />
+          </div>
+
+          <br />
+
+          <div className="flex gap-2 justify-center">
+            <button
+              className="mx-auto px-2 w-full h-[40px] font-normal text-xs flex justify-center items-center gap-3 disabled:cursor-not-allowed border border-pfBlack md:w-272"
+              onClick={() => closeModal()}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => createUser()}
+              className="bg-green-700 text-white flex justify-center items-center h-[40px] w-full gap-2"
+            >
+              {requestType === "edit"
+                ? "Save Changes"
+                : loading
+                ? "Creating..."
+                : "Create User"}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };

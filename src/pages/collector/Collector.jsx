@@ -4,6 +4,7 @@ import CustomTable from "../../components/table/CustomTable";
 import { GoPlus } from "react-icons/go";
 import DataCard from "../../components/card/DataCard";
 import InputSelect from "../../components/input/InputSelect";
+import InputSelect2 from "../../components/input/InputSelect2";
 import InputSearch from "../../components/input/InputSearch";
 import Character from "../../assets/images/Character.png";
 import useOutsideClick from "../../hooks/useOutsideClick";
@@ -43,6 +44,7 @@ const detail = {
 const Collector = () => {
   const [query, setQuery] = useState("");
   const [selectedState, setSelectedState] = useState("");
+  const [selectedLga, setSelectedLga] = useState("");
 
   const { paReport } = useResource();
   const wrapperRef = useRef(null);
@@ -50,6 +52,7 @@ const Collector = () => {
   const [viewDetail, setViewDetail] = useOutsideClick(wrapperRef);
   const [editDetail, setEditDetail] = useOutsideClick(wrapperRef);
   const [aggregatorList, setAggregatorList] = useState([]);
+  const [aggId, setAggId] = useState("");
   const [collectors, setCollectors] = useState([]);
   const [collectorId, setCollectorId] = useState(1);
   const [collectorDetail, setCollectorDetail] = useState({});
@@ -63,6 +66,8 @@ const Collector = () => {
   const { loading, gatAllCollectors, getSingleCollector } = useCollector(
     query,
     selectedState,
+    selectedLga,
+    aggId,
     collectorId
   );
 
@@ -72,14 +77,15 @@ const Collector = () => {
     setCollectorDetail(res.data);
   };
 
+  const getCollectors = async () => {
+    const res = await gatAllCollectors(page, limit);
+    setTotalPages(res?.data?.totalPages);
+    setCollectors(res?.data?.content);
+  };
+
   useEffect(() => {
-    const getCollectors = async () => {
-      const res = await gatAllCollectors(page, limit);
-      setTotalPages(res.data.totalPages);
-      setCollectors(res.data?.content);
-    };
     getCollectors();
-  }, [page, query, selectedState]);
+  }, []);
 
   useEffect(() => {
     const getAllState = async () => {
@@ -99,7 +105,14 @@ const Collector = () => {
   useEffect(() => {
     const getAggregatorsList = async () => {
       const res = await gatAllAggregatorLists();
-      setAggregatorList(res.data);
+      const list = res.data.map((item) => {
+        return {
+          label: item.name,
+          value: item.id,
+        };
+      });
+      console.log(list);
+      setAggregatorList([...list]);
       // console.log(res.data);
     };
     getAggregatorsList();
@@ -139,28 +152,46 @@ const Collector = () => {
       </div>
       <div className="mb-10 flex justify-between">
         <div className="flex gap-2">
-          <InputSelect
-            options={aggregatorList.map((data) => data.name)}
+          <InputSelect2
+            options={aggregatorList}
             placeholder="Aggregators"
-            // handleChange={(e) => setSelectedState(e.target.value)}
+            handleChange={(e) => setAggId(e.target.value)}
           />
           <InputSelect
             options={states.map((data) => data.name)}
-            placeholder="Select State"
+            placeholder="All States"
             handleChange={(e) => setSelectedState(e.target.value)}
           />
-          <InputSelect options={lga.map((data) => data.name)} />
+          <InputSelect
+            options={lga.map((data) => data.name)}
+            placeholder="All LGAs"
+          />
         </div>
-        <div>
+        <div className="flex gap-2">
           <InputSearch
             placeholder={"search"}
             inputValue={query}
             setInputValue={setQuery}
           />
+
+          <button
+            className="flex justify-center items-center h-[44px] w-[101px] border border-gray-300 gap-2 rounded-md"
+            onClick={() => getCollectors()}
+          >
+            Apply
+          </button>
         </div>
       </div>
 
-      {collectors.length > 0 ? (
+      {loading ? (
+        <div className="flex justify-center">
+          <p className="text-center">Loading...</p>
+        </div>
+      ) : collectors?.length === 0 ? (
+        <div className="flex justify-center">
+          <p className="text-center">No data.</p>
+        </div>
+      ) : (
         <CustomTable
           headers={headers}
           rows={collectors.map((data, index) => {
@@ -175,7 +206,7 @@ const Collector = () => {
               ),
               aggregator: data.aggregator,
               phone_number: data.phoneNumber,
-              Age: data.dateOfBirth,
+              Age: data.age,
               disability: data.disabilityStatus,
               state: data.state,
               edit: (
@@ -187,10 +218,6 @@ const Collector = () => {
             };
           })}
         />
-      ) : (
-        <div className="flex justify-center">
-          <p className="text-center">Loading...</p>
-        </div>
       )}
       <PaginationPane
         currentPage={page > 1 ? page : 1}
@@ -204,7 +231,10 @@ const Collector = () => {
           refProp={wrapperRef}
           closeModal={() => setShowModal(false)}
         >
-          <CollectorModal closeModal={() => setShowModal(false)} />
+          <CollectorModal
+            closeModal={() => setShowModal(false)}
+            aggregatorList={aggregatorList}
+          />
         </Modal>
       )}
       {editDetail && (

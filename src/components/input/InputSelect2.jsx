@@ -1,6 +1,6 @@
 import React from "react";
 
-const InputSelect = ({
+const InputSelect2 = ({
   options = [],
   label,
   css,
@@ -20,13 +20,12 @@ const InputSelect = ({
         onChange={handleChange}
         name={name}
         {...props}
-        style={{ outline: "none" }}
       >
         <option>{placeholder}</option>
-        {options.map((data, index) => {
+        {options.map((option, index) => {
           return (
-            <option className="p-2" key={index}>
-              {data}
+            <option className="p-2" key={index} value={option.value}>
+              {option.label}
             </option>
           );
         })}
@@ -35,4 +34,4 @@ const InputSelect = ({
   );
 };
 
-export default InputSelect;
+export default InputSelect2;
