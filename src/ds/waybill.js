@@ -2,15 +2,40 @@ import api from "../api/axios";
 import fetcher from "../api/fetacher";
 import fileFetch from "../api/fileFetcher";
 
-export const gatAllWaybill = async ({ page, size, name, state }) => {
+export const gatAllWaybill = async ({
+  page,
+  size,
+  nameOrEmailOrPhoneNumber,
+  state,
+  aggregatorId,
+  collectorId,
+  startDate,
+  endDate,
+}) => {
   try {
     const accessToken = localStorage.getItem("accessToken");
     const params = {
       page,
       size,
     };
-    if (name) {
-      params.name = name;
+    if (nameOrEmailOrPhoneNumber) {
+      params.nameOrEmailOrPhoneNumber = nameOrEmailOrPhoneNumber;
+    }
+    if (state !== "All States") {
+      params.state = state;
+    }
+    if (aggregatorId !== "All Aggregators") {
+      params.aggregatorId = aggregatorId;
+    }
+
+    if (collectorId !== "All Collectors") {
+      params.collectorId = collectorId;
+    }
+    if (startDate) {
+      params.startDate = startDate;
+    }
+    if (endDate) {
+      params.endDate = endDate;
     }
 
     const res = await fetcher(

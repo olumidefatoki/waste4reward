@@ -48,12 +48,17 @@ const detail = {
 const Waybill = () => {
   const wrapperRef = useRef(null);
   const [query, setQuery] = useState("");
-  const [selectedState, setSelectedState] = useState("");
+  const [selectedState, setSelectedState] = useState("All States");
   const [showModal, setShowModal] = useOutsideClick(wrapperRef);
   const [viewDetail, setViewDetail] = useOutsideClick(wrapperRef);
   const [editDetail, setEditDetail] = useOutsideClick(wrapperRef);
 
-  const { getAllWaybills, createNewWaybill } = useWaybill(query, selectedState);
+  const [aggregatorList, setAggregatorList] = useState([]);
+  const [aggId, setAggId] = useState("All Aggregators");
+
+  const [collectorList, setCollectorList] = useState([]);
+  const [colId, setColId] = useState("All Collectors");
+
   const { getAllStates, getAllLgas } = useResource();
 
   const [waybill, setWaybills] = useState([]);
@@ -63,14 +68,9 @@ const Waybill = () => {
   const [lga, setLga] = useState([]);
   const limit = 10;
 
-  const [aggregatorList, setAggregatorList] = useState([]);
-  const [aggId, setAggId] = useState("");
-
   const [recyclerList, setRecyclerList] = useState([]);
   const [recycId, setRecycId] = useState("");
 
-  const [collectorList, setCollectorList] = useState([]);
-  const [colId, setColId] = useState("");
   const { gatAllAggregatorLists } = useAggregator();
   const { gatAllCollectorList } = useCollector();
   const { gatAllRecyclers } = useRecycler();
@@ -114,14 +114,24 @@ const Waybill = () => {
     </div>
   ));
 
+  const { loading, getAllWaybills, createNewWaybill } = useWaybill(
+    query,
+    selectedState,
+    aggId,
+    colId,
+    formatStartDate,
+    formatEndDate
+  );
+
+  //fetch waybill
+  const getWaybills = async () => {
+    const res = await getAllWaybills(page, limit);
+    setTotalPages(res.data.totalPages);
+    setWaybills(res.data?.content);
+  };
   useEffect(() => {
-    const getWaybills = async () => {
-      const res = await getAllWaybills(page, limit);
-      setTotalPages(res.data.totalPages);
-      setWaybills(res.data?.content);
-    };
     getWaybills();
-  }, [page, query, selectedState]);
+  }, []);
 
   useEffect(() => {
     const getAllState = async () => {
@@ -242,13 +252,21 @@ const Waybill = () => {
 
           <button
             className="flex justify-center items-center h-[44px] w-[101px] border border-gray-300 gap-2 rounded-md"
-            // onClick={() => fetchTransactions()}
+            onClick={() => getWaybills()}
           >
             Apply
           </button>
         </div>
       </div>
-      {waybill.length > 0 ? (
+      {loading ? (
+        <div className="flex justify-center">
+          <p className="text-center">Loading...</p>
+        </div>
+      ) : waybill?.length === 0 ? (
+        <div className="flex justify-center">
+          <p className="text-center">No data.</p>
+        </div>
+      ) : (
         <CustomTable
           headers={headers}
           rows={waybill.map((data, index) => {
@@ -265,10 +283,6 @@ const Waybill = () => {
             };
           })}
         />
-      ) : (
-        <div className="flex justify-center">
-          <p className="text-center">Loading...</p>
-        </div>
       )}
       <PaginationPane
         currentPage={page > 1 ? page : 1}

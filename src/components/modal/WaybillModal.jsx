@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import useWaybill from "../../hooks/useWaybill";
 import InputFile from "../input/InputFile";
 import { createWaybillSchema } from "../../utils/validationSchema/waybill";
+import { httpClient, api } from "../../api/axios";
 
 export const WaybillModal = ({
   model,
@@ -21,7 +22,7 @@ export const WaybillModal = ({
   const modalRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const { createNewWaybill } = useWaybill();
-
+  const apiUrl = "https://waste-api-staging.shaktihub.org/api/v1";
   const [waybillDetail, setWaybillDetail] = useState({
     amount: "",
     quantity: "",
@@ -30,26 +31,50 @@ export const WaybillModal = ({
     file: null,
   });
 
-  const createWaybill = async () => {
-    try {
-      if (requestType === "edit") {
-        setLoading(true);
-        const res = await createNewWaybill();
-        // console.log({ res });
-      }
-      setLoading(true);
-      const res = await createNewWaybill(waybillDetail);
-      if (res.errors) {
-        toast.error(Object.values(res.errors)[0]);
-        return;
-      }
-      toast.success("Waybill created");
-      closeModal();
-    } catch (error) {
-      toast.error(error.message || "something went wrong");
-    } finally {
-      setLoading(false);
-    }
+  // const createWaybill = async () => {
+  //   try {
+  //     if (requestType === "edit") {
+  //       setLoading(true);
+  //       const res = await createNewWaybill();
+  //       // console.log({ res });
+  //     }
+  //     setLoading(true);
+  //     const res = await createNewWaybill(waybillDetail);
+  //     if (res.errors) {
+  //       toast.error(Object.values(res.errors)[0]);
+  //       return;
+  //     }
+  //     toast.success("Waybill created");
+  //     closeModal();
+  //   } catch (error) {
+  //     toast.error(error.message || "something went wrong");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const createWaybill = () => {
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("amount", waybillDetail.amount);
+    formData.append("quantity", waybillDetail.quantity);
+    formData.append("aggregatorId", waybillDetail.aggregatorId);
+    formData.append("recyclerId", waybillDetail.recyclerId);
+    formData.append("file", waybillDetail.file);
+
+    httpClient
+      .post(`${apiUrl}/waybill`, formData)
+      .then((response) => {
+        console.log(response);
+
+        toast.success("Waybill created");
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(error?.message || "something went wrong");
+        setLoading(false);
+      });
   };
 
   return (
@@ -140,7 +165,11 @@ export const WaybillModal = ({
             onClick={() => createWaybill()}
             className="bg-green-700 text-white flex justify-center items-center h-[40px] w-full gap-2"
           >
-            {requestType === "edit" ? "Save Changes" : "Create Waybill"}
+            {requestType === "edit"
+              ? "Save Changes"
+              : loading
+              ? "Creating..."
+              : "Create Waybill"}
           </button>
         </div>
       </div>
