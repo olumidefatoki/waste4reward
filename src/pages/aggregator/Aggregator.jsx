@@ -66,7 +66,7 @@ const Aggregator = () => {
 
   useEffect(() => {
     getAggregators();
-  }, []);
+  }, [page]);
 
   useEffect(() => {
     const getAllState = async () => {
@@ -104,6 +104,11 @@ const Aggregator = () => {
   const handleViewDetail = (id) => {
     setAggregatorId(id);
     setViewDetail(true);
+  };
+
+  const handleEditDetail = (id) => {
+    setAggregatorId(id);
+    setEditDetail(true);
   };
 
   useEffect(() => {
@@ -189,7 +194,7 @@ const Aggregator = () => {
                   onClick={() => handleViewDetail(data.id)}
                 />
               ),
-              open: <FiEdit onClick={() => setEditDetail(true)} />,
+              open: <FiEdit onClick={() => handleEditDetail(data.id)} />,
             };
           })}
         />
@@ -218,6 +223,7 @@ const Aggregator = () => {
           <AggregatorModal
             closeModal={() => setEditDetail(false)}
             requestType={"edit"}
+            id={aggregatorId}
           />
         </Modal>
       )}

@@ -100,6 +100,22 @@ export const createAggregator = async (data) => {
   }
 };
 
+export const updateAggregator = async (data) => {
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+    const res = await fetcher("/aggregator/update", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const downloadAggregator = async () => {
   try {
     const accessToken = localStorage.getItem("accessToken");

@@ -7,6 +7,7 @@ import {
   gatAllAggregator,
   getAllAggregatorList,
   getAggregatorDetail,
+  updateAggregator,
 } from "../ds/aggregators";
 import { getTopAggregators } from "../ds/resource";
 const useAggregator = (query, selectedState, selectedLga, aggregatorId) => {
@@ -58,6 +59,11 @@ const useAggregator = (query, selectedState, selectedLga, aggregatorId) => {
     return res;
   };
 
+  const updateExistingAggregator = async (data) => {
+    const res = await updateAggregator(data);
+    return res;
+  };
+
   return {
     loading,
     gatAllAggregators,
@@ -65,6 +71,7 @@ const useAggregator = (query, selectedState, selectedLga, aggregatorId) => {
     gatAllAggregatorLists,
     aggregatorCount,
     createNewAggregator,
+    updateExistingAggregator,
   };
 };
 

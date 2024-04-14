@@ -11,10 +11,10 @@ import { createAggregatorSchema } from "../../utils/validationSchema/aggregatorS
 
 import { getState, getLga } from "../../ds/resource";
 
-export const AggregatorModal = ({ model, closeModal, requestType }) => {
+export const AggregatorModal = ({ model, closeModal, requestType, id }) => {
   const modalRef = useRef(null);
   const [loading, setLoading] = useState(false);
-  const { createNewAggregator } = useAggregator();
+  const { createNewAggregator, updateExistingAggregator } = useAggregator();
 
   const [states, setStates] = useState([]);
   const [lga, setLga] = useState([]);
@@ -58,11 +58,6 @@ export const AggregatorModal = ({ model, closeModal, requestType }) => {
       yearOfIncorporation: aggregatorDetail.yearOfIncorporation,
     };
     try {
-      if (requestType === "edit") {
-        setLoading(true);
-        const res = await createNewAggregator();
-        // console.log({ res });
-      }
       setLoading(true);
       const res = await createNewAggregator(formdata);
       // console.log({ res });
@@ -71,6 +66,36 @@ export const AggregatorModal = ({ model, closeModal, requestType }) => {
         return;
       }
       toast.success("Aggregator created");
+      closeModal();
+    } catch (error) {
+      toast.error(error.message || "something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const editAggregator = async () => {
+    // console.log(aggregatorDetail);
+
+    const formdata = {
+      id: id,
+      address: aggregatorDetail.location,
+      name: `${aggregatorDetail.firstName} ${aggregatorDetail.lastName}`,
+      phoneNumber: aggregatorDetail.phoneNumber,
+      email: aggregatorDetail.phoneNumber,
+      location: aggregatorDetail.location,
+      state: aggregatorDetail.state,
+      yearOfIncorporation: aggregatorDetail.yearOfIncorporation,
+    };
+    try {
+      setLoading(true);
+      const res = await updateExistingAggregator(formdata);
+      // console.log({ res });
+      if (res.errors) {
+        toast.error(Object.values(res.errors)[0]);
+        return;
+      }
+      toast.success("Aggregator updated");
       closeModal();
     } catch (error) {
       toast.error(error.message || "something went wrong");
@@ -191,17 +216,24 @@ export const AggregatorModal = ({ model, closeModal, requestType }) => {
           >
             Cancel
           </button>
-          <button
-            type="submit"
-            onClick={() => createAggregator()}
-            className="bg-green-700 text-white flex justify-center items-center h-[40px] w-full gap-2"
-          >
-            {requestType === "edit"
-              ? "Save Changes"
-              : loading
-              ? "Creating..."
-              : "Create Aggregator"}
-          </button>
+
+          {requestType === "edit" ? (
+            <button
+              type="submit"
+              onClick={() => editAggregator()}
+              className="bg-green-700 text-white flex justify-center items-center h-[40px] w-full gap-2"
+            >
+              {loading ? "Updating..." : "Save changes"}
+            </button>
+          ) : (
+            <button
+              type="submit"
+              onClick={() => createAggregator()}
+              className="bg-green-700 text-white flex justify-center items-center h-[40px] w-full gap-2"
+            >
+              {loading ? "Creating..." : "Create Aggregator"}
+            </button>
+          )}
         </div>
       </div>
     </div>
