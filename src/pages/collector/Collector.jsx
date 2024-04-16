@@ -5,6 +5,7 @@ import { GoPlus } from "react-icons/go";
 import DataCard from "../../components/card/DataCard";
 import InputSelect from "../../components/input/InputSelect";
 import InputSelect2 from "../../components/input/InputSelect2";
+import SearchableDropdown from "../../components/input/SearchableDropdown";
 import InputSearch from "../../components/input/InputSearch";
 import Character from "../../assets/images/Character.png";
 import useOutsideClick from "../../hooks/useOutsideClick";
@@ -90,14 +91,29 @@ const Collector = () => {
   useEffect(() => {
     const getAllState = async () => {
       const res = await getState();
-      setStates(res.data);
+      const list = res.data.map((item) => {
+        return {
+          label: item.name,
+          value: item.name,
+        };
+      });
+
+      setStates([...list]);
     };
     getAllState();
   }, []);
+
   useEffect(() => {
     const getAllLga = async () => {
       const res = await getLga();
-      setLga(res.data);
+
+      const list = res.data.map((item) => {
+        return {
+          label: item.name,
+          value: item.name,
+        };
+      });
+      setLga([...list]);
     };
     getAllLga();
   }, []);
@@ -152,19 +168,20 @@ const Collector = () => {
       </div>
       <div className="mb-10 flex justify-between">
         <div className="flex gap-2">
-          <InputSelect2
+          <SearchableDropdown
             options={aggregatorList}
             placeholder="Aggregators"
-            handleChange={(e) => setAggId(e.target.value)}
+            handleChange={(e) => setAggId(e.value)}
           />
-          <InputSelect
-            options={states.map((data) => data.name)}
+          <SearchableDropdown
+            options={states}
             placeholder="All States"
-            handleChange={(e) => setSelectedState(e.target.value)}
+            handleChange={(e) => setSelectedState(e.value)}
           />
-          <InputSelect
-            options={lga.map((data) => data.name)}
+          <SearchableDropdown
+            options={lga}
             placeholder="All LGAs"
+            handleChange={(e) => setSelectedLga(e.value)}
           />
         </div>
         <div className="flex gap-2">

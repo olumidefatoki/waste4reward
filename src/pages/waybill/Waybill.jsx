@@ -14,10 +14,12 @@ import { FiEdit } from "react-icons/fi";
 import ViewDetail from "../../components/modal/ViewDetail";
 import PaginationPane from "../../components/table/PaginationPane";
 import { EditWaybillModal } from "../../components/editmodal/WaybillModal";
+import SearchableDropdown from "../../components/input/SearchableDropdown";
 import useAggregator from "../../hooks/useAggregator";
 import useRecycler from "../../hooks/useRecycler";
 import useWaybill from "../../hooks/useWaybill";
 import useResource from "../../hooks/useResource";
+import { getLga, getState } from "../../ds/resource";
 
 //date range
 import moment from "moment";
@@ -135,18 +137,33 @@ const Waybill = () => {
 
   useEffect(() => {
     const getAllState = async () => {
-      const res = await getAllStates();
-      setStates(res.data);
+      const res = await getState();
+      const list = res.data.map((item) => {
+        return {
+          label: item.name,
+          value: item.name,
+        };
+      });
+
+      setStates([...list]);
     };
     getAllState();
   }, []);
-  useEffect(() => {
-    const getAllLga = async () => {
-      const res = await getAllLgas();
-      setLga(res.data);
-    };
-    getAllLga();
-  }, []);
+
+  // useEffect(() => {
+  //   const getAllLga = async () => {
+  //     const res = await getLga();
+
+  //     const list = res.data.map((item) => {
+  //       return {
+  //         label: item.name,
+  //         value: item.name,
+  //       };
+  //     });
+  //     setLga([...list]);
+  //   };
+  //   getAllLga();
+  // }, []);
 
   //get lists
   useEffect(() => {
@@ -209,22 +226,20 @@ const Waybill = () => {
       </div>
       <div className="mb-10 flex justify-between">
         <div className="flex gap-2">
-          <InputSelect2
+          <SearchableDropdown
             options={aggregatorList}
             placeholder="All Aggregators"
-            handleChange={(e) => setAggId(e.target.value)}
-            css="w-[150px]"
+            handleChange={(e) => setAggId(e.value)}
           />
-          <InputSelect2
+          <SearchableDropdown
             options={collectorList}
             placeholder="All Collectors"
-            handleChange={(e) => setColId(e.target.value)}
-            css="w-[150px]"
+            handleChange={(e) => setColId(e.value)}
           />
-          <InputSelect
-            options={states.map((data) => data.name)}
+          <SearchableDropdown
+            options={states}
             placeholder="All States"
-            handleChange={(e) => setSelectedState(e.target.value)}
+            handleChange={(e) => setSelectedState(e.value)}
             css="w-[150px]"
           />
         </div>

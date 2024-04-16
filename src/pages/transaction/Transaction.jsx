@@ -5,6 +5,7 @@ import { GoPlus } from "react-icons/go";
 import DataCard from "../../components/card/DataCard";
 import InputSelect from "../../components/input/InputSelect";
 import InputSelect2 from "../../components/input/InputSelect2";
+import SearchableDropdown from "../../components/input/SearchableDropdown";
 import InputSearch from "../../components/input/InputSearch";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import useTransaction from "../../hooks/useTransaction";
@@ -131,7 +132,14 @@ const Transaction = () => {
   useEffect(() => {
     const getAllState = async () => {
       const res = await getState();
-      setStates(res.data);
+      const list = res.data.map((item) => {
+        return {
+          label: item.name,
+          value: item.name,
+        };
+      });
+
+      setStates([...list]);
     };
     getAllState();
   }, []);
@@ -192,22 +200,20 @@ const Transaction = () => {
       </div> */}
       <div className="mb-10 flex justify-between">
         <div className="flex gap-2">
-          <InputSelect2
+          <SearchableDropdown
             options={aggregatorList}
             placeholder="All Aggregators"
-            handleChange={(e) => setAggId(e.target.value)}
-            css="w-[150px]"
+            handleChange={(e) => setAggId(e.value)}
           />
-          <InputSelect2
+          <SearchableDropdown
             options={collectorList}
             placeholder="All Collectors"
-            handleChange={(e) => setColId(e.target.value)}
-            css="w-[150px]"
+            handleChange={(e) => setColId(e.value)}
           />
-          <InputSelect
-            options={states.map((data) => data.name)}
+          <SearchableDropdown
+            options={states}
             placeholder="All States"
-            handleChange={(e) => setSelectedState(e.target.value)}
+            handleChange={(e) => setSelectedState(e.value)}
             css="w-[150px]"
           />
         </div>

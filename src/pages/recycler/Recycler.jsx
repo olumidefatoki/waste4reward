@@ -4,6 +4,7 @@ import CustomTable from "../../components/table/CustomTable";
 import { GoPlus } from "react-icons/go";
 import DataCard from "../../components/card/DataCard";
 import InputSelect from "../../components/input/InputSelect";
+import SearchableDropdown from "../../components/input/SearchableDropdown";
 import InputSearch from "../../components/input/InputSearch";
 import rafiki from "../../assets/images/rafiki.png";
 import useOutsideClick from "../../hooks/useOutsideClick";
@@ -73,14 +74,29 @@ const Recycler = () => {
   useEffect(() => {
     const getAllState = async () => {
       const res = await getState();
-      setStates(res.data);
+      const list = res.data.map((item) => {
+        return {
+          label: item.name,
+          value: item.name,
+        };
+      });
+
+      setStates([...list]);
     };
     getAllState();
   }, []);
+
   useEffect(() => {
     const getAllLga = async () => {
       const res = await getLga();
-      setLga(res.data);
+
+      const list = res.data.map((item) => {
+        return {
+          label: item.name,
+          value: item.name,
+        };
+      });
+      setLga([...list]);
     };
     getAllLga();
   }, []);
@@ -119,12 +135,12 @@ const Recycler = () => {
       </div>
       <div className="mb-10 flex justify-between">
         <div className="flex gap-2">
-          <InputSelect
-            options={states.map((data) => data.name)}
+          <SearchableDropdown
+            options={states}
             placeholder="Select State"
-            handleChange={(e) => setSelectedState(e.target.value)}
+            handleChange={(e) => setSelectedState(e.value)}
           />
-          <InputSelect options={lga.map((data) => data.name)} />
+          <SearchableDropdown options={lga} />
         </div>
         <div>
           <InputSearch

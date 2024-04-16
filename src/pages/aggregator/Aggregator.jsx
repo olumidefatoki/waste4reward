@@ -5,6 +5,7 @@ import { GoPlus } from "react-icons/go";
 import DataCard from "../../components/card/DataCard";
 import InputSelect from "../../components/input/InputSelect";
 import InputSearch from "../../components/input/InputSearch";
+import SearchableDropdown from "../../components/input/SearchableDropdown";
 import Character from "../../assets/images/Characters.png";
 import Modal from "../../components/Modal";
 import { AggregatorModal } from "../../components/modal/AggregatorModal";
@@ -71,14 +72,29 @@ const Aggregator = () => {
   useEffect(() => {
     const getAllState = async () => {
       const res = await getState();
-      setStates(res.data);
+      const list = res.data.map((item) => {
+        return {
+          label: item.name,
+          value: item.name,
+        };
+      });
+
+      setStates([...list]);
     };
     getAllState();
   }, []);
+
   useEffect(() => {
     const getAllLga = async () => {
       const res = await getLga();
-      setLga(res.data);
+
+      const list = res.data.map((item) => {
+        return {
+          label: item.name,
+          value: item.name,
+        };
+      });
+      setLga([...list]);
     };
     getAllLga();
   }, []);
@@ -140,15 +156,17 @@ const Aggregator = () => {
       </div>
       <div className="mb-10 flex justify-between">
         <div className="flex gap-2">
-          <InputSelect
-            options={states.map((data) => data.name)}
+          <SearchableDropdown
+            options={states}
             placeholder="All States"
-            handleChange={(e) => setSelectedState(e.target.value)}
+            handleChange={(e) => {
+              setSelectedState(e.value);
+            }}
           />
-          <InputSelect
-            options={lga.map((data) => data.name)}
+          <SearchableDropdown
+            options={lga}
             placeholder="All LGAs"
-            handleChange={(e) => setSelectedLga(e.target.value)}
+            handleChange={(e) => setSelectedLga(e.value)}
           />
         </div>
         <div className="flex gap-2">
