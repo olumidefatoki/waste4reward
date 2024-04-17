@@ -10,7 +10,7 @@ import InputSearch from "../../components/input/InputSearch";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import useTransaction from "../../hooks/useTransaction";
 import { FiEdit } from "react-icons/fi";
-import { getLga, getState } from "../../ds/resource";
+import { getLgaByState, getState } from "../../ds/resource";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import useResource from "../../hooks/useResource";
 import { toMoney } from "../../utils/utils";
@@ -52,6 +52,8 @@ const Transaction = () => {
   const wrapperRef = useRef(null);
   const [query, setQuery] = useState("");
   const [selectedState, setSelectedState] = useState("");
+  // const [selectedStateId, setSelectedStateId] = useState(0);
+  // const [selectedLga, setSelectedLga] = useState("");
   const [transactions, setTransactions] = useState([]);
   const [states, setStates] = useState([]);
 
@@ -129,26 +131,19 @@ const Transaction = () => {
     fetchTransactions();
   }, []);
 
+  //get state
   useEffect(() => {
     const getAllState = async () => {
       const res = await getState();
       const list = res.data.map((item) => {
         return {
           label: item.name,
-          value: item.name,
+          value: item.id,
         };
       });
-
       setStates([...list]);
     };
     getAllState();
-  }, []);
-  useEffect(() => {
-    const getAllLga = async () => {
-      const res = await getLga();
-      setLga(res.data);
-    };
-    getAllLga();
   }, []);
 
   //get lists
@@ -199,23 +194,31 @@ const Transaction = () => {
         <DataCard />
       </div> */}
       <div className="mb-10 flex justify-between">
-        <div className="flex gap-2">
-          <SearchableDropdown
-            options={aggregatorList}
-            placeholder="All Aggregators"
-            handleChange={(e) => setAggId(e.value)}
-          />
-          <SearchableDropdown
-            options={collectorList}
-            placeholder="All Collectors"
-            handleChange={(e) => setColId(e.value)}
-          />
-          <SearchableDropdown
-            options={states}
-            placeholder="All States"
-            handleChange={(e) => setSelectedState(e.value)}
-            css="w-[150px]"
-          />
+        <div className="flex gap-2 w-[50%]">
+          <div className="w-[30%]">
+            <SearchableDropdown
+              options={aggregatorList}
+              placeholder="All Aggregators"
+              handleChange={(e) => setAggId(e.value)}
+            />
+          </div>
+          <div className="w-[30%]">
+            <SearchableDropdown
+              options={collectorList}
+              placeholder="All Collectors"
+              handleChange={(e) => setColId(e.value)}
+            />
+          </div>
+          <div className="w-[30%]">
+            <SearchableDropdown
+              options={states}
+              placeholder="All States"
+              handleChange={(selectionOption) => {
+                setSelectedState(selectionOption.label);
+              }}
+              css="w-[150px]"
+            />
+          </div>
         </div>
         <div className="flex gap-2">
           {/* date range*/}

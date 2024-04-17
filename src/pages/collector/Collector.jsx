@@ -17,7 +17,7 @@ import ViewDetail from "../../components/modal/ViewDetail";
 import PaginationPane from "../../components/table/PaginationPane";
 import { EditCollectorModal } from "../../components/editmodal/CollectorModal";
 import { gatAllCollector } from "../../ds/collectors";
-import { getLga, getState } from "../../ds/resource";
+import { getLga, getState, getLgaByState } from "../../ds/resource";
 import useCollector from "../../hooks/useCollector";
 import useAggregator from "../../hooks/useAggregator";
 import useResource from "../../hooks/useResource";
@@ -45,6 +45,7 @@ const detail = {
 const Collector = () => {
   const [query, setQuery] = useState("");
   const [selectedState, setSelectedState] = useState("");
+  const [selectedStateId, setSelectedStateId] = useState(0);
   const [selectedLga, setSelectedLga] = useState("");
 
   const { paReport } = useResource();
@@ -88,35 +89,39 @@ const Collector = () => {
     getCollectors();
   }, []);
 
+  //get state
   useEffect(() => {
     const getAllState = async () => {
       const res = await getState();
       const list = res.data.map((item) => {
         return {
           label: item.name,
-          value: item.name,
+          value: item.id,
         };
       });
-
       setStates([...list]);
     };
     getAllState();
   }, []);
 
   useEffect(() => {
-    const getAllLga = async () => {
-      const res = await getLga();
+    if (selectedStateId) {
+      const getLgaFromState = async () => {
+        const res = await getLgaByState(selectedStateId);
 
-      const list = res.data.map((item) => {
-        return {
-          label: item.name,
-          value: item.name,
-        };
-      });
-      setLga([...list]);
-    };
-    getAllLga();
-  }, []);
+        console.log(res);
+
+        const list = res.data.map((item) => {
+          return {
+            label: item.name,
+            value: item.name,
+          };
+        });
+        setLga([...list]);
+      };
+      getLgaFromState();
+    }
+  }, [selectedStateId]);
 
   useEffect(() => {
     const getAggregatorsList = async () => {
@@ -167,22 +172,31 @@ const Collector = () => {
         />
       </div>
       <div className="mb-10 flex justify-between">
-        <div className="flex gap-2">
-          <SearchableDropdown
-            options={aggregatorList}
-            placeholder="Aggregators"
-            handleChange={(e) => setAggId(e.value)}
-          />
-          <SearchableDropdown
-            options={states}
-            placeholder="All States"
-            handleChange={(e) => setSelectedState(e.value)}
-          />
-          <SearchableDropdown
-            options={lga}
-            placeholder="All LGAs"
-            handleChange={(e) => setSelectedLga(e.value)}
-          />
+        <div className="flex gap-2 w-[50%]">
+          <div className="w-[30%]">
+            <SearchableDropdown
+              options={aggregatorList}
+              placeholder="Aggregators"
+              handleChange={(e) => setAggId(e.value)}
+            />
+          </div>
+          <div className="w-[30%]">
+            <SearchableDropdown
+              options={states}
+              placeholder="All States"
+              handleChange={(selectionOption) => {
+                setSelectedState(selectionOption.label);
+                setSelectedStateId(selectionOption.value);
+              }}
+            />
+          </div>
+          <div className="w-[30%]">
+            <SearchableDropdown
+              options={lga}
+              placeholder="All LGAs"
+              handleChange={(e) => setSelectedLga(e.value)}
+            />
+          </div>
         </div>
         <div className="flex gap-2">
           <InputSearch

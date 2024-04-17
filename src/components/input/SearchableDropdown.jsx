@@ -17,7 +17,7 @@ const customStyles = {
     // marginTop: "8px",
 
     // padding: "5px",
-    width: "200px",
+    width: "100%",
     height: "44px",
     outline: state.isFocused ? "none" : "none",
     // fontFamily: "",

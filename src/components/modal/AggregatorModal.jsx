@@ -7,33 +7,55 @@ import InputText from "../input/InputText";
 import InputSelect from "../input/InputSelect";
 import toast from "react-hot-toast";
 import useAggregator from "../../hooks/useAggregator";
-import { createAggregatorSchema } from "../../utils/validationSchema/aggregatorSchema";
+import SearchableDropdown from "../input/SearchableDropdown";
 
-import { getState, getLga } from "../../ds/resource";
+import { getState, getLgaByState } from "../../ds/resource";
 
 export const AggregatorModal = ({ model, closeModal, requestType, id }) => {
   const modalRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const { createNewAggregator, updateExistingAggregator } = useAggregator();
 
+  const [selectedState, setSelectedState] = useState("");
+  const [selectedStateId, setSelectedStateId] = useState(0);
+  const [selectedLga, setSelectedLga] = useState("");
+
   const [states, setStates] = useState([]);
   const [lga, setLga] = useState([]);
 
+  //get state
   useEffect(() => {
     const getAllState = async () => {
       const res = await getState();
-      setStates(res.data);
+      const list = res.data.map((item) => {
+        return {
+          label: item.name,
+          value: item.id,
+        };
+      });
+      setStates([...list]);
     };
     getAllState();
   }, []);
-  useEffect(() => {
-    const getAllLga = async () => {
-      const res = await getLga();
-      setLga(res.data);
-    };
-    getAllLga();
-  }, []);
 
+  useEffect(() => {
+    if (selectedStateId) {
+      const getLgaFromState = async () => {
+        const res = await getLgaByState(selectedStateId);
+
+        console.log(res);
+
+        const list = res.data.map((item) => {
+          return {
+            label: item.name,
+            value: item.name,
+          };
+        });
+        setLga([...list]);
+      };
+      getLgaFromState();
+    }
+  }, [selectedStateId]);
   const [aggregatorDetail, setAggregatorDetail] = useState({
     address: "",
     firstName: "",
@@ -173,28 +195,35 @@ export const AggregatorModal = ({ model, closeModal, requestType, id }) => {
           />
         </div>
         <div className="flex justify-between w-full">
-          <InputSelect
-            label={"State"}
-            placeholder="Select state"
-            options={states.map((data) => data.name)}
-            handleChange={(e) =>
-              setAggregatorDetail({
-                ...aggregatorDetail,
-                state: e.target.value,
-              })
-            }
-          />
-          <InputSelect
-            label={"Lga"}
-            placeholder="Select lga"
-            options={lga.map((data) => data.name)}
-            handleChange={(e) =>
-              setAggregatorDetail({
-                ...aggregatorDetail,
-                location: e.target.value,
-              })
-            }
-          />
+          <div className="w-[45%]">
+            <SearchableDropdown
+              label={"State"}
+              options={states}
+              placeholder="Select state"
+              handleChange={(selectionOption) => {
+                setSelectedState(selectionOption.label);
+                setSelectedStateId(selectionOption.value);
+                setAggregatorDetail({
+                  ...aggregatorDetail,
+                  state: selectionOption.label,
+                });
+              }}
+            />
+          </div>
+
+          <div className="w-[45%]">
+            <SearchableDropdown
+              label={"Lga"}
+              options={lga}
+              placeholder="Select lga"
+              handleChange={(e) =>
+                setAggregatorDetail({
+                  ...aggregatorDetail,
+                  location: e.value,
+                })
+              }
+            />
+          </div>
         </div>
         <div className="w-full mb-10">
           <InputText

@@ -29,6 +29,22 @@ export const getLga = async (data, accessToken) => {
     throw error;
   }
 };
+
+export const getLgaByState = async (id) => {
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+
+    const res = await fetcher(`/state/${id}/localgovernment`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
 export const getTypeOfPlastic = async (data, accessToken) => {
   try {
     const accessToken = localStorage.getItem("accessToken");

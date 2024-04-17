@@ -19,7 +19,7 @@ import useAggregator from "../../hooks/useAggregator";
 import useRecycler from "../../hooks/useRecycler";
 import useWaybill from "../../hooks/useWaybill";
 import useResource from "../../hooks/useResource";
-import { getLga, getState } from "../../ds/resource";
+import { getLgaByState, getState } from "../../ds/resource";
 
 //date range
 import moment from "moment";
@@ -225,23 +225,29 @@ const Waybill = () => {
         <DataCard />
       </div>
       <div className="mb-10 flex justify-between">
-        <div className="flex gap-2">
-          <SearchableDropdown
-            options={aggregatorList}
-            placeholder="All Aggregators"
-            handleChange={(e) => setAggId(e.value)}
-          />
-          <SearchableDropdown
-            options={collectorList}
-            placeholder="All Collectors"
-            handleChange={(e) => setColId(e.value)}
-          />
-          <SearchableDropdown
-            options={states}
-            placeholder="All States"
-            handleChange={(e) => setSelectedState(e.value)}
-            css="w-[150px]"
-          />
+        <div className="flex gap-2 w-[50%]">
+          <div className="w-[30%]">
+            <SearchableDropdown
+              options={aggregatorList}
+              placeholder="All Aggregators"
+              handleChange={(e) => setAggId(e.value)}
+            />
+          </div>
+          <div className="w-[30%]">
+            <SearchableDropdown
+              options={collectorList}
+              placeholder="All Collectors"
+              handleChange={(e) => setColId(e.value)}
+            />
+          </div>
+          <div className="w-[30%]">
+            <SearchableDropdown
+              options={states}
+              placeholder="All States"
+              handleChange={(e) => setSelectedState(e.value)}
+              css="w-[150px]"
+            />
+          </div>
         </div>
         <div className="flex gap-2">
           {/* date range*/}

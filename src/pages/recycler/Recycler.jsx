@@ -15,7 +15,7 @@ import { FiEdit } from "react-icons/fi";
 import ViewDetail from "../../components/modal/ViewDetail";
 import PaginationPane from "../../components/table/PaginationPane";
 import { EditRecyclerModal } from "../../components/editmodal/RecyclerModal";
-import { getLga, getState } from "../../ds/resource";
+import { getLga, getState, getLgaByState } from "../../ds/resource";
 import useRecycler from "../../hooks/useRecycler";
 import useResource from "../../hooks/useResource";
 
@@ -47,6 +47,8 @@ const Recycler = () => {
   const [states, setStates] = useState([]);
   const [query, setQuery] = useState("");
   const [selectedState, setSelectedState] = useState("");
+  const [selectedStateId, setSelectedStateId] = useState(0);
+  const [selectedLga, setSelectedLga] = useState("");
   const [lga, setLga] = useState([]);
   const limit = 10;
 
@@ -71,35 +73,39 @@ const Recycler = () => {
     getRecyclers();
   }, [page, query, selectedState]);
 
+  //get state
   useEffect(() => {
     const getAllState = async () => {
       const res = await getState();
       const list = res.data.map((item) => {
         return {
           label: item.name,
-          value: item.name,
+          value: item.id,
         };
       });
-
       setStates([...list]);
     };
     getAllState();
   }, []);
 
   useEffect(() => {
-    const getAllLga = async () => {
-      const res = await getLga();
+    if (selectedStateId) {
+      const getLgaFromState = async () => {
+        const res = await getLgaByState(selectedStateId);
 
-      const list = res.data.map((item) => {
-        return {
-          label: item.name,
-          value: item.name,
-        };
-      });
-      setLga([...list]);
-    };
-    getAllLga();
-  }, []);
+        console.log(res);
+
+        const list = res.data.map((item) => {
+          return {
+            label: item.name,
+            value: item.name,
+          };
+        });
+        setLga([...list]);
+      };
+      getLgaFromState();
+    }
+  }, [selectedStateId]);
 
   const handleViewDetail = (id) => {
     setRecyclerId(id);
@@ -134,13 +140,26 @@ const Recycler = () => {
         />
       </div>
       <div className="mb-10 flex justify-between">
-        <div className="flex gap-2">
-          <SearchableDropdown
-            options={states}
-            placeholder="Select State"
-            handleChange={(e) => setSelectedState(e.value)}
-          />
-          <SearchableDropdown options={lga} />
+        <div className="flex gap-2 w-[50%]">
+          <div className="w-[45%]">
+            {" "}
+            <SearchableDropdown
+              options={states}
+              placeholder="Select State"
+              handleChange={(selectionOption) => {
+                setSelectedState(selectionOption.label);
+                setSelectedStateId(selectionOption.value);
+              }}
+            />
+          </div>
+          <div className="w-[45%]">
+            {" "}
+            <SearchableDropdown
+              options={lga}
+              placeholder="All LGAs"
+              handleChange={(e) => setSelectedLga(e.value)}
+            />
+          </div>
         </div>
         <div>
           <InputSearch

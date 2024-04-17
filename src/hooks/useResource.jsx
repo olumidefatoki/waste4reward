@@ -13,6 +13,7 @@ import {
   getProgram,
   getSourceOfPlastic,
   getState,
+  getLgaByState,
   getTopAggregators,
   getTopCollectors,
   getTopLocation,
@@ -71,6 +72,13 @@ const useResource = () => {
     const res = await getState();
     return res;
   };
+
+  const getLgaFromState = async () => {
+    setLoading(true);
+    const res = await getLgaByState();
+    return res;
+  };
+
   const getAllLgas = async () => {
     setLoading(true);
     const res = await getLga();
@@ -124,6 +132,7 @@ const useResource = () => {
   return {
     loading,
     getAllStates,
+    getLgaFromState,
     getAllLgas,
     getAllTypeOfPlastics,
     getAllSourceOfPlastics,
