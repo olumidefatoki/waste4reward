@@ -17,6 +17,7 @@ import ViewDetail from "../../components/modal/ViewDetail";
 import PaginationTab from "../../components/table/PaginationTab";
 import PaginationPane from "../../components/table/PaginationPane";
 import useAggregator from "../../hooks/useAggregator";
+import ViewAggregatorModal from "../../components/modal/ViewAggregatotModal";
 import fetcher from "../../api/fetacher";
 import { getLga, getState, getLgaByState } from "../../ds/resource";
 import useResource from "../../hooks/useResource";
@@ -262,7 +263,7 @@ const Aggregator = () => {
           refProp={wrapperRef}
           closeModal={() => setViewDetail(false)}
         >
-          <ViewDetail
+          <ViewAggregatorModal
             detail={aggregatorDetail}
             closeModal={() => setViewDetail(false)}
             title={"Aggregator Details"}
