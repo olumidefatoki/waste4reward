@@ -104,6 +104,22 @@ export const createCollector = async (data) => {
   }
 };
 
+export const updateCollector = async (data) => {
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+    const res = await fetcher("/collector/update", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const downloadCollector = async () => {
   try {
     const accessToken = localStorage.getItem("accessToken");

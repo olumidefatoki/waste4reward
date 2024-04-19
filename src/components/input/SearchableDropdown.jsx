@@ -52,7 +52,7 @@ const SearchableDropdown = ({
   selectedOption,
 }) => {
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       <label htmlFor="" className="label">
         {label}
       </label>

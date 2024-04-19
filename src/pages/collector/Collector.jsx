@@ -144,6 +144,11 @@ const Collector = () => {
     setViewDetail(true);
   };
 
+  const handleEditDetail = (id) => {
+    setCollectorId(id);
+    setEditDetail(true);
+  };
+
   useEffect(() => {
     getCollector();
   }, [collectorId]);
@@ -245,7 +250,7 @@ const Collector = () => {
                   onClick={() => handleViewDetail(data.id)}
                 />
               ),
-              open: <FiEdit onClick={() => setEditDetail(true)} />,
+              open: <FiEdit onClick={() => handleEditDetail(data.id)} />,
             };
           })}
         />
@@ -277,6 +282,9 @@ const Collector = () => {
           <CollectorModal
             closeModal={() => setEditDetail(false)}
             requestType={"edit"}
+            detail={collectorDetail}
+            id={collectorId}
+            aggregatorList={aggregatorList}
           />
         </Modal>
       )}

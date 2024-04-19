@@ -8,6 +8,7 @@ import {
   gatAllCollector,
   getAllCollectorList,
   getCollectorDetail,
+  updateCollector,
 } from "../ds/collectors";
 const useCollector = (
   query,
@@ -64,12 +65,18 @@ const useCollector = (
     const res = await createCollector(data);
     return res;
   };
+
+  const updateExistingCollector = async (data) => {
+    const res = await updateCollector(data);
+    return res;
+  };
   return {
     loading,
     gatAllCollectors,
     gatAllCollectorList,
     getSingleCollector,
     createNewCollector,
+    updateExistingCollector,
   };
 };
 
