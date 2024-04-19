@@ -254,6 +254,7 @@ const Aggregator = () => {
             closeModal={() => setEditDetail(false)}
             requestType={"edit"}
             id={aggregatorId}
+            detail={aggregatorDetail}
           />
         </Modal>
       )}

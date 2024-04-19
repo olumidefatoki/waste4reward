@@ -92,6 +92,7 @@ const SignIn = () => {
                         id="email"
                         name="email"
                         placeholder="Enter email address"
+                        style={{ outline: "none" }}
                       />
                     </div>
                   </div>
@@ -115,6 +116,7 @@ const SignIn = () => {
                         id="password"
                         name="password"
                         placeholder="Enter password"
+                        style={{ outline: "none" }}
                       />
                     </div>
                   </div>

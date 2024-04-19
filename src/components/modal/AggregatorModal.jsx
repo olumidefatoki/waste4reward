@@ -11,7 +11,13 @@ import SearchableDropdown from "../input/SearchableDropdown";
 
 import { getState, getLgaByState } from "../../ds/resource";
 
-export const AggregatorModal = ({ model, closeModal, requestType, id }) => {
+export const AggregatorModal = ({
+  model,
+  closeModal,
+  requestType,
+  id,
+  detail,
+}) => {
   const modalRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const { createNewAggregator, updateExistingAggregator } = useAggregator();
@@ -147,7 +153,11 @@ export const AggregatorModal = ({ model, closeModal, requestType, id }) => {
         <div className="flex justify-between">
           <InputText
             label={"FirstName"}
-            placeholder={"Enter first name"}
+            placeholder={
+              requestType === "edit"
+                ? detail.contactPersonFirstName
+                : "Enter first name"
+            }
             value={aggregatorDetail.firstName}
             handleChange={(e) =>
               setAggregatorDetail({
@@ -158,7 +168,11 @@ export const AggregatorModal = ({ model, closeModal, requestType, id }) => {
           />
           <InputText
             label={"LastName"}
-            placeholder={"Enter last name"}
+            placeholder={
+              requestType === "edit"
+                ? detail.contactPersonLastName
+                : "Enter last name"
+            }
             value={aggregatorDetail.lastName}
             handleChange={(e) =>
               setAggregatorDetail({
@@ -171,7 +185,9 @@ export const AggregatorModal = ({ model, closeModal, requestType, id }) => {
         <div className="w-full">
           <InputText
             label={"Phone Number"}
-            placeholder={"Enter phone number"}
+            placeholder={
+              requestType === "edit" ? detail.phoneNumber : "Enter phone number"
+            }
             value={aggregatorDetail.phoneNumber}
             handleChange={(e) =>
               setAggregatorDetail({
@@ -184,7 +200,9 @@ export const AggregatorModal = ({ model, closeModal, requestType, id }) => {
         <div className="w-full">
           <InputText
             label={"Email Address"}
-            placeholder={"Enter email address"}
+            placeholder={
+              requestType === "edit" ? detail.email : "Enter email address"
+            }
             value={aggregatorDetail.email}
             handleChange={(e) =>
               setAggregatorDetail({
@@ -199,7 +217,9 @@ export const AggregatorModal = ({ model, closeModal, requestType, id }) => {
             <SearchableDropdown
               label={"State"}
               options={states}
-              placeholder="Select state"
+              placeholder={
+                requestType === "edit" ? detail.state : "Select state"
+              }
               handleChange={(selectionOption) => {
                 setSelectedState(selectionOption.label);
                 setSelectedStateId(selectionOption.value);
@@ -215,7 +235,9 @@ export const AggregatorModal = ({ model, closeModal, requestType, id }) => {
             <SearchableDropdown
               label={"Lga"}
               options={lga}
-              placeholder="Select lga"
+              placeholder={
+                requestType === "edit" ? detail.location : "Select LGA"
+              }
               handleChange={(e) =>
                 setAggregatorDetail({
                   ...aggregatorDetail,
@@ -227,8 +249,12 @@ export const AggregatorModal = ({ model, closeModal, requestType, id }) => {
         </div>
         <div className="w-full mb-10">
           <InputText
-            label={"Year of Incorporation"}
-            placeholder={"Enter year of incorporation"}
+            label="Year of Incorporation"
+            placeholder={
+              requestType === "edit"
+                ? detail.yearOfIncorporation
+                : "Enter year of incorporation"
+            }
             value={aggregatorDetail.yearOfIncorporation}
             handleChange={(e) =>
               setAggregatorDetail({
