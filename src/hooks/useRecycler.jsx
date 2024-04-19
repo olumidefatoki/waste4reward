@@ -13,11 +13,16 @@ const useRecycler = (query, selectedState, recyclerId) => {
   const gatAllRecyclers = async (
     page = 1,
     size = 10,
-    name = query,
+    nameOrEmailOrPhoneNumber = query,
     state = selectedState
   ) => {
     setLoading(true);
-    const res = await gatAllRecycler({ page, size, name, state });
+    const res = await gatAllRecycler({
+      page,
+      size,
+      nameOrEmailOrPhoneNumber,
+      state,
+    });
     return JSON.parse(res);
   };
 

@@ -1,18 +1,27 @@
 import api from "../api/axios";
 import fetcher from "../api/fetacher";
 
-export const gatAllRecycler = async ({ page, size, name, state }) => {
+export const gatAllRecycler = async ({
+  page,
+  size,
+  nameOrEmailOrPhoneNumber,
+  state,
+  location,
+}) => {
   try {
     const accessToken = localStorage.getItem("accessToken");
     const params = {
       page,
       size,
     };
-    if (name) {
-      params.name = name;
+    if (nameOrEmailOrPhoneNumber) {
+      params.nameOrEmailOrPhoneNumber = nameOrEmailOrPhoneNumber;
     }
-    if (!!state && state !== "Select State") {
+    if (!!state && state !== "All States") {
       params.state = state;
+    }
+    if (!!location && location !== "All LGAs") {
+      params.location = location;
     }
     const res = await fetcher(
       "/recycler",

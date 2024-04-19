@@ -65,14 +65,14 @@ const Recycler = () => {
     setRecyclerDetail(res.data);
   };
 
+  const getRecyclers = async () => {
+    const res = await gatAllRecyclers(page, limit);
+    setTotalPages(res.data.totalPages);
+    setRecyclers(res.data?.content);
+  };
   useEffect(() => {
-    const getRecyclers = async () => {
-      const res = await gatAllRecyclers(page, limit);
-      setTotalPages(res.data.totalPages);
-      setRecyclers(res.data?.content);
-    };
     getRecyclers();
-  }, [page, query, selectedState]);
+  }, [page]);
 
   //get state
   useEffect(() => {
@@ -158,21 +158,28 @@ const Recycler = () => {
               }}
             />
           </div>
-          <div className="w-[45%]">
+          {/* <div className="w-[45%]">
             {" "}
             <SearchableDropdown
               options={lga}
               placeholder="All LGAs"
               handleChange={(e) => setSelectedLga(e.value)}
             />
-          </div>
+          </div> */}
         </div>
-        <div>
+        <div className="flex gap-2">
           <InputSearch
             placeholder={"search"}
             inputValue={query}
             setInputValue={setQuery}
           />
+
+          <button
+            className="flex justify-center items-center h-[44px] w-[101px] border border-gray-300 gap-2 rounded-md"
+            onClick={() => getRecyclers()}
+          >
+            Apply
+          </button>
         </div>
       </div>
       {recyclers.length > 0 ? (
