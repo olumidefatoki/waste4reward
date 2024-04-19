@@ -5,11 +5,19 @@ import { PiUsers } from "react-icons/pi";
 import InputText from "../input/InputText";
 import InputSelect from "../input/InputSelect";
 import { IoCloseOutline } from "react-icons/io5";
-import { Form, Formik } from "formik";
+import SearchableDropdown from "../input/SearchableDropdown";
 import useRecycler from "../../hooks/useRecycler";
-import { getState, getLga } from "../../ds/resource";
+import { getState, getLgaByState } from "../../ds/resource";
 import toast from "react-hot-toast";
-export const RecyclerModal = ({ model, closeModal, requestType }) => {
+import { updateRecycler } from "../../ds/recycler";
+
+export const RecyclerModal = ({
+  model,
+  closeModal,
+  requestType,
+  id,
+  detail,
+}) => {
   const modalRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const { createNewRecycler } = useRecycler();
@@ -17,27 +25,52 @@ export const RecyclerModal = ({ model, closeModal, requestType }) => {
   const [states, setStates] = useState([]);
   const [lga, setLga] = useState([]);
 
+  const [selectedState, setSelectedState] = useState("");
+  const [selectedStateId, setSelectedStateId] = useState(0);
+
   const [recyclerDetail, setRecyclerDetail] = useState({
     name: "",
+    contactPersonFirstName: "",
+    contactPersonLastName: "",
+    phoneNumber: "",
     address: "",
     state: "",
     email: "",
   });
 
+  //get state
   useEffect(() => {
     const getAllState = async () => {
       const res = await getState();
-      setStates(res.data);
+      const list = res.data.map((item) => {
+        return {
+          label: item.name,
+          value: item.id,
+        };
+      });
+      setStates([...list]);
     };
     getAllState();
   }, []);
+
   useEffect(() => {
-    const getAllLga = async () => {
-      const res = await getLga();
-      setLga(res.data);
-    };
-    getAllLga();
-  }, []);
+    if (selectedStateId) {
+      const getLgaFromState = async () => {
+        const res = await getLgaByState(selectedStateId);
+
+        console.log(res);
+
+        const list = res.data.map((item) => {
+          return {
+            label: item.name,
+            value: item.name,
+          };
+        });
+        setLga([...list]);
+      };
+      getLgaFromState();
+    }
+  }, [selectedStateId]);
 
   const createRecycler = async () => {
     const formdata = {
@@ -45,14 +78,12 @@ export const RecyclerModal = ({ model, closeModal, requestType }) => {
       address: recyclerDetail.address,
       email: recyclerDetail.email,
       state: recyclerDetail.state,
+      contactPersonFirstName: recyclerDetail.contactPersonFirstName,
+      contactPersonLastName: recyclerDetail.contactPersonLastName,
+      phoneNumber: recyclerDetail.phoneNumber,
     };
 
     try {
-      if (requestType === "edit") {
-        setLoading(true);
-        const res = await createNewRecycler(formdata);
-        // console.log({ res });
-      }
       setLoading(true);
       const res = await createNewRecycler(formdata);
       if (res.errors) {
@@ -60,6 +91,33 @@ export const RecyclerModal = ({ model, closeModal, requestType }) => {
         return;
       }
       toast.success("Recycler created");
+      closeModal();
+    } catch (error) {
+      toast.error(error.message || "something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const editRecycler = async () => {
+    const formdata = {
+      id: id,
+      name: recyclerDetail.name,
+      address: recyclerDetail.address,
+      email: recyclerDetail.email,
+      state: recyclerDetail.state,
+    };
+
+    try {
+      setLoading(true);
+      const res = await updateRecycler(formdata);
+      // console.log({ res });
+
+      if (res.errors) {
+        toast.error(Object.values(res.errors)[0]);
+        return;
+      }
+      toast.success("Recycler updated");
       closeModal();
     } catch (error) {
       toast.error(error.message || "something went wrong");
@@ -82,12 +140,14 @@ export const RecyclerModal = ({ model, closeModal, requestType }) => {
           <h1 className="capitalize font-bold">
             {requestType === "edit" ? "Edit Recycler" : "Create new Recycler"}
           </h1>
-          <p className="text-sm">Enter the details below</p>
+          <p className="text-sm" onClick={() => console.log(detail)}>
+            Enter the details below
+          </p>
         </div>
         <div className="w-full">
           <InputText
             label={"Name"}
-            placeholder={"Enter name"}
+            placeholder={requestType === "edit" ? detail.name : "Enter name"}
             value={recyclerDetail.name}
             handleChange={(e) =>
               setRecyclerDetail({
@@ -99,23 +159,58 @@ export const RecyclerModal = ({ model, closeModal, requestType }) => {
           />
         </div>
 
-        <div className="w-full">
+        <div className="flex justify-between">
           <InputText
-            label={"Address"}
-            placeholder={"Enter  address"}
-            value={recyclerDetail.address}
+            label={"Contact person first name"}
+            placeholder={
+              requestType === "edit"
+                ? detail.contactPersonFirstName
+                : "Enter first name"
+            }
+            value={recyclerDetail.contactPersonFirstName}
             handleChange={(e) =>
               setRecyclerDetail({
                 ...recyclerDetail,
-                address: e.target.value,
+                contactPersonFirstName: e.target.value,
+              })
+            }
+          />
+          <InputText
+            label={"Contact person last name"}
+            placeholder={
+              requestType === "edit"
+                ? detail.contactPersonLastName
+                : "Enter last name"
+            }
+            value={recyclerDetail.lastName}
+            handleChange={(e) =>
+              setRecyclerDetail({
+                ...recyclerDetail,
+                contactPersonLastName: e.target.value,
               })
             }
           />
         </div>
-        <div className="w-full">
+
+        <div className="flex justify-between">
           <InputText
-            label={"Email Address"}
-            placeholder={"Enter email address"}
+            label={"Phone number"}
+            placeholder={
+              requestType === "edit" ? detail.phoneNumber : "Enter phone number"
+            }
+            value={recyclerDetail.phoneNumber}
+            handleChange={(e) =>
+              setRecyclerDetail({
+                ...recyclerDetail,
+                phoneNumber: e.target.value,
+              })
+            }
+          />
+          <InputText
+            label={"Email address"}
+            placeholder={
+              requestType === "edit" ? detail.email : "Enter email address"
+            }
             value={recyclerDetail.email}
             handleChange={(e) =>
               setRecyclerDetail({
@@ -125,17 +220,36 @@ export const RecyclerModal = ({ model, closeModal, requestType }) => {
             }
           />
         </div>
+
         <div className="w-full">
-          <InputSelect
-            label={"State"}
-            placeholder="Select state"
-            options={states.map((data) => data.name)}
+          <InputText
+            label={"Address"}
+            placeholder={
+              requestType === "edit" ? detail.address : "Enter  address"
+            }
+            value={recyclerDetail.address}
             handleChange={(e) =>
               setRecyclerDetail({
                 ...recyclerDetail,
-                state: e.target.value,
+                address: e.target.value,
               })
             }
+          />
+        </div>
+
+        <div className="w-full">
+          <SearchableDropdown
+            label={"State"}
+            placeholder={requestType === "edit" ? detail.state : "Select state"}
+            options={states}
+            handleChange={(selectionOption) => {
+              setSelectedState(selectionOption.label);
+              setSelectedStateId(selectionOption.value);
+              setRecyclerDetail({
+                ...recyclerDetail,
+                state: selectionOption.label,
+              });
+            }}
             css="w-full"
           />
         </div>
@@ -149,16 +263,22 @@ export const RecyclerModal = ({ model, closeModal, requestType }) => {
           >
             Cancel
           </button>
-          <button
-            onClick={() => createRecycler()}
-            className="bg-green-700 text-white flex justify-center items-center h-[40px] w-full gap-2"
-          >
-            {requestType === "edit"
-              ? "Save Changes"
-              : loading
-              ? "Creating..."
-              : "Create Recycler"}
-          </button>
+
+          {requestType === "edit" ? (
+            <button
+              onClick={() => editRecycler()}
+              className="bg-green-700 text-white flex justify-center items-center h-[40px] w-full gap-2"
+            >
+              {loading ? "Updating..." : "Save changes"}
+            </button>
+          ) : (
+            <button
+              onClick={() => createRecycler()}
+              className="bg-green-700 text-white flex justify-center items-center h-[40px] w-full gap-2"
+            >
+              {loading ? "Creating..." : "Create Recycler"}
+            </button>
+          )}
         </div>
       </div>
     </div>

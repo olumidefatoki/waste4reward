@@ -70,6 +70,22 @@ export const createRecycler = async (data) => {
   }
 };
 
+export const updateRecycler = async (data) => {
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+    const res = await fetcher("/recycler/update", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const downloadRecycler = async () => {
   try {
     const accessToken = localStorage.getItem("accessToken");

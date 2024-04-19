@@ -5,6 +5,7 @@ import {
   createRecycler,
   gatAllRecycler,
   getRecyclerDetail,
+  updateRecycler,
 } from "../ds/recycler";
 const useRecycler = (query, selectedState, recyclerId) => {
   const [loading, setLoading] = useState();
@@ -32,11 +33,17 @@ const useRecycler = (query, selectedState, recyclerId) => {
     return res;
   };
 
+  const updateExistingRecycler = async (data) => {
+    const res = await updateRecycler(data);
+    return res;
+  };
+
   return {
     loading,
     gatAllRecyclers,
     getSingleRecycler,
     createNewRecycler,
+    updateExistingRecycler,
   };
 };
 

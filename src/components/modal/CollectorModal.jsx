@@ -177,9 +177,7 @@ export const CollectorModal = ({
           <h1 className="capitalize font-bold">
             {requestType === "edit" ? "Edit Collector" : "Create new Collector"}
           </h1>
-          <p className="text-sm" onClick={() => console.log(detail)}>
-            Enter the details below
-          </p>
+          <p className="text-sm">Enter the details below</p>
         </div>
         <div className="flex justify-between">
           <InputText

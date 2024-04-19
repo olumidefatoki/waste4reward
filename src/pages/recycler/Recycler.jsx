@@ -52,11 +52,12 @@ const Recycler = () => {
   const [lga, setLga] = useState([]);
   const limit = 10;
 
-  const { loading, gatAllRecyclers, getSingleRecycler } = useRecycler(
-    query,
-    selectedState,
-    recyclerId
-  );
+  const {
+    loading,
+    gatAllRecyclers,
+    getSingleRecycler,
+    updateExistingRecycler,
+  } = useRecycler(query, selectedState, recyclerId);
 
   const getRecycler = async () => {
     const res = await getSingleRecycler(recyclerId);
@@ -110,6 +111,11 @@ const Recycler = () => {
   const handleViewDetail = (id) => {
     setRecyclerId(id);
     setViewDetail(true);
+  };
+
+  const handleEditDetail = (id) => {
+    setRecyclerId(id);
+    setEditDetail(true);
   };
 
   useEffect(() => {
@@ -190,7 +196,7 @@ const Recycler = () => {
                   onClick={() => handleViewDetail(data.id)}
                 />
               ),
-              open: <FiEdit onClick={() => setEditDetail(true)} />,
+              open: <FiEdit onClick={() => handleEditDetail(data.id)} />,
             };
           })}
         />
@@ -223,6 +229,8 @@ const Recycler = () => {
           <RecyclerModal
             closeModal={() => setEditDetail(false)}
             requestType={"edit"}
+            id={recyclerId}
+            detail={recyclerDetail}
           />
         </Modal>
       )}
